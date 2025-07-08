@@ -1,0 +1,493 @@
+#!/usr/bin/env python
+"""
+Triangulum Folder Healer
+
+A command-line interface for the Triangulum folder-level self-healing system that 
+automatically detects and fixes bugs across an entire codebase.
+
+This tool builds on triangulum_self_heal.py but adds:
+1. Large-scale relationship analysis
+2. Priority-based scheduling
+3. Distributed processing capabilities
+4. Multi-file repair coordination
+
+Usage:
+  python triangulum_folder_healer.py [options] <folder_path>
+
+Options:
+  --dry-run              Don't apply fixes, just show what would be done
+  --max-files=<num>      Maximum number of files to process (default: 50)
+  --workers=<num>        Number of worker processes (default: 1)
+  --depth=<num>          Maximum depth for relationship analysis (default: 3)
+  --bug-type=<type>      Focus on a specific bug type
+  --help                 Show this help message
+
+Examples:
+  python triangulum_folder_healer.py src/
+  python triangulum_folder_healer.py --dry-run --max-files=10 lib/
+  python triangulum_folder_healer.py --workers=4 --depth=2 app/
+"""
+
+import os
+import sys
+import logging
+import argparse
+import time
+import threading
+import itertools
+from pathlib import Path
+from typing import Dict, List, Set, Tuple, Any, Optional, Union
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Add the project root to the Python path
+sys.path.insert(0, str(Path(__file__).parent))
+
+try:
+    from triangulum_lx.agents.bug_detector_agent import BugDetectorAgent
+    from triangulum_lx.agents.relationship_analyst_agent import RelationshipAnalystAgent
+    from triangulum_lx.agents.priority_analyzer_agent import PriorityAnalyzerAgent
+    from triangulum_lx.agents.strategy_agent import StrategyAgent
+    from triangulum_lx.agents.implementation_agent import ImplementationAgent
+    from triangulum_lx.agents.verification_agent import VerificationAgent
+    from triangulum_lx.agents.orchestrator_agent import OrchestratorAgent
+    from triangulum_lx.agents.message import AgentMessage, MessageType
+    from triangulum_lx.agents.message_bus import MessageBus
+except ImportError:
+    logger.error("Failed to import Triangulum modules. Make sure they are installed.")
+    sys.exit(1)
+
+
+class TriangulumFolderHealer:
+    """
+    Folder-level self-healing system for Triangulum.
+    
+    This class orchestrates the process of analyzing and fixing bugs across
+    an entire folder/repository. It uses specialized agents to detect bugs,
+    analyze relationships, prioritize fixes, implement and verify them.
+    """
+    
+    def __init__(
+        self,
+        dry_run: bool = False,
+        max_files: int = 50,
+        workers: int = 1,
+        analysis_depth: int = 3,
+        bug_type: Optional[str] = None
+    ):
+        """
+        Initialize the Triangulum Folder Healer.
+        
+        Args:
+            dry_run: If True, don't apply fixes
+            max_files: Maximum number of files to process
+            workers: Number of worker processes
+            analysis_depth: Maximum depth for relationship analysis
+            bug_type: Optional specific bug type to focus on
+        """
+        self.dry_run = dry_run
+        self.max_files = max_files
+        self.workers = workers
+        self.analysis_depth = analysis_depth
+        self.bug_type = bug_type
+        
+        # Create the message bus for agent communication
+        self.message_bus = MessageBus()
+        
+        # Create all specialized agents
+        self.agents = self._create_agents()
+        
+        # Create the orchestrator agent
+        self.orchestrator = OrchestratorAgent(
+            agent_id="orchestrator",
+            message_bus=self.message_bus,
+            config={
+                "max_retries": 3,
+                "timeout": 120,  # Longer timeout for folder-level operations
+                "parallel_execution": workers > 1
+            }
+        )
+        
+        # Storage for results
+        self.results = {}
+        
+        # Register message handlers
+        self.message_bus.register_handler(
+            "folder_healer",
+            MessageType.TASK_RESULT,
+            self._handle_task_result
+        )
+        
+        self.message_bus.register_handler(
+            "folder_healer",
+            MessageType.ERROR,
+            self._handle_error
+        )
+    
+    def _create_agents(self) -> Dict[str, Any]:
+        """
+        Create all specialized agents.
+        
+        Returns:
+            Dictionary mapping agent types to agent instances
+        """
+        return {
+            "bug_detector": BugDetectorAgent(
+                agent_id="bug_detector",
+                message_bus=self.message_bus
+            ),
+            "relationship_analyst": RelationshipAnalystAgent(
+                agent_id="relationship_analyst",
+                message_bus=self.message_bus
+            ),
+            "priority_analyzer": PriorityAnalyzerAgent(
+                agent_id="priority_analyzer",
+                message_bus=self.message_bus,
+                config={
+                    "max_prioritized_files": self.max_files
+                }
+            ),
+            "strategy_agent": StrategyAgent(
+                agent_id="strategy_agent",
+                message_bus=self.message_bus
+            ),
+            "implementation_agent": ImplementationAgent(
+                agent_id="implementation_agent",
+                message_bus=self.message_bus
+            ),
+            "verification_agent": VerificationAgent(
+                agent_id="verification_agent",
+                message_bus=self.message_bus
+            )
+        }
+    
+    def _handle_task_result(self, message: AgentMessage):
+        """
+        Handle task result messages.
+        
+        Args:
+            message: The task result message
+        """
+        # Store the result
+        self.results[message.sender] = message.content
+    
+    def _handle_error(self, message: AgentMessage):
+        """
+        Handle error messages.
+        
+        Args:
+            message: The error message
+        """
+        logger.error(f"Error from {message.sender}: {message.content.get('error', 'Unknown error')}")
+    
+    def heal_folder(self, folder_path: str) -> Dict[str, Any]:
+        """
+        Run the self-healing process on a folder.
+        
+        Args:
+            folder_path: Path to the folder to heal
+            
+        Returns:
+            Results of the healing process
+        """
+        if not os.path.isdir(folder_path):
+            raise ValueError(f"Folder not found: {folder_path}")
+        
+        logger.info(f"Starting folder-level self-healing for: {folder_path}")
+        
+        # Configure options for the orchestrator
+        options = {
+            "dry_run": self.dry_run,
+            "max_files": self.max_files,
+            "analysis_depth": self.analysis_depth,
+            "bug_type": self.bug_type,
+            "workers": self.workers
+        }
+        
+        # Send the orchestration request
+        message = AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "orchestrate_folder_healing",
+                "folder_path": folder_path,
+                "options": options
+            },
+            sender="folder_healer",
+            receiver="orchestrator"
+        )
+        
+        # Process the message
+        self.orchestrator.handle_message(message)
+        
+        # Wait for the result (with timeout)
+        start_time = time.time()
+        timeout = 3600  # 1 hour timeout for folder healing
+        
+        while time.time() - start_time < timeout:
+            if "orchestrator" in self.results:
+                result = self.results["orchestrator"]
+                
+                if result.get("status") == "success":
+                    return result.get("result", {})
+                else:
+                    raise Exception(f"Orchestration failed: {result.get('error', 'Unknown error')}")
+            
+            # Sleep a bit to avoid busy waiting
+            time.sleep(1)
+        
+        # Timeout
+        raise TimeoutError("Folder healing timed out")
+    
+    def get_progress(self) -> Dict[str, Any]:
+        """
+        Get the current progress of the healing process.
+        
+        Returns:
+            Progress information
+        """
+        if "orchestrator" in self.results:
+            result = self.results["orchestrator"]
+            
+            if result.get("status") == "success":
+                task_result = result.get("result", {})
+                
+                if isinstance(task_result, dict) and "id" in task_result:
+                    # Get task status
+                    task_id = task_result["id"]
+                    
+                    message = AgentMessage(
+                        message_type=MessageType.TASK_REQUEST,
+                        content={
+                            "action": "get_task_status",
+                            "task_id": task_id
+                        },
+                        sender="folder_healer",
+                        receiver="orchestrator"
+                    )
+                    
+                    # Clear previous result
+                    if "orchestrator" in self.results:
+                        del self.results["orchestrator"]
+                    
+                    # Process the message
+                    self.orchestrator.handle_message(message)
+                    
+                    # Wait for a short time
+                    time.sleep(0.5)
+                    
+                    # Return the result
+                    if "orchestrator" in self.results:
+                        return self.results["orchestrator"].get("result", {})
+        
+        return {}
+
+
+def display_results(result: Dict[str, Any], dry_run: bool):
+    """
+    Display the results of the healing process.
+    
+    Args:
+        result: Results of the healing process
+        dry_run: Whether this was a dry run
+    """
+    print("\n" + "=" * 80)
+    print(f"{'TRIANGULUM FOLDER HEALING RESULTS (DRY RUN)' if dry_run else 'TRIANGULUM FOLDER HEALING RESULTS'}")
+    print("=" * 80)
+    
+    # Display summary information
+    print(f"\nTarget folder: {result.get('target', 'unknown')}")
+    print(f"Status: {result.get('status', 'unknown')}")
+    
+    # Display metrics
+    metrics = result.get("metrics", {})
+    if metrics:
+        print("\nMetrics:")
+        print(f"  Files analyzed: {metrics.get('files_analyzed', 0)}")
+        print(f"  Files with bugs: {metrics.get('files_with_bugs', 0)}")
+        print(f"  Files processed: {metrics.get('files_processed', 0)}")
+        print(f"  Files healed: {metrics.get('files_healed', 0)}")
+        print(f"  Files failed: {metrics.get('files_failed', 0)}")
+        print(f"  Total bugs detected: {metrics.get('bugs_detected', 0)}")
+        print(f"  Bugs fixed: {metrics.get('bugs_fixed', 0)}")
+        
+        if metrics.get('files_processed', 0) > 0:
+            success_rate = (metrics.get('files_healed', 0) / metrics.get('files_processed', 0)) * 100
+            print(f"  Success rate: {success_rate:.1f}%")
+        
+        duration = metrics.get('duration', 0)
+        if duration > 0:
+            minutes, seconds = divmod(duration, 60)
+            print(f"  Duration: {int(minutes)}m {int(seconds)}s")
+    
+    # Display files that were healed
+    files_healed = result.get("files_healed", [])
+    if files_healed:
+        print("\nFiles healed:")
+        for i, file_path in enumerate(files_healed[:10], 1):
+            print(f"  {i}. {file_path}")
+        
+        if len(files_healed) > 10:
+            print(f"  ... and {len(files_healed) - 10} more files")
+    
+    # Display files that failed
+    files_failed = result.get("files_failed", [])
+    if files_failed:
+        print("\nFiles that could not be healed:")
+        for i, file_path in enumerate(files_failed[:10], 1):
+            print(f"  {i}. {file_path}")
+        
+        if len(files_failed) > 10:
+            print(f"  ... and {len(files_failed) - 10} more files")
+    
+    # If it was a dry run, remind the user
+    if dry_run:
+        print("\nThis was a dry run. No files were modified.")
+        print("Run without --dry-run to apply the fixes.")
+    
+    print("\n" + "=" * 80)
+
+
+def progress_monitor(folder_healer: TriangulumFolderHealer):
+    """
+    Monitor the progress of the healing process and display a simple progress bar.
+    
+    Args:
+        folder_healer: The folder healer instance
+    """
+    spinner = itertools.cycle(['-', '\\', '|', '/'])
+    last_progress = {}
+    last_files_processed = 0
+    
+    # Progress bar settings
+    bar_width = 40
+    
+    try:
+        while True:
+            # Get current progress
+            progress = folder_healer.get_progress()
+            
+            if progress:
+                # Clear line and print progress
+                sys.stdout.write('\r' + ' ' * 80 + '\r')
+                
+                # Print status
+                current_step = progress.get("current_step", 0)
+                total_steps = progress.get("total_steps", 0)
+                status = progress.get("status", "in_progress")
+                
+                if status == "in_progress":
+                    # Print step information
+                    if current_step > 0 and total_steps > 0:
+                        percent = int((current_step / total_steps) * 100)
+                        filled_width = int(bar_width * current_step / total_steps)
+                        bar = '█' * filled_width + ' ' * (bar_width - filled_width)
+                        sys.stdout.write(f"Progress: [{bar}] {percent}% Step {current_step}/{total_steps} ")
+                    
+                    # Print files progress if available
+                    files_processed = len(progress.get("files_processed", []))
+                    files_healed = len(progress.get("files_healed", []))
+                    files_failed = len(progress.get("files_failed", []))
+                    
+                    if files_processed > 0:
+                        sys.stdout.write(f"| Files: {files_processed} processed, {files_healed} healed, {files_failed} failed ")
+                    
+                    # Print processing status
+                    current_action = progress.get("current_action", "")
+                    if current_action:
+                        sys.stdout.write(f"| Action: {current_action} ")
+                    
+                    # Show spinner
+                    sys.stdout.write(next(spinner))
+                    
+                    # Log a message if new files have been processed
+                    if files_processed > last_files_processed:
+                        new_files = files_processed - last_files_processed
+                        print(f"\nProcessed {new_files} new files. Total: {files_processed}")
+                        last_files_processed = files_processed
+                else:
+                    # Process complete
+                    sys.stdout.write(f"Status: {status} | Completed!")
+                    break
+                
+                sys.stdout.flush()
+                last_progress = progress
+            
+            # Sleep a bit
+            time.sleep(0.5)
+    except Exception as e:
+        # Clear line
+        sys.stdout.write('\r' + ' ' * 80 + '\r')
+        logger.error(f"Error in progress monitor: {str(e)}")
+        import traceback
+        logger.debug(traceback.format_exc())
+
+def main():
+    """Main function to run the folder-level self-healing process."""
+    
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description="Triangulum Folder Healer: Automatically detect and fix bugs across an entire codebase")
+    parser.add_argument("folder_path", help="Path to the folder to analyze and fix")
+    parser.add_argument("--dry-run", action="store_true", help="Don't apply fixes, just show what would be done")
+    parser.add_argument("--max-files", type=int, default=50, help="Maximum number of files to process")
+    parser.add_argument("--workers", type=int, default=1, help="Number of worker processes")
+    parser.add_argument("--depth", type=int, default=3, help="Maximum depth for relationship analysis")
+    parser.add_argument("--bug-type", help="Focus on a specific bug type")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    
+    args = parser.parse_args()
+    
+    # Set logging level
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    try:
+        # Create and run the folder healer
+        folder_healer = TriangulumFolderHealer(
+            dry_run=args.dry_run,
+            max_files=args.max_files,
+            workers=args.workers,
+            analysis_depth=args.depth,
+            bug_type=args.bug_type
+        )
+        
+        # Start progress monitor in a separate thread
+        monitor_thread = threading.Thread(
+            target=progress_monitor,
+            args=(folder_healer,),
+            daemon=True
+        )
+        monitor_thread.start()
+        
+        # Run the healing process
+        result = folder_healer.heal_folder(args.folder_path)
+        
+        # Wait for monitor thread to exit
+        monitor_thread.join(timeout=1)
+        
+        # Display results
+        display_results(result, args.dry_run)
+        
+        # Set exit code based on result
+        if result.get("status") == "completed":
+            sys.exit(0)
+        elif result.get("status") == "partial_success":
+            sys.exit(1)
+        else:
+            sys.exit(2)
+    
+    except KeyboardInterrupt:
+        print("\nProcess interrupted by user.")
+        sys.exit(130)
+    except Exception as e:
+        logger.error(f"Error during folder healing: {str(e)}")
+        import traceback
+        logger.debug(traceback.format_exc())
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

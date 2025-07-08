@@ -1,0 +1,5968 @@
+{
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_comprehensive_tests.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "run_command",
+      "ensure_dependencies",
+      "run_unit_tests",
+      "run_integration_tests",
+      "run_edge_case_tests",
+      "run_quick_benchmarks",
+      "generate_combined_coverage_report",
+      "generate_test_summary",
+      "run_comprehensive_tests",
+      "parse_args"
+    ],
+    "classes": [],
+    "function_calls": {
+      "Path": 6,
+      "run_command": 6,
+      "str": 4,
+      "parse_args": 1,
+      "open": 1,
+      "ensure_dependencies": 1,
+      "run_unit_tests": 1,
+      "run_integration_tests": 1,
+      "run_edge_case_tests": 1,
+      "run_quick_benchmarks": 1,
+      "generate_combined_coverage_report": 1,
+      "generate_test_summary": 1,
+      "run_comprehensive_tests": 1,
+      "__import__": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\scripts\\analyze_code_relationships.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_tests.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_patcher_agent.py"
+    ],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {
+      "print": 14,
+      "enumerate": 2,
+      "len": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_patcher_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\repair.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\test_runner.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "test_analyze",
+      "test_generate_patch",
+      "test_apply",
+      "test_verify_success",
+      "test_verify_failure",
+      "test_rollback",
+      "test_execute_repair_success",
+      "test_execute_repair_failure",
+      "test_integration",
+      "mock_generate_patch",
+      "mock_validate_patch"
+    ],
+    "classes": [
+      "TestPatcherAgent"
+    ],
+    "function_calls": {
+      "patch": 7,
+      "PatcherAgent": 1,
+      "MagicMock": 15,
+      "TestResult": 6,
+      "open": 4,
+      "mock_open": 2,
+      "hasattr": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\setup.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {
+      "setup": 1,
+      "open": 1,
+      "find_packages": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_repair_workflow.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\repair.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\test_runner.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setup_test_files",
+      "cleanup",
+      "main",
+      "mock_apply"
+    ],
+    "classes": [],
+    "function_calls": {
+      "print": 10,
+      "setup_test_files": 1,
+      "main": 1,
+      "open": 6,
+      "PatcherAgent": 1,
+      "cleanup": 1,
+      "type": 3,
+      "TestResult": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\self_healing_demo.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\repair.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "execute_repair",
+      "_analyze",
+      "_generate_patch",
+      "_apply",
+      "_verify",
+      "_rollback",
+      "_restore_from_backup"
+    ],
+    "classes": [
+      "PatcherAgent"
+    ],
+    "function_calls": {
+      "CodeRelationshipAnalyzer": 1,
+      "RelationshipContextProvider": 1,
+      "TestRunner": 1,
+      "print": 4,
+      "PatchBundle": 1,
+      "hasattr": 2,
+      "TestResult": 1,
+      "open": 6,
+      "Exception": 2,
+      "len": 2,
+      "locals": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\test_runner.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "__init__",
+      "discover_tests",
+      "run_tests",
+      "run_specific_test",
+      "run_unittest",
+      "run_coverage_analysis",
+      "validate_test_structure",
+      "generate_test_report",
+      "validate_patch",
+      "find_related_tests"
+    ],
+    "classes": [
+      "TestResult",
+      "TestRunner"
+    ],
+    "function_calls": {
+      "Path": 7,
+      "any": 1,
+      "list": 3,
+      "len": 6,
+      "all": 1,
+      "set": 1,
+      "TestResult": 10,
+      "str": 12,
+      "open": 1,
+      "float": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_enhancements.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_folder_healer.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "display_results",
+      "progress_monitor",
+      "main",
+      "__init__",
+      "_create_agents",
+      "_handle_task_result",
+      "_handle_error",
+      "heal_folder",
+      "get_progress"
+    ],
+    "classes": [
+      "TriangulumFolderHealer"
+    ],
+    "function_calls": {
+      "str": 3,
+      "print": 25,
+      "main": 1,
+      "MessageBus": 1,
+      "OrchestratorAgent": 1,
+      "AgentMessage": 2,
+      "TimeoutError": 1,
+      "enumerate": 2,
+      "TriangulumFolderHealer": 1,
+      "display_results": 1,
+      "Path": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "PriorityAnalyzerAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "ValueError": 1,
+      "divmod": 1,
+      "len": 7,
+      "Exception": 1,
+      "isinstance": 1,
+      "int": 2,
+      "next": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\folder_healing_demo.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_load_bug_patterns",
+      "add_bug_pattern",
+      "disable_bug_pattern",
+      "enable_bug_pattern",
+      "detect_bugs_in_file",
+      "analyze_test_failure",
+      "_infer_language_from_path",
+      "_get_applicable_patterns",
+      "_extract_files_from_stack_trace",
+      "_extract_error_type",
+      "_extract_error_location",
+      "_calculate_confidence",
+      "_generate_fix_recommendations",
+      "_calculate_fix_priority",
+      "_handle_task_request",
+      "_handle_query"
+    ],
+    "classes": [
+      "BugDetectorAgent"
+    ],
+    "function_calls": {
+      "set": 1,
+      "list": 1,
+      "max": 2,
+      "len": 8,
+      "min": 2,
+      "super": 1,
+      "open": 2,
+      "int": 1,
+      "all": 1,
+      "abs": 1,
+      "str": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "analyze_codebase",
+      "get_most_central_files",
+      "find_cycles",
+      "get_file_dependents",
+      "get_file_dependencies",
+      "prioritize_files_for_repair",
+      "find_critical_paths",
+      "get_impacted_files",
+      "_count_languages",
+      "_handle_task_request",
+      "_handle_query",
+      "process_message"
+    ],
+    "classes": [
+      "RelationshipAnalystAgent"
+    ],
+    "function_calls": {
+      "DependencyGraphBuilder": 1,
+      "DependencyAnalyzer": 1,
+      "set": 3,
+      "len": 6,
+      "ValueError": 9,
+      "list": 7,
+      "sorted": 1,
+      "str": 12,
+      "super": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "analyze_priorities",
+      "_build_dependency_graph",
+      "_calculate_centrality_metrics",
+      "_calculate_prioritization_factors",
+      "_calculate_priority_score",
+      "_estimate_business_impact",
+      "handle_message",
+      "_handle_task_request",
+      "_handle_query"
+    ],
+    "classes": [
+      "PriorityAnalyzerAgent"
+    ],
+    "function_calls": {
+      "sorted": 1,
+      "len": 9,
+      "min": 4,
+      "max": 5,
+      "sum": 2,
+      "list": 1,
+      "super": 2,
+      "str": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_load_strategy_templates",
+      "formulate_strategy",
+      "evaluate_strategy",
+      "_determine_bug_type",
+      "_generate_strategy_from_template",
+      "_extract_variables",
+      "_estimate_complexity",
+      "_calculate_confidence",
+      "_get_timestamp",
+      "_handle_task_request",
+      "_handle_query",
+      "_handle_other_message"
+    ],
+    "classes": [
+      "StrategyAgent"
+    ],
+    "function_calls": {
+      "len": 6,
+      "max": 2,
+      "min": 2,
+      "super": 2,
+      "enumerate": 1,
+      "hash": 1,
+      "str": 5
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "implement_strategy",
+      "apply_implementation",
+      "get_implementation_status",
+      "_load_affected_files",
+      "_get_implementation_function",
+      "_implement_null_pointer_fix",
+      "_implement_resource_leak_fix",
+      "_implement_sql_injection_fix",
+      "_implement_hardcoded_credentials_fix",
+      "_implement_exception_swallowing_fix",
+      "_implement_generic_fix",
+      "_extract_variable_from_null_pointer",
+      "_determine_language",
+      "_find_containing_function",
+      "_extract_resource_usage_block",
+      "_extract_function_params",
+      "_find_except_block",
+      "_extract_exception_type",
+      "_extract_variable_assignment",
+      "_extract_sql_query_info",
+      "_extract_credential_info",
+      "_apply_patch_changes",
+      "_create_empty_implementation",
+      "_get_timestamp",
+      "_handle_task_request",
+      "_handle_query",
+      "_handle_other_message"
+    ],
+    "classes": [
+      "ImplementationAgent"
+    ],
+    "function_calls": {
+      "implementation_func": 1,
+      "max": 2,
+      "min": 3,
+      "enumerate": 4,
+      "range": 1,
+      "sorted": 1,
+      "ValueError": 3,
+      "len": 28,
+      "super": 2,
+      "isinstance": 3,
+      "open": 5,
+      "str": 3,
+      "hasattr": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "verify_implementation",
+      "_create_verification_sandbox",
+      "_apply_patches_in_sandbox",
+      "_apply_changes",
+      "_verify_syntax",
+      "_verify_tests",
+      "_find_relevant_tests",
+      "_find_corresponding_test",
+      "_run_test",
+      "_run_default_tests",
+      "_verify_standards",
+      "_check_basic_python_standards",
+      "_verify_regression",
+      "_calculate_confidence",
+      "_determine_language",
+      "get_verification_result",
+      "_get_timestamp",
+      "_handle_task_request",
+      "_handle_query",
+      "__init__",
+      "_get_affected_files",
+      "__enter__",
+      "__exit__"
+    ],
+    "classes": [
+      "VerificationAgent",
+      "SandboxContext"
+    ],
+    "function_calls": {
+      "all": 1,
+      "SandboxContext": 1,
+      "sorted": 1,
+      "sum": 1,
+      "len": 8,
+      "max": 1,
+      "ValueError": 1,
+      "enumerate": 1,
+      "min": 3,
+      "super": 1,
+      "set": 1,
+      "list": 1,
+      "open": 4,
+      "str": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "orchestrate_file_healing",
+      "orchestrate_folder_healing",
+      "get_task_status",
+      "cancel_task",
+      "_execute_workflow_step",
+      "_execute_folder_analysis_step",
+      "_heal_single_file_in_folder",
+      "_run_integration_tests",
+      "_find_test_files",
+      "_run_test",
+      "_get_prioritized_files",
+      "_prepare_bug_detector_message",
+      "_prepare_relationship_analyst_message",
+      "_prepare_strategy_message",
+      "_prepare_implementation_message",
+      "_prepare_verification_message",
+      "_prepare_folder_bug_detection_message",
+      "_prepare_folder_relationship_analysis_message",
+      "_prepare_priority_analysis_message",
+      "_prepare_file_strategy_message",
+      "_prepare_file_implementation_message",
+      "_prepare_apply_implementation_message",
+      "_prepare_file_verification_message",
+      "_wait_for_result",
+      "_is_critical_step",
+      "_calculate_metrics",
+      "_calculate_folder_metrics",
+      "_generate_id",
+      "_handle_task_request",
+      "handle_message"
+    ],
+    "classes": [
+      "OrchestratorAgent"
+    ],
+    "function_calls": {
+      "all": 1,
+      "AgentMessage": 12,
+      "str": 11,
+      "ValueError": 8,
+      "len": 17,
+      "enumerate": 3,
+      "sum": 2,
+      "open": 2,
+      "super": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_schema_validator.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\meta_agent.py"
+    ],
+    "functions": [
+      "__post_init__",
+      "validate",
+      "to_dict",
+      "to_json",
+      "from_dict",
+      "from_json",
+      "create_response",
+      "add_message",
+      "get_message_by_id",
+      "get_messages_by_type",
+      "get_messages_by_sender",
+      "get_message_chain",
+      "to_dict",
+      "from_dict"
+    ],
+    "classes": [
+      "MessageType",
+      "ConfidenceLevel",
+      "AgentMessage",
+      "ConversationMemory"
+    ],
+    "function_calls": {
+      "field": 8,
+      "asdict": 1,
+      "isinstance": 7,
+      "cls": 2,
+      "AgentMessage": 1,
+      "ValueError": 9,
+      "MessageType": 1,
+      "str": 1,
+      "type": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\meta_agent.py"
+    ],
+    "functions": [
+      "__init__",
+      "subscribe",
+      "unsubscribe",
+      "publish",
+      "_route_to_agent",
+      "_broadcast_message",
+      "_store_message",
+      "get_conversation",
+      "get_message",
+      "get_message_chain",
+      "clear_conversations",
+      "clear_conversation"
+    ],
+    "classes": [
+      "SubscriptionInfo",
+      "MessageBus"
+    ],
+    "function_calls": {
+      "set": 3,
+      "SubscriptionInfo": 1,
+      "ConversationMemory": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_integrated_system.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\system_monitor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\relationship_context_provider.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\repair.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\feedback.py"
+    ],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\integrated_triangulum_demo.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\test_triangulum_system.py"
+    ],
+    "functions": [
+      "__init__",
+      "_load_config",
+      "_setup_logging",
+      "analyze_code_relationships",
+      "diagnose_system",
+      "_detect_issues",
+      "_check_code_structure",
+      "_check_dependencies",
+      "_check_for_bugs",
+      "_generate_recommendations",
+      "self_heal",
+      "_attempt_fix",
+      "run_with_goal",
+      "shutdown",
+      "record_feedback",
+      "get_system_status"
+    ],
+    "classes": [
+      "TriangulumSystem"
+    ],
+    "function_calls": {
+      "TriangulumEngine": 1,
+      "SystemMonitor": 1,
+      "CodeRelationshipAnalyzer": 1,
+      "RelationshipContextProvider": 1,
+      "FeedbackCollector": 1,
+      "PatcherAgent": 1,
+      "getattr": 1,
+      "hasattr": 10,
+      "len": 3,
+      "open": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\test_simple_bug.py"
+    ],
+    "functions": [
+      "__init__",
+      "_get_tooling_access",
+      "run",
+      "process_goal",
+      "_assess",
+      "_plan",
+      "_act",
+      "_verify",
+      "get_status",
+      "shutdown"
+    ],
+    "classes": [
+      "TriangulumEngine"
+    ],
+    "function_calls": {
+      "TriangulumState": 1,
+      "MetricsCollector": 1,
+      "GoalLoader": 1,
+      "MessageBus": 1,
+      "Router": 1,
+      "MetaAgent": 1,
+      "PatcherAgent": 1,
+      "int": 1,
+      "hasattr": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\test_simple_bug.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\test_state.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\test_transition.py"
+    ],
+    "functions": [
+      "__init__",
+      "update_phase",
+      "add_bug",
+      "complete_bug",
+      "get_status"
+    ],
+    "classes": [
+      "Phase",
+      "BugState",
+      "TriangulumState"
+    ],
+    "function_calls": {
+      "dataclass": 1,
+      "auto": 6,
+      "len": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\system_monitor.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli.py"
+    ],
+    "functions": [
+      "__init__",
+      "start_monitoring",
+      "stop_monitoring",
+      "check_health",
+      "get_health_status",
+      "check_component_health",
+      "diagnose_issue",
+      "generate_health_report",
+      "export_metrics",
+      "monitor_loop"
+    ],
+    "classes": [
+      "SystemMonitor"
+    ],
+    "function_calls": {
+      "list": 1,
+      "set": 1,
+      "open": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "analyze_directory",
+      "_collect_python_files",
+      "_build_module_map",
+      "_analyze_file",
+      "_analyze_imports",
+      "_analyze_definitions",
+      "_analyze_function_calls",
+      "_resolve_function_calls",
+      "save_relationships",
+      "load_relationships",
+      "get_relationships"
+    ],
+    "classes": [
+      "CodeRelationshipAnalyzer"
+    ],
+    "function_calls": {
+      "isinstance": 9,
+      "open": 3,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\relationship_context_provider.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "load_relationships_from_file",
+      "load_relationships",
+      "save_relationships",
+      "_build_dependency_graphs",
+      "get_related_files",
+      "get_circular_dependencies",
+      "get_most_dependent_files",
+      "get_file_complexity",
+      "suggest_refactoring",
+      "get_impact_analysis",
+      "get_context_for_repair",
+      "get_imports",
+      "get_imported_by",
+      "get_functions",
+      "get_classes",
+      "get_metadata"
+    ],
+    "classes": [
+      "RelationshipContextProvider"
+    ],
+    "function_calls": {
+      "set": 3,
+      "list": 2,
+      "sorted": 1,
+      "range": 1,
+      "len": 15,
+      "open": 2,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\feedback.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "to_dict",
+      "__init__",
+      "add_feedback",
+      "get_all_feedback",
+      "__init__",
+      "_ensure_db_exists",
+      "record_feedback",
+      "get_feedback",
+      "get_all_feedback",
+      "mark_as_processed",
+      "record_action",
+      "analyze_feedback",
+      "export_feedback",
+      "delete_feedback"
+    ],
+    "classes": [
+      "FeedbackType",
+      "FeedbackItem",
+      "FeedbackManager",
+      "FeedbackCollector"
+    ],
+    "function_calls": {
+      "auto": 6,
+      "dict": 4,
+      "len": 3,
+      "sorted": 1,
+      "open": 5,
+      "sum": 1,
+      "isinstance": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_self_heal.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "handle_task_result",
+      "handle_error",
+      "heal_file",
+      "detect_bugs",
+      "analyze_relationships",
+      "formulate_strategy",
+      "implement_fix",
+      "apply_fix",
+      "verify_fix",
+      "show_summary"
+    ],
+    "classes": [
+      "TriangulumSelfHeal"
+    ],
+    "function_calls": {
+      "str": 1,
+      "TriangulumSelfHeal": 1,
+      "main": 1,
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "len": 9,
+      "enumerate": 2,
+      "AgentMessage": 6,
+      "Path": 1,
+      "open": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\agent_communication_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "run_demo",
+      "__init__",
+      "handle_message",
+      "_process_task_request",
+      "_process_query",
+      "send_task",
+      "send_query",
+      "broadcast_status"
+    ],
+    "classes": [
+      "SimpleAgent"
+    ],
+    "function_calls": {
+      "TriangulumEngine": 1,
+      "SimpleAgent": 3,
+      "run_demo": 1,
+      "AgentMessage": 3,
+      "enumerate": 1,
+      "len": 3
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\self_healing_workflow_demo.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\agent_message_protocol_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_schema_validator.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_example_messages",
+      "validate_messages",
+      "demonstrate_serialization",
+      "demonstrate_schema_templates",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "AgentMessage": 3,
+      "enumerate": 1,
+      "create_example_messages": 1,
+      "MessageSchemaValidator": 1,
+      "validate_messages": 1,
+      "demonstrate_serialization": 1,
+      "demonstrate_schema_templates": 1,
+      "main": 1,
+      "len": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\thought_chain_demo.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_schema_validator.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_load_schema",
+      "validate_message",
+      "_validate_message_content",
+      "generate_message_template",
+      "get_schema_version",
+      "get_required_fields"
+    ],
+    "classes": [
+      "MessageSchemaValidator"
+    ],
+    "function_calls": {
+      "MessageSchemaValidator": 1,
+      "open": 1,
+      "ValueError": 5,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\agent_system_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\agent_factory.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\base_agent.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setup_agent_system",
+      "run_simple_agent_demo",
+      "run_relationship_analysis_demo",
+      "main",
+      "__init__",
+      "_handle_task_request",
+      "_handle_query"
+    ],
+    "classes": [
+      "SimpleAgent"
+    ],
+    "function_calls": {
+      "MessageBus": 1,
+      "AgentFactory": 1,
+      "setup_agent_system": 1,
+      "run_simple_agent_demo": 1,
+      "run_relationship_analysis_demo": 1,
+      "main": 1,
+      "open": 1,
+      "len": 3,
+      "sum": 2,
+      "super": 1,
+      "list": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\agent_factory.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\base_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "register_agent_type",
+      "create_agent",
+      "get_agent",
+      "get_agents_by_type",
+      "shutdown_agent",
+      "shutdown_all_agents",
+      "load_agent_module",
+      "discover_agents"
+    ],
+    "classes": [
+      "AgentFactory"
+    ],
+    "function_calls": {
+      "list": 1,
+      "agent_class": 1,
+      "dir": 1,
+      "getattr": 3,
+      "isinstance": 1,
+      "issubclass": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\base_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_register_with_message_bus",
+      "handle_message",
+      "send_message",
+      "send_response",
+      "broadcast_status",
+      "initialize",
+      "shutdown",
+      "_handle_task_request",
+      "_handle_query",
+      "_handle_error",
+      "_handle_status",
+      "_handle_other_message"
+    ],
+    "classes": [
+      "BaseAgent"
+    ],
+    "function_calls": {
+      "AgentMessage": 2,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\bug_detector_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\test_division.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_example_files",
+      "demo_direct_api_usage",
+      "demo_message_based_usage",
+      "main",
+      "custom_publish",
+      "__init__",
+      "handle_message"
+    ],
+    "classes": [
+      "MessageHandler"
+    ],
+    "function_calls": {
+      "str": 9,
+      "Path": 2,
+      "MessageHandler": 1,
+      "AgentMessage": 2,
+      "create_example_files": 1,
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "demo_direct_api_usage": 1,
+      "demo_message_based_usage": 1,
+      "main": 1,
+      "open": 7,
+      "original_publish": 1,
+      "enumerate": 3,
+      "len": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\strategy_agent_demo.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\test_division.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "test_calculate_ratio",
+      "test_safe_calculate_ratio"
+    ],
+    "classes": [
+      "TestDivision"
+    ],
+    "function_calls": {
+      "Path": 1,
+      "str": 1,
+      "calculate_ratio": 1,
+      "safe_calculate_ratio": 1,
+      "float": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\division.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\dependency_graph_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "analyze_project",
+      "display_centrality_metrics",
+      "display_cycles",
+      "suggest_repair_priorities",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "DependencyGraphBuilder": 1,
+      "DependencyAnalyzer": 1,
+      "enumerate": 1,
+      "list": 2,
+      "sorted": 1,
+      "analyze_project": 1,
+      "display_centrality_metrics": 1,
+      "display_cycles": 1,
+      "suggest_repair_priorities": 1,
+      "main": 1,
+      "len": 6
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\relationship_analyst_demo.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "parse_file",
+      "can_parse",
+      "__init__",
+      "parse_file",
+      "_process_import",
+      "_is_standard_lib",
+      "_is_external_lib",
+      "_module_to_path",
+      "__init__",
+      "parse_file",
+      "_process_import",
+      "_resolve_import_path",
+      "__init__",
+      "_resolve_import_path",
+      "__init__",
+      "get_parser_for_file",
+      "register_parser",
+      "__init__",
+      "build_graph",
+      "_find_files",
+      "_identify_changed_files",
+      "_process_file",
+      "_cache_graph",
+      "load_cached_graph",
+      "__init__",
+      "networkx_graph",
+      "calculate_centrality",
+      "find_cycles",
+      "prioritize_files",
+      "get_most_central_files",
+      "get_strongly_connected_components",
+      "get_impact_score"
+    ],
+    "classes": [
+      "BaseDependencyParser",
+      "PythonDependencyParser",
+      "JavaScriptDependencyParser",
+      "TypeScriptDependencyParser",
+      "ParserRegistry",
+      "DependencyGraphBuilder",
+      "DependencyAnalyzer"
+    ],
+    "function_calls": {
+      "NotImplementedError": 1,
+      "DependencyMetadata": 2,
+      "set": 3,
+      "sorted": 2,
+      "list": 2,
+      "len": 5,
+      "enumerate": 1,
+      "PythonDependencyParser": 1,
+      "JavaScriptDependencyParser": 1,
+      "TypeScriptDependencyParser": 1,
+      "ParserRegistry": 1,
+      "DependencyGraph": 1,
+      "ThreadPoolExecutor": 1,
+      "as_completed": 1,
+      "any": 3,
+      "super": 4,
+      "open": 4,
+      "isinstance": 2,
+      "FileNode": 1,
+      "hash": 2,
+      "max": 1,
+      "ValueError": 1,
+      "str": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\enhanced_agent_communication_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_schema_validator.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\enhanced_message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\memory_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "visualize_thought_chain",
+      "main",
+      "__init__",
+      "subscribe_to_messages",
+      "handle_message",
+      "send_message",
+      "__init__",
+      "handle_bug_report",
+      "handle_repair_result",
+      "start_bug_detection_task",
+      "__init__",
+      "handle_message",
+      "detect_bugs",
+      "__init__",
+      "handle_message",
+      "generate_repair",
+      "__init__",
+      "handle_message",
+      "verify_repair",
+      "__init__",
+      "handle_status_message"
+    ],
+    "classes": [
+      "SimulatedAgent",
+      "CoordinatorAgent",
+      "BugDetectorAgent",
+      "RepairAgent",
+      "VerificationAgent",
+      "ObserverAgent"
+    ],
+    "function_calls": {
+      "list": 2,
+      "enumerate": 2,
+      "EnhancedMessageBus": 1,
+      "ThoughtChainManager": 1,
+      "CoordinatorAgent": 1,
+      "BugDetectorAgent": 1,
+      "RepairAgent": 1,
+      "VerificationAgent": 1,
+      "ObserverAgent": 1,
+      "main": 1,
+      "MemoryManager": 1,
+      "MessageSchemaValidator": 1,
+      "AgentMessage": 1,
+      "ConversationMemory": 1,
+      "visualize_thought_chain": 1,
+      "super": 8,
+      "len": 2,
+      "str": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\enhanced_message_bus.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "subscribe_to_topic",
+      "unsubscribe_from_topic",
+      "publish_to_topic",
+      "_get_topic_subscribers",
+      "publish",
+      "_route_to_agent_with_guarantee",
+      "_broadcast_message_with_guarantee",
+      "_record_delivery",
+      "_schedule_retry",
+      "_delivery_worker",
+      "get_delivery_status",
+      "wait_for_delivery",
+      "shutdown"
+    ],
+    "classes": [
+      "DeliveryStatus",
+      "TopicSubscriptionInfo",
+      "DeliveryRecord",
+      "EnhancedMessageBus"
+    ],
+    "function_calls": {
+      "field": 2,
+      "DeliveryRecord": 2,
+      "all": 1,
+      "super": 1,
+      "set": 4,
+      "TopicSubscriptionInfo": 1,
+      "callback": 2,
+      "hasattr": 1,
+      "filter_func": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_enhanced_message_bus.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py"
+    ],
+    "functions": [
+      "__post_init__",
+      "validate",
+      "add_parent",
+      "add_child",
+      "remove_parent",
+      "remove_child",
+      "to_dict",
+      "from_dict",
+      "get_relationship_to",
+      "is_parent_of",
+      "is_child_of",
+      "update_content",
+      "update_confidence"
+    ],
+    "classes": [
+      "ThoughtType",
+      "RelationshipType",
+      "ChainNode"
+    ],
+    "function_calls": {
+      "field": 6,
+      "asdict": 1,
+      "list": 2,
+      "isinstance": 7,
+      "cls": 1,
+      "ValueError": 7,
+      "ThoughtType": 1,
+      "set": 2,
+      "str": 1,
+      "RelationshipType": 1,
+      "type": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py"
+    ],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py"
+    ],
+    "functions": [
+      "__init__",
+      "add_node",
+      "remove_node",
+      "get_node",
+      "add_relationship",
+      "remove_relationship",
+      "traverse",
+      "_traverse_depth_first",
+      "_traverse_breadth_first",
+      "_traverse_chronological",
+      "_traverse_by_confidence",
+      "find_nodes",
+      "find_paths",
+      "validate",
+      "_would_create_cycle",
+      "_has_path",
+      "merge",
+      "to_dict",
+      "to_json",
+      "from_dict",
+      "from_json",
+      "__len__",
+      "__contains__",
+      "__iter__",
+      "confidence_key",
+      "dfs"
+    ],
+    "classes": [
+      "TraversalOrder",
+      "ValidationError",
+      "ThoughtChain"
+    ],
+    "function_calls": {
+      "set": 12,
+      "list": 4,
+      "deque": 2,
+      "sorted": 2,
+      "dfs": 2,
+      "cls": 1,
+      "len": 2,
+      "str": 2,
+      "ValueError": 8,
+      "filter_fn": 4,
+      "reversed": 1,
+      "RelationshipType": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "create_chain",
+      "add_thought",
+      "get_chain",
+      "get_chain_by_name",
+      "get_thought",
+      "list_chains",
+      "get_agent_chains",
+      "search_thoughts",
+      "find_related_thoughts",
+      "merge_chains",
+      "delete_chain",
+      "validate_all_chains",
+      "load_chains",
+      "_save_chain"
+    ],
+    "classes": [
+      "ThoughtChainManager"
+    ],
+    "function_calls": {
+      "ThoughtChain": 1,
+      "ChainNode": 1,
+      "list": 2,
+      "Path": 4,
+      "ValueError": 6,
+      "set": 3,
+      "len": 1,
+      "open": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\memory_manager.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "count_tokens",
+      "count_message_tokens",
+      "__init__",
+      "get_context",
+      "_get_by_recency",
+      "_get_by_relevance",
+      "_get_by_thread",
+      "_get_by_hybrid",
+      "_get_by_round_robin",
+      "_get_by_type_priority",
+      "_apply_token_limit",
+      "summarize_conversation",
+      "prune_conversation",
+      "get_token_count"
+    ],
+    "classes": [
+      "RetrievalStrategy",
+      "TokenCounter",
+      "MemoryManager"
+    ],
+    "function_calls": {
+      "len": 19,
+      "sorted": 4,
+      "str": 5,
+      "max": 2,
+      "set": 5,
+      "ConversationMemory": 1,
+      "sum": 1,
+      "min": 1,
+      "int": 1,
+      "hash": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\folder_debug_demo.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {
+      "print": 18,
+      "open": 2,
+      "FolderDebugger": 1,
+      "enumerate": 1,
+      "input": 1,
+      "max": 1,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\folder_healing_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "handle_task_result",
+      "handle_error",
+      "create_example_project",
+      "run_folder_healing",
+      "display_results",
+      "cleanup"
+    ],
+    "classes": [
+      "FolderHealingDemo"
+    ],
+    "function_calls": {
+      "str": 3,
+      "FolderHealingDemo": 1,
+      "print": 30,
+      "main": 1,
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "PriorityAnalyzerAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "OrchestratorAgent": 1,
+      "Path": 3,
+      "AgentMessage": 1,
+      "open": 8,
+      "enumerate": 3,
+      "int": 1,
+      "input": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\incremental_analyzer_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\incremental_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setup_cache_dir",
+      "analyze_incrementally",
+      "display_high_risk_files",
+      "display_change_history",
+      "analyze_related_files",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "ChangeTracker": 1,
+      "IncrementalGraphBuilder": 1,
+      "EnhancedDependencyAnalyzer": 1,
+      "setup_cache_dir": 1,
+      "analyze_incrementally": 1,
+      "display_high_risk_files": 1,
+      "display_change_history": 1,
+      "main": 1,
+      "len": 4,
+      "sorted": 1,
+      "analyze_related_files": 1,
+      "list": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\incremental_analyzer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "update_hash",
+      "has_changed",
+      "__init__",
+      "load_records",
+      "save_records",
+      "update_record",
+      "has_changed",
+      "get_change_frequency",
+      "get_recently_changed_files",
+      "_get_cache_path",
+      "__init__",
+      "build_graph",
+      "prioritize_analysis",
+      "__init__",
+      "get_change_weighted_impact",
+      "prioritize_files_for_repair",
+      "get_high_risk_files",
+      "get_related_files"
+    ],
+    "classes": [
+      "FileChangeRecord",
+      "ChangeTracker",
+      "IncrementalGraphBuilder",
+      "EnhancedDependencyAnalyzer"
+    ],
+    "function_calls": {
+      "field": 2,
+      "sorted": 5,
+      "Path": 2,
+      "FileChangeRecord": 3,
+      "len": 12,
+      "ChangeTracker": 1,
+      "DependencyGraph": 1,
+      "set": 3,
+      "FileNode": 1,
+      "ThreadPoolExecutor": 1,
+      "as_completed": 1,
+      "min": 3,
+      "open": 2,
+      "super": 5,
+      "list": 1,
+      "str": 5,
+      "any": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\integrated_triangulum_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_integrated_system.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setup_logging",
+      "parse_args",
+      "ensure_directories",
+      "run_demo"
+    ],
+    "classes": [],
+    "function_calls": {
+      "print": 29,
+      "ensure_directories": 1,
+      "TriangulumSystem": 1,
+      "setup_logging": 1,
+      "parse_args": 1,
+      "run_demo": 1,
+      "open": 1,
+      "enumerate": 2,
+      "len": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\scripts\\analyze_code_relationships.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\self_healing_workflow_demo.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\learning_engine_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_enabled_engine.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_sample_bug_file",
+      "create_test_results",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 5,
+      "range": 2,
+      "print": 19,
+      "Path": 2,
+      "main": 1,
+      "open": 2,
+      "LearningEnabledEngine": 1,
+      "enumerate": 1,
+      "create_sample_bug_file": 1,
+      "create_test_results": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_enabled_engine.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "repair_file",
+      "repair_folder",
+      "run_tests",
+      "record_user_feedback",
+      "run_improvement_cycle",
+      "get_learning_report"
+    ],
+    "classes": [
+      "LearningEnabledEngine"
+    ],
+    "function_calls": {
+      "extend_engine_with_events": 1,
+      "LearningManager": 1,
+      "integrate_learning_with_engine": 1,
+      "run_improvement_cycle": 1,
+      "get_learning_report": 1,
+      "super": 3
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_event_extension.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_learning_integration.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\continuous_improvement.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\learning_system_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\replay_buffer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\repair_pattern_extractor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\feedback_processor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\continuous_improvement.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "generate_sample_episode",
+      "generate_sample_test_results",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 2,
+      "Episode": 1,
+      "range": 4,
+      "print": 31,
+      "Path": 2,
+      "main": 1,
+      "TestResult": 1,
+      "ContinuousImprovementSystem": 1,
+      "enumerate": 1,
+      "generate_sample_episode": 1,
+      "generate_sample_test_results": 2,
+      "open": 1,
+      "len": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\replay_buffer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "to_dict",
+      "from_dict",
+      "__init__",
+      "add",
+      "sample",
+      "recent",
+      "stats",
+      "clear",
+      "_save_episode",
+      "_load_from_storage",
+      "save_all"
+    ],
+    "classes": [
+      "Episode",
+      "ReplayBuffer"
+    ],
+    "function_calls": {
+      "asdict": 1,
+      "cls": 1,
+      "deque": 1,
+      "len": 3,
+      "sum": 6,
+      "Path": 2,
+      "list": 4,
+      "int": 1,
+      "open": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\repair_pattern_extractor.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "to_dict",
+      "from_dict",
+      "__init__",
+      "extract_patterns_from_buffer",
+      "get_patterns_for_bug",
+      "create_repair_template",
+      "_adapt_changes_to_context",
+      "_extract_patterns_for_bug_type",
+      "_classify_bug_type",
+      "_classify_bug_from_description",
+      "_load_patterns",
+      "_save_patterns",
+      "get_pattern_stats"
+    ],
+    "classes": [
+      "RepairPattern",
+      "RepairPatternExtractor"
+    ],
+    "function_calls": {
+      "field": 1,
+      "asdict": 1,
+      "cls": 1,
+      "defaultdict": 1,
+      "RepairPattern": 1,
+      "list": 3,
+      "Counter": 1,
+      "len": 7,
+      "Path": 1,
+      "dict": 1,
+      "sum": 2,
+      "set": 2,
+      "enumerate": 1,
+      "min": 1,
+      "max": 1,
+      "open": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\feedback_processor.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "to_dict",
+      "from_dict",
+      "to_dict",
+      "from_dict",
+      "to_dict",
+      "from_dict",
+      "__init__",
+      "add_user_feedback",
+      "add_test_result",
+      "compare_repair",
+      "get_repair_effectiveness",
+      "get_long_term_metrics",
+      "_calculate_trend",
+      "_load_data",
+      "generate_feedback_report"
+    ],
+    "classes": [
+      "UserFeedback",
+      "TestResult",
+      "RepairComparison",
+      "FeedbackProcessor"
+    ],
+    "function_calls": {
+      "field": 1,
+      "asdict": 2,
+      "cls": 3,
+      "RepairComparison": 1,
+      "Path": 1,
+      "sum": 8,
+      "max": 11,
+      "min": 4,
+      "len": 16,
+      "open": 6,
+      "sorted": 1,
+      "int": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\continuous_improvement.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "add_episode",
+      "run_improvement_cycle",
+      "recommend_repair_patterns",
+      "evaluate_repair",
+      "add_user_feedback",
+      "get_current_parameters",
+      "generate_learning_report",
+      "_update_performance_history",
+      "_save_parameters",
+      "_load_parameters"
+    ],
+    "classes": [
+      "ContinuousImprovementSystem"
+    ],
+    "function_calls": {
+      "ReplayBuffer": 1,
+      "RepairPatternExtractor": 1,
+      "FeedbackProcessor": 1,
+      "TriangulumOptimizer": 1,
+      "UserFeedback": 1,
+      "Path": 1,
+      "len": 6,
+      "TestResult": 2,
+      "float": 1,
+      "sum": 2,
+      "max": 2,
+      "min": 1,
+      "open": 3,
+      "str": 3,
+      "int": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\memory_manager_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\memory_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_sample_conversation",
+      "demonstrate_retrieval_strategies",
+      "demonstrate_token_management",
+      "demonstrate_summarization",
+      "print_messages",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "ConversationMemory": 1,
+      "AgentMessage": 10,
+      "print_messages": 6,
+      "enumerate": 1,
+      "MemoryManager": 1,
+      "create_sample_conversation": 1,
+      "demonstrate_retrieval_strategies": 1,
+      "demonstrate_token_management": 1,
+      "demonstrate_summarization": 1,
+      "main": 1,
+      "len": 8,
+      "str": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\o3_provider_api_test.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\o3_provider.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\base.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_basic_generation",
+      "test_context_management",
+      "test_tool_usage"
+    ],
+    "classes": [],
+    "function_calls": {
+      "O3Provider": 3,
+      "Tool": 2,
+      "isinstance": 1,
+      "test_basic_generation": 1,
+      "test_context_management": 1,
+      "test_tool_usage": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\o3_provider.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "to_dict",
+      "__init__",
+      "get_model_config",
+      "prepare_system_prompt",
+      "optimize_messages",
+      "_api_request_with_backoff",
+      "generate",
+      "_generate_non_stream_enhanced",
+      "_generate_stream_enhanced",
+      "generate_with_tools_enhanced",
+      "save_context",
+      "get_context",
+      "get_statistics",
+      "is_available",
+      "generate_response"
+    ],
+    "classes": [
+      "AgentRole",
+      "ModelConfig",
+      "O3Provider"
+    ],
+    "function_calls": {
+      "ModelConfig": 6,
+      "sum": 1,
+      "reversed": 1,
+      "isinstance": 6,
+      "len": 5,
+      "LLMResponse": 6,
+      "super": 1,
+      "AgentRole": 3,
+      "hasattr": 1,
+      "ToolCall": 1,
+      "str": 13,
+      "type": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\base.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__post_init__",
+      "__post_init__",
+      "__post_init__",
+      "__init__",
+      "is_available",
+      "generate_response",
+      "configure",
+      "get_provider_info",
+      "shutdown"
+    ],
+    "classes": [
+      "LLMResponse",
+      "Tool",
+      "ToolCall",
+      "LLMProvider",
+      "BaseProvider"
+    ],
+    "function_calls": {
+      "str": 1,
+      "list": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\o3_provider_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\o3_provider.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "demonstrate_role_based_configuration",
+      "demonstrate_context_management",
+      "demonstrate_api_features",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "main": 1,
+      "O3Provider": 7,
+      "demonstrate_role_based_configuration": 1,
+      "demonstrate_context_management": 1,
+      "demonstrate_api_features": 1,
+      "len": 3,
+      "str": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\quantum_acceleration_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\entanglement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\parallelization.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_sample_dependency_graph",
+      "analyze_real_dependencies",
+      "simulate_bugs",
+      "simulate_repair",
+      "demo_quantum_entanglement",
+      "demo_quantum_parallelization",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "DependencyGraph": 1,
+      "CodeRelationshipAnalyzer": 1,
+      "min": 3,
+      "max": 1,
+      "QuantumBugSimulator": 1,
+      "QuantumParallelizer": 3,
+      "sum": 3,
+      "simulate_bugs": 1,
+      "demo_quantum_entanglement": 1,
+      "demo_quantum_parallelization": 1,
+      "main": 1,
+      "FileNode": 1,
+      "len": 16,
+      "DependencyMetadata": 2,
+      "range": 1,
+      "sorted": 1,
+      "analyze_real_dependencies": 1,
+      "create_sample_dependency_graph": 1,
+      "simulate_repair": 3,
+      "Path": 2,
+      "list": 2,
+      "round": 1,
+      "DependencyEdge": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\quantum_acceleration_simple_demo.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\entanglement.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__post_init__",
+      "add_component",
+      "set_entanglement",
+      "apply_hadamard",
+      "normalize",
+      "measure",
+      "get_entanglement_map",
+      "__init__",
+      "initialize_from_graph",
+      "calculate_bug_probabilities",
+      "simulate_repairs",
+      "_apply_repair_operation",
+      "_calculate_repair_success",
+      "get_optimal_repair_strategy"
+    ],
+    "classes": [
+      "QuantumState",
+      "EntangledState",
+      "QuantumBugSimulator"
+    ],
+    "function_calls": {
+      "field": 2,
+      "len": 9,
+      "range": 7,
+      "EntangledState": 3,
+      "enumerate": 2,
+      "max": 2,
+      "TriangulumError": 4,
+      "sum": 1,
+      "min": 1,
+      "hasattr": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\parallelization.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "parallel_repair_example",
+      "__init__",
+      "set_dependency_graph",
+      "add_task",
+      "compute_repair_strategies",
+      "prioritize_tasks",
+      "_adjust_priorities_quantum",
+      "execute_parallel_repairs"
+    ],
+    "classes": [
+      "ParallelizationMode",
+      "RepairTask",
+      "QuantumParallelizer"
+    ],
+    "function_calls": {
+      "field": 2,
+      "RepairTask": 1,
+      "EntangledState": 2,
+      "enumerate": 4,
+      "range": 2,
+      "QuantumBugSimulator": 1,
+      "TriangulumError": 1,
+      "sum": 1,
+      "ThreadPoolExecutor": 1,
+      "as_completed": 1,
+      "max": 1,
+      "len": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "from_extension",
+      "to_dict",
+      "from_dict",
+      "__post_init__",
+      "update_hash",
+      "has_changed",
+      "to_dict",
+      "from_dict",
+      "__init__",
+      "add_node",
+      "add_edge",
+      "get_node",
+      "get_edge",
+      "get_outgoing_edges",
+      "get_incoming_edges",
+      "remove_node",
+      "has_path",
+      "find_cycles",
+      "get_subgraph",
+      "transitive_dependencies",
+      "transitive_dependents",
+      "to_dict",
+      "from_dict",
+      "to_json",
+      "from_json",
+      "__len__",
+      "__contains__",
+      "__iter__",
+      "nodes",
+      "edges",
+      "dfs"
+    ],
+    "classes": [
+      "DependencyType",
+      "LanguageType",
+      "DependencyMetadata",
+      "FileNode",
+      "DependencyEdge",
+      "DependencyGraph"
+    ],
+    "function_calls": {
+      "auto": 15,
+      "field": 5,
+      "cls": 3,
+      "list": 2,
+      "set": 9,
+      "DependencyGraph": 1,
+      "len": 1,
+      "iter": 2,
+      "ValueError": 1,
+      "dfs": 2,
+      "Path": 6,
+      "DependencyEdge": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\quantum_acceleration_simple_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\entanglement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\parallelization.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "simulate_repair",
+      "create_sample_graph",
+      "demo_quantum_entanglement",
+      "demo_quantum_parallelization",
+      "main",
+      "__init__",
+      "add_node",
+      "add_edge",
+      "get_all_nodes",
+      "get_all_edges",
+      "get_connected_nodes",
+      "__init__",
+      "initialize_from_graph",
+      "calculate_bug_probabilities",
+      "simulate_repairs",
+      "get_optimal_repair_strategy",
+      "__init__",
+      "set_dependency_graph",
+      "add_task",
+      "compute_repair_strategies",
+      "prioritize_tasks",
+      "execute_parallel_repairs"
+    ],
+    "classes": [
+      "SimpleGraph",
+      "SimpleQuantumBugSimulator",
+      "SimpleQuantumParallelizer"
+    ],
+    "function_calls": {
+      "str": 1,
+      "max": 3,
+      "SimpleGraph": 1,
+      "SimpleQuantumBugSimulator": 1,
+      "SimpleQuantumParallelizer": 3,
+      "sum": 4,
+      "create_sample_graph": 1,
+      "demo_quantum_entanglement": 1,
+      "demo_quantum_parallelization": 1,
+      "main": 1,
+      "list": 1,
+      "EntangledState": 2,
+      "range": 5,
+      "enumerate": 3,
+      "RepairTask": 1,
+      "min": 2,
+      "sorted": 1,
+      "ValueError": 2,
+      "repair_function": 1,
+      "simulate_repair": 3,
+      "Path": 1,
+      "len": 14
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\relationship_analyst_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "analyze_codebase",
+      "display_central_files",
+      "display_cycles",
+      "suggest_repair_priorities",
+      "analyze_specific_file",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "enumerate": 1,
+      "RelationshipAnalystAgent": 1,
+      "analyze_codebase": 1,
+      "display_central_files": 1,
+      "display_cycles": 1,
+      "suggest_repair_priorities": 1,
+      "analyze_specific_file": 1,
+      "main": 1,
+      "len": 12,
+      "sorted": 6,
+      "list": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\self_healing_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\repair.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\test_runner.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\relationship_context_provider.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "setup_project",
+      "analyze_code_relationships",
+      "run_tests",
+      "fix_bug",
+      "verify_fix",
+      "cleanup",
+      "run_demo"
+    ],
+    "classes": [
+      "SelfHealingDemo"
+    ],
+    "function_calls": {
+      "print": 7,
+      "SelfHealingDemo": 1,
+      "CodeRelationshipAnalyzer": 1,
+      "RelationshipContextProvider": 1,
+      "TestRunner": 1,
+      "PatcherAgent": 1,
+      "open": 7,
+      "enumerate": 1,
+      "len": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\self_healing_workflow_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "setup_message_handlers",
+      "handle_task_result",
+      "handle_error",
+      "create_example_files",
+      "run_demo",
+      "detect_bugs",
+      "analyze_relationships",
+      "formulate_strategy",
+      "implement_fix",
+      "verify_fix",
+      "show_summary"
+    ],
+    "classes": [
+      "SelfHealingDemo"
+    ],
+    "function_calls": {
+      "str": 4,
+      "SelfHealingDemo": 1,
+      "main": 1,
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "Path": 2,
+      "AgentMessage": 6,
+      "all": 1,
+      "open": 4,
+      "enumerate": 6,
+      "len": 5
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\simple_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py"
+    ],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "print": 26,
+      "TriangulumEngine": 1,
+      "EngineMonitor": 1,
+      "MetricsCollector": 1,
+      "AutoGenCoordinator": 1,
+      "Path": 2,
+      "range": 1,
+      "BugState": 1,
+      "main": 1,
+      "open": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_triangulum_engine",
+      "TriangulumEngine"
+    ],
+    "classes": [],
+    "function_calls": {
+      "get_triangulum_engine": 1,
+      "engine_cls": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\strategy_agent_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "create_example_files",
+      "detect_bugs",
+      "formulate_strategies",
+      "evaluate_strategies",
+      "demonstrate_message_based_communication",
+      "main",
+      "custom_publish",
+      "__init__",
+      "handle_message"
+    ],
+    "classes": [
+      "MessageHandler"
+    ],
+    "function_calls": {
+      "str": 5,
+      "Path": 2,
+      "MessageBus": 1,
+      "MessageHandler": 1,
+      "AgentMessage": 2,
+      "create_example_files": 1,
+      "BugDetectorAgent": 1,
+      "StrategyAgent": 1,
+      "detect_bugs": 1,
+      "formulate_strategies": 1,
+      "evaluate_strategies": 1,
+      "demonstrate_message_based_communication": 1,
+      "main": 1,
+      "open": 6,
+      "list": 1,
+      "original_publish": 1,
+      "enumerate": 5,
+      "len": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\thought_chain_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "build_reasoning_chain",
+      "demonstrate_traversal",
+      "demonstrate_searching",
+      "build_alternative_chain",
+      "demonstrate_chain_merging",
+      "demonstrate_chain_validation",
+      "demonstrate_serialization",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "ThoughtChain": 2,
+      "ChainNode": 16,
+      "enumerate": 11,
+      "len": 16,
+      "list": 7,
+      "set": 2,
+      "build_reasoning_chain": 1,
+      "demonstrate_traversal": 1,
+      "demonstrate_searching": 1,
+      "build_alternative_chain": 1,
+      "demonstrate_chain_merging": 1,
+      "demonstrate_chain_validation": 1,
+      "demonstrate_serialization": 1,
+      "main": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\examples\\thought_chain_manager_demo.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setup_storage",
+      "demo_creating_chains",
+      "demo_building_bug_investigation",
+      "demo_building_feature_design",
+      "demo_searching_thoughts",
+      "demo_finding_related_thoughts",
+      "demo_merging_chains",
+      "demo_persistence",
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "Path": 1,
+      "enumerate": 9,
+      "list": 5,
+      "ThoughtChainManager": 3,
+      "main": 1,
+      "len": 24,
+      "setup_storage": 1,
+      "demo_creating_chains": 1,
+      "demo_building_bug_investigation": 1,
+      "demo_building_feature_design": 1,
+      "demo_searching_thoughts": 1,
+      "demo_finding_related_thoughts": 1,
+      "demo_merging_chains": 1,
+      "demo_persistence": 1,
+      "str": 2,
+      "locals": 1,
+      "next": 2,
+      "iter": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\division.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "divide",
+      "calculate_ratio",
+      "safe_calculate_ratio"
+    ],
+    "classes": [],
+    "function_calls": {
+      "divide": 2,
+      "float": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\exception_swallowing_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "process_data",
+      "complex_calculation"
+    ],
+    "classes": [],
+    "function_calls": {
+      "complex_calculation": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\hardcoded_credentials_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "connect_to_database"
+    ],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\null_pointer_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_user_name",
+      "process_request",
+      "get_user_from_request"
+    ],
+    "classes": [],
+    "function_calls": {
+      "get_user_from_request": 1,
+      "get_user_name": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\resource_leak_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "read_data_from_file",
+      "write_data_to_file"
+    ],
+    "classes": [],
+    "function_calls": {
+      "open": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\example_files\\sql_injection_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_user_by_id",
+      "search_users"
+    ],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\legacy\\triangulum_adaptive_breakthrough.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "initialize_breakthrough_strategies",
+      "detect_plateau",
+      "select_breakthrough_strategy",
+      "calculate_strategy_score",
+      "analyze_remaining_issues",
+      "implement_breakthrough_strategy",
+      "implement_llm_agent_coordination",
+      "implement_test_generation",
+      "implement_performance_optimization",
+      "implement_documentation_enhancement",
+      "implement_agent_enhancement",
+      "run_adaptive_breakthrough",
+      "save_breakthrough_results"
+    ],
+    "classes": [
+      "BreakthroughStrategy",
+      "TriangulumAdaptiveBreakthrough"
+    ],
+    "function_calls": {
+      "Path": 2,
+      "str": 3,
+      "print": 16,
+      "TriangulumAdaptiveBreakthrough": 1,
+      "exit": 1,
+      "TriangulumContinuousImprovement": 1,
+      "len": 13,
+      "enumerate": 1,
+      "main": 1,
+      "BreakthroughStrategy": 5,
+      "max": 1,
+      "min": 1,
+      "list": 4,
+      "ImprovementCycle": 1,
+      "range": 1,
+      "open": 6
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\legacy\\triangulum_comprehensive_self_assessment.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__post_init__",
+      "__init__",
+      "_load_current_metrics",
+      "_load_assessment_history",
+      "_load_or_create_feature_map",
+      "_analyze_triangulum_features",
+      "_assess_feature_status",
+      "conduct_comprehensive_assessment",
+      "_assess_agility",
+      "_assess_bug_freedom",
+      "_assess_efficiency",
+      "_assess_self_awareness",
+      "_assess_operational_functionality",
+      "_assess_feature_completeness",
+      "_measure_response_time",
+      "_measure_adaptation_capability",
+      "_measure_learning_speed",
+      "_measure_flexibility",
+      "_perform_static_analysis",
+      "_analyze_test_coverage",
+      "_measure_resource_efficiency",
+      "_measure_processing_speed",
+      "_measure_memory_efficiency",
+      "_assess_algorithm_efficiency",
+      "_assess_state_monitoring",
+      "_assess_self_reflection",
+      "_assess_introspection",
+      "_assess_meta_cognition",
+      "_assess_self_modification",
+      "_test_core_engine",
+      "_test_agent_system",
+      "_test_provider_system",
+      "_test_monitoring_system",
+      "_test_tooling_system",
+      "_calculate_assessment_confidence",
+      "_generate_assessment_reasoning",
+      "_generate_improvement_suggestions",
+      "_save_current_metrics",
+      "_add_to_history",
+      "_save_feature_map",
+      "generate_comprehensive_report",
+      "generate_detailed_improvement_plan",
+      "_analyze_actual_code_usage",
+      "_analyze_import_usage",
+      "_analyze_function_usage",
+      "_identify_dormant_modules",
+      "_generate_specific_improvement_tasks",
+      "_calculate_overall_score",
+      "save_detailed_improvement_plan"
+    ],
+    "classes": [
+      "ComprehensiveMetrics",
+      "TriangulumComprehensiveAssessment"
+    ],
+    "function_calls": {
+      "TriangulumComprehensiveAssessment": 1,
+      "print": 5,
+      "main": 1,
+      "Path": 1,
+      "ComprehensiveMetrics": 3,
+      "len": 21,
+      "sum": 9,
+      "max": 2,
+      "sorted": 2,
+      "enumerate": 2,
+      "list": 7,
+      "set": 1,
+      "str": 4,
+      "min": 3,
+      "open": 12,
+      "asdict": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\legacy\\triangulum_final_breakthrough.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "create_quantum_optimizer",
+      "create_meta_agent_enhancer",
+      "create_emergent_behavior_synthesizer",
+      "create_ultimate_health_booster",
+      "run_final_breakthrough",
+      "save_breakthrough_results"
+    ],
+    "classes": [
+      "TriangulumFinalBreakthrough"
+    ],
+    "function_calls": {
+      "Path": 2,
+      "str": 1,
+      "print": 19,
+      "TriangulumFinalBreakthrough": 1,
+      "enumerate": 1,
+      "exit": 1,
+      "len": 1,
+      "main": 1,
+      "min": 5,
+      "open": 5
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\legacy\\triangulum_ultimate_breakthrough.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\scripts\\analyze_code_relationships.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "parse_args",
+      "main",
+      "print_graph_stats"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "parse_args": 1,
+      "CodeRelationshipAnalyzer": 1,
+      "print": 9,
+      "sorted": 1,
+      "exit": 1,
+      "main": 1,
+      "Path": 1,
+      "len": 5
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_factory",
+      "create_provider",
+      "get_best_provider",
+      "get_provider",
+      "__init__",
+      "register_provider",
+      "create_provider",
+      "get_or_create_provider",
+      "configure_provider",
+      "list_available_providers",
+      "list_active_providers",
+      "get_provider_info",
+      "discover_providers",
+      "shutdown_provider",
+      "shutdown_all_providers",
+      "get_best_provider",
+      "load_config_file",
+      "save_config_file"
+    ],
+    "classes": [
+      "ProviderFactory"
+    ],
+    "function_calls": {
+      "get_factory": 3,
+      "list": 4,
+      "hasattr": 2,
+      "Path": 1,
+      "ProviderFactory": 1,
+      "ValueError": 1,
+      "provider_class": 1,
+      "open": 2,
+      "str": 2,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\scripts\\run_benchmarks.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\llm_config.py"
+    ],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli.py"
+    ],
+    "functions": [
+      "load_prompts",
+      "run_benchmark",
+      "generate_report"
+    ],
+    "classes": [],
+    "function_calls": {
+      "load_prompts": 1,
+      "print": 5,
+      "run_benchmark": 1,
+      "open": 2,
+      "generate_report": 1,
+      "Path": 2,
+      "get_provider": 1,
+      "round": 2,
+      "type": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\benchmarks\\benchmark_folder_healing.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\spec\\model_checker.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\llm_config.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_provider_config",
+      "get_agent_config"
+    ],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\strategy_example_files\\exception_swallowing_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "process_data",
+      "transform_data"
+    ],
+    "classes": [],
+    "function_calls": {
+      "transform_data": 1,
+      "isinstance": 1,
+      "TypeError": 1,
+      "ValueError": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\strategy_example_files\\null_pointer_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_user_profile",
+      "get_user_from_database",
+      "__init__"
+    ],
+    "classes": [
+      "User"
+    ],
+    "function_calls": {
+      "get_user_from_database": 1,
+      "User": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\strategy_example_files\\resource_leak_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "save_log_entry",
+      "read_configuration"
+    ],
+    "classes": [],
+    "function_calls": {
+      "open": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\strategy_example_files\\sql_injection_example.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "search_users",
+      "get_user_by_id",
+      "db_execute"
+    ],
+    "classes": [],
+    "function_calls": {
+      "db_execute": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\benchmarks\\benchmark_folder_healing.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "main",
+      "__init__",
+      "start_stage",
+      "end_stage",
+      "complete",
+      "_get_memory_usage",
+      "_get_cpu_usage",
+      "to_dict",
+      "__init__",
+      "setup_agents",
+      "create_test_project",
+      "_generate_file_with_bugs",
+      "run_benchmark",
+      "run_all_benchmarks",
+      "save_results",
+      "generate_reports",
+      "handle_result"
+    ],
+    "classes": [
+      "BenchmarkResult",
+      "FolderHealingBenchmark"
+    ],
+    "function_calls": {
+      "str": 4,
+      "FolderHealingBenchmark": 1,
+      "main": 1,
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "PriorityAnalyzerAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "OrchestratorAgent": 1,
+      "range": 4,
+      "ValueError": 1,
+      "len": 8,
+      "open": 5,
+      "BenchmarkResult": 1,
+      "list": 1,
+      "Path": 1,
+      "AgentMessage": 1,
+      "max": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\benchmarks\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\edge_cases\\test_folder_healing_edge_cases.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "_handle_task_result",
+      "_handle_error",
+      "_wait_for_result",
+      "_run_orchestrator",
+      "test_empty_folder",
+      "test_very_large_file",
+      "test_unusual_encoding",
+      "test_corrupted_file",
+      "test_circular_dependencies",
+      "test_unusual_file_extensions",
+      "test_mixed_languages",
+      "test_very_deep_directory_structure",
+      "test_many_small_files"
+    ],
+    "classes": [
+      "TestFolderHealingEdgeCases"
+    ],
+    "function_calls": {
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "PriorityAnalyzerAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "OrchestratorAgent": 1,
+      "print": 1,
+      "AgentMessage": 1,
+      "enumerate": 1,
+      "range": 4,
+      "open": 12,
+      "len": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\edge_cases\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\functional\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\test_dependency_analysis.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "create_sample_project",
+      "test_full_project_analysis",
+      "test_cached_graph_loading",
+      "test_incremental_analysis",
+      "test_prioritization",
+      "test_impact_analysis"
+    ],
+    "classes": [
+      "TestIntegratedDependencyAnalysis"
+    ],
+    "function_calls": {
+      "DependencyGraphBuilder": 1,
+      "DependencyAnalyzer": 5,
+      "sorted": 1,
+      "next": 1,
+      "open": 8,
+      "len": 8,
+      "enumerate": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\test_folder_healing.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "_handle_task_result",
+      "_handle_error",
+      "_create_test_project",
+      "test_folder_healing_dry_run",
+      "test_orchestrator_real_healing_simulation",
+      "mock_heal_file",
+      "mock_run_tests"
+    ],
+    "classes": [
+      "TestFolderHealing"
+    ],
+    "function_calls": {
+      "MessageBus": 1,
+      "BugDetectorAgent": 1,
+      "RelationshipAnalystAgent": 1,
+      "PriorityAnalyzerAgent": 1,
+      "StrategyAgent": 1,
+      "ImplementationAgent": 1,
+      "VerificationAgent": 1,
+      "OrchestratorAgent": 1,
+      "print": 1,
+      "AgentMessage": 2,
+      "open": 6,
+      "len": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\test_learning_integration.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_enabled_engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_learning_integration.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_event_extension.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "repair_file",
+      "repair_folder",
+      "get_status",
+      "setUp",
+      "tearDown",
+      "test_integrate_learning_with_engine",
+      "test_engine_events",
+      "test_run_improvement_cycle",
+      "test_get_learning_report",
+      "setUp",
+      "tearDown",
+      "test_initialization",
+      "test_repair_file",
+      "test_run_tests",
+      "test_record_user_feedback"
+    ],
+    "classes": [
+      "MockEngine",
+      "TestEngineLearningIntegration",
+      "TestLearningEnabledEngine"
+    ],
+    "function_calls": {
+      "str": 1,
+      "MockEngine": 1,
+      "LearningManager": 4,
+      "integrate_learning_with_engine": 4,
+      "run_improvement_cycle": 1,
+      "get_learning_report": 1,
+      "LearningEnabledEngine": 1,
+      "hasattr": 3,
+      "super": 1,
+      "Path": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_learning_integration.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\continuous_improvement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_enabled_engine.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_learning_integration.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "integrate_learning_with_engine",
+      "_handle_repair_started",
+      "_handle_repair_completed",
+      "_handle_test_run_completed",
+      "_handle_user_feedback",
+      "_apply_learned_parameters",
+      "run_improvement_cycle",
+      "get_learning_report"
+    ],
+    "classes": [],
+    "function_calls": {
+      "_apply_learned_parameters": 2,
+      "int": 2,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_event_extension.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "extend_engine_with_events",
+      "__init__",
+      "on",
+      "off",
+      "emit",
+      "__init__"
+    ],
+    "classes": [
+      "EventHandlerMixin",
+      "EventEnabledEngine"
+    ],
+    "function_calls": {
+      "handler": 1,
+      "hasattr": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_manager.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "record_repair_episode",
+      "record_user_feedback",
+      "record_test_results",
+      "get_repair_recommendations",
+      "run_improvement_cycle",
+      "get_current_parameters",
+      "generate_report"
+    ],
+    "classes": [
+      "LearningManager"
+    ],
+    "function_calls": {
+      "ContinuousImprovementSystem": 1,
+      "Episode": 1,
+      "Path": 1,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\test_triangulum_system.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_integrated_system.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "create_test_files",
+      "test_analyze_code_relationships",
+      "test_diagnose_system",
+      "test_self_heal",
+      "test_run_with_goal",
+      "test_shutdown",
+      "test_integration_all_components"
+    ],
+    "classes": [
+      "TestTriangulumSystem"
+    ],
+    "function_calls": {
+      "patch": 36,
+      "MagicMock": 9,
+      "TriangulumSystem": 7,
+      "open": 5
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\integration\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_agent_message.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_create_message",
+      "test_create_message_with_enhanced_fields",
+      "test_message_validation",
+      "test_serialization",
+      "test_create_response",
+      "test_backward_compatibility",
+      "setUp",
+      "test_add_message",
+      "test_get_message_by_id",
+      "test_get_messages_by_type",
+      "test_get_messages_by_sender",
+      "test_get_message_chain",
+      "test_serialization",
+      "setUp",
+      "test_direct_message_delivery",
+      "test_broadcast_message",
+      "test_message_type_filtering",
+      "test_unsubscribe",
+      "test_conversation_management"
+    ],
+    "classes": [
+      "TestAgentMessage",
+      "TestConversationMemory",
+      "TestMessageBus"
+    ],
+    "function_calls": {
+      "AgentMessage": 24,
+      "ConversationMemory": 1,
+      "MessageBus": 1,
+      "MagicMock": 3,
+      "len": 15
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_base_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\base_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\agent_factory.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_handle_task_request",
+      "_handle_query",
+      "setUp",
+      "test_initialization",
+      "test_register_with_message_bus",
+      "test_initialize",
+      "test_shutdown",
+      "test_handle_message_task_request",
+      "test_handle_message_query",
+      "test_handle_message_error",
+      "test_handle_message_status",
+      "test_send_message",
+      "test_send_response",
+      "test_broadcast_status",
+      "test_no_message_bus",
+      "setUp",
+      "test_register_agent_type",
+      "test_create_agent",
+      "test_create_agent_unregistered_type",
+      "test_create_agent_initialization_failure",
+      "test_get_agent",
+      "test_get_agents_by_type",
+      "test_shutdown_agent",
+      "test_shutdown_all_agents",
+      "test_shutdown_agent_exception"
+    ],
+    "classes": [
+      "TestAgent",
+      "TestBaseAgent",
+      "TestAgentFactory"
+    ],
+    "function_calls": {
+      "MagicMock": 7,
+      "TestAgent": 3,
+      "AgentMessage": 5,
+      "AgentFactory": 1,
+      "len": 5,
+      "patch": 7,
+      "super": 1,
+      "Exception": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_bug_detector_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "create_test_file",
+      "test_bug_pattern_management",
+      "test_detect_null_reference_bug",
+      "test_detect_resource_leak_bug",
+      "test_detect_sql_injection_bug",
+      "test_detect_hardcoded_credentials_bug",
+      "test_detect_exception_swallowing_bug",
+      "test_analyze_test_failure",
+      "test_infer_language_from_path",
+      "test_extract_error_type",
+      "test_extract_error_location",
+      "test_handle_task_request_detect_bugs",
+      "test_handle_query_get_bug_patterns",
+      "test_error_handling"
+    ],
+    "classes": [
+      "TestBugDetectorAgent"
+    ],
+    "function_calls": {
+      "MagicMock": 1,
+      "BugDetectorAgent": 1,
+      "AgentMessage": 3,
+      "open": 1,
+      "len": 8
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_chain_node.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_thought_types",
+      "test_relationship_types",
+      "setUp",
+      "test_initialization",
+      "test_validation",
+      "test_relationship_validation",
+      "test_add_parent",
+      "test_add_child",
+      "test_remove_parent",
+      "test_remove_child",
+      "test_to_dict",
+      "test_from_dict",
+      "test_serialization_roundtrip",
+      "test_get_relationship_to",
+      "test_is_parent_of",
+      "test_is_child_of",
+      "test_update_content",
+      "test_update_confidence"
+    ],
+    "classes": [
+      "TestThoughtType",
+      "TestRelationshipType",
+      "TestChainNode"
+    ],
+    "function_calls": {
+      "ChainNode": 10,
+      "set": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_code_relationship_analyzer.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "create_test_files",
+      "test_initialization",
+      "test_collect_python_files",
+      "test_build_module_map",
+      "test_analyze_file",
+      "test_analyze_directory",
+      "test_save_and_load_relationships",
+      "test_analyze_file_with_mock"
+    ],
+    "classes": [
+      "TestCodeRelationshipAnalyzer"
+    ],
+    "function_calls": {
+      "patch": 2,
+      "CodeRelationshipAnalyzer": 2,
+      "open": 3,
+      "len": 2,
+      "MagicMock": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_coordinator.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\coordinator.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_coordinator_initialization",
+      "test_dispatch_task",
+      "test_dispatch_task_unknown_agent"
+    ],
+    "classes": [
+      "TestCoordinator"
+    ],
+    "function_calls": {
+      "MagicMock": 4,
+      "Coordinator": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\coordinator.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\test_simple_bug.py"
+    ],
+    "functions": [
+      "__init__",
+      "dispatch_task",
+      "register_agent",
+      "broadcast_message"
+    ],
+    "classes": [
+      "Coordinator"
+    ],
+    "function_calls": {
+      "KeyError": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_dependency_graph.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "parse_file",
+      "test_file_node",
+      "test_dependency_metadata",
+      "test_dependency_graph_basic",
+      "test_dependency_graph_path_traversal",
+      "test_dependency_graph_cycles",
+      "test_dependency_graph_serialization",
+      "setUp",
+      "tearDown",
+      "test_parser_registry",
+      "test_python_parser_simple",
+      "test_javascript_parser_simple",
+      "setUp",
+      "tearDown",
+      "create_test_project",
+      "test_build_graph_with_mocks",
+      "test_incremental_build",
+      "setUp",
+      "test_centrality_metrics",
+      "test_find_cycles",
+      "test_prioritize_files",
+      "test_most_central_files",
+      "test_impact_score"
+    ],
+    "classes": [
+      "MockDependencyParser",
+      "TestGraphModels",
+      "TestDependencyParsers",
+      "TestDependencyGraphBuilder",
+      "TestDependencyAnalyzer"
+    ],
+    "function_calls": {
+      "FileNode": 7,
+      "DependencyMetadata": 8,
+      "DependencyGraph": 5,
+      "range": 4,
+      "ParserRegistry": 2,
+      "MockDependencyParser": 2,
+      "PythonDependencyParser": 1,
+      "JavaScriptDependencyParser": 1,
+      "DependencyGraphBuilder": 1,
+      "DependencyAnalyzer": 1,
+      "set": 2,
+      "len": 13,
+      "open": 14,
+      "super": 1,
+      "any": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_engine.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_engine_initialization",
+      "test_run_loads_goals",
+      "test_process_goal_calls_phases",
+      "import_mock",
+      "import_mock"
+    ],
+    "classes": [
+      "TestTriangulumEngine"
+    ],
+    "function_calls": {
+      "patch": 5,
+      "MagicMock": 6,
+      "original_import": 2,
+      "TriangulumEngine": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_enhanced_message_bus.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\enhanced_message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "test_subscribe_to_topic",
+      "test_unsubscribe_from_topic",
+      "test_publish_to_topic",
+      "test_publish_to_topic_with_filter",
+      "test_publish_with_delivery_guarantee",
+      "test_message_filtering",
+      "test_wait_for_delivery",
+      "test_multiple_topics",
+      "filter_func",
+      "delayed_callback"
+    ],
+    "classes": [
+      "TestEnhancedMessageBus"
+    ],
+    "function_calls": {
+      "EnhancedMessageBus": 1,
+      "MagicMock": 11,
+      "AgentMessage": 8,
+      "len": 4,
+      "Exception": 1,
+      "list": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_feedback_collector.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\feedback.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "test_initialization",
+      "test_record_feedback",
+      "test_get_feedback",
+      "test_get_all_feedback",
+      "test_mark_as_processed",
+      "test_record_action",
+      "test_analyze_feedback",
+      "test_export_feedback_json",
+      "test_delete_feedback"
+    ],
+    "classes": [
+      "TestFeedbackCollector"
+    ],
+    "function_calls": {
+      "patch": 1,
+      "FeedbackCollector": 1,
+      "mock_file": 1,
+      "len": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_implementation_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\implementation_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_determine_language",
+      "test_extract_variable_from_null_pointer",
+      "test_extract_variable_assignment",
+      "test_extract_exception_type",
+      "test_extract_function_params",
+      "test_implement_strategy_null_pointer",
+      "test_implement_strategy_resource_leak",
+      "test_implement_strategy_exception_swallowing",
+      "test_apply_patch_changes_replace_lines",
+      "test_apply_patch_changes_insert_lines",
+      "test_apply_patch_changes_delete_lines",
+      "test_apply_implementation",
+      "test_handle_task_request_implement_strategy",
+      "test_handle_task_request_apply_implementation",
+      "test_handle_query_get_implementation_status"
+    ],
+    "classes": [
+      "TestImplementationAgent"
+    ],
+    "function_calls": {
+      "patch": 6,
+      "MagicMock": 1,
+      "ImplementationAgent": 1,
+      "AgentMessage": 3,
+      "len": 6,
+      "open": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_learning_components.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\replay_buffer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\repair_pattern_extractor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\feedback_processor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\continuous_improvement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\learning_manager.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_event_extension.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "repair_file",
+      "repair_folder",
+      "get_status",
+      "setUp",
+      "tearDown",
+      "test_add_episode",
+      "test_sample",
+      "test_stats",
+      "setUp",
+      "tearDown",
+      "test_classify_bug_from_description",
+      "test_get_patterns_for_bug",
+      "setUp",
+      "tearDown",
+      "test_add_user_feedback",
+      "test_compare_repair",
+      "setUp",
+      "tearDown",
+      "test_add_episode",
+      "test_run_improvement_cycle_insufficient_data",
+      "test_get_current_parameters",
+      "setUp",
+      "tearDown",
+      "test_record_repair_episode",
+      "test_get_repair_recommendations",
+      "test_on_off_emit",
+      "test_extend_engine_with_events"
+    ],
+    "classes": [
+      "MockEngine",
+      "TestReplayBuffer",
+      "TestRepairPatternExtractor",
+      "TestFeedbackProcessor",
+      "TestContinuousImprovementSystem",
+      "TestLearningManager",
+      "TestEventHandlerMixin",
+      "TestEngineExtension"
+    ],
+    "function_calls": {
+      "str": 1,
+      "ReplayBuffer": 1,
+      "Episode": 5,
+      "range": 1,
+      "RepairPatternExtractor": 1,
+      "RepairPattern": 1,
+      "FeedbackProcessor": 1,
+      "UserFeedback": 1,
+      "ContinuousImprovementSystem": 1,
+      "LearningManager": 1,
+      "EventHandlerMixin": 1,
+      "extend_engine_with_events": 1,
+      "EventEnabledEngine": 1,
+      "len": 8,
+      "TestResult": 4,
+      "hasattr": 3,
+      "Path": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine_event_extension.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_memory_manager.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\memory_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_count_tokens",
+      "test_count_message_tokens",
+      "setUp",
+      "_create_test_conversation",
+      "test_initialization",
+      "test_get_context_recency",
+      "test_get_context_thread",
+      "test_get_context_token_limit",
+      "test_get_context_message_limit",
+      "test_get_context_filter_types",
+      "test_get_context_relevance",
+      "test_get_context_round_robin",
+      "test_get_context_type_priority",
+      "test_summarize_conversation",
+      "test_prune_conversation",
+      "test_get_token_count",
+      "test_hybrid_strategy",
+      "test_fallback_to_recency",
+      "mock_token_count"
+    ],
+    "classes": [
+      "TestTokenCounter",
+      "TestMemoryManager"
+    ],
+    "function_calls": {
+      "AgentMessage": 6,
+      "MemoryManager": 1,
+      "ConversationMemory": 1,
+      "len": 12,
+      "set": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_message_schema_validator.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_schema_validator.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_load_schema",
+      "test_validate_valid_message",
+      "test_validate_message_with_enhanced_fields",
+      "test_validate_invalid_message_type",
+      "test_validate_missing_required_content",
+      "test_generate_message_template",
+      "test_get_schema_version",
+      "test_get_required_fields",
+      "test_fallback_schema_on_load_failure"
+    ],
+    "classes": [
+      "TestMessageSchemaValidator"
+    ],
+    "function_calls": {
+      "MessageSchemaValidator": 3,
+      "AgentMessage": 5,
+      "len": 1,
+      "patch": 3,
+      "mock_open": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_meta_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\meta_agent.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_meta_agent_initialization",
+      "test_execute_task_happy_path",
+      "decompose_effect"
+    ],
+    "classes": [
+      "TestMetaAgent"
+    ],
+    "function_calls": {
+      "MagicMock": 3,
+      "MetaAgent": 1,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\meta_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "execute_task",
+      "_handle_message",
+      "_send_message",
+      "_send_error_message",
+      "_decompose_task",
+      "_dispatch_tasks",
+      "_execute_sub_task",
+      "report_result",
+      "_synthesize_results",
+      "_respond_to_engine",
+      "_reset"
+    ],
+    "classes": [
+      "MetaAgentState",
+      "MetaAgent"
+    ],
+    "function_calls": {
+      "auto": 6,
+      "str": 2,
+      "AgentMessage": 2,
+      "enumerate": 1,
+      "Exception": 1,
+      "len": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_o3_provider.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\o3_provider.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\base.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_initialization",
+      "test_model_configs",
+      "test_get_model_config",
+      "test_prepare_system_prompt",
+      "test_optimize_messages",
+      "test_context_storage",
+      "test_is_available",
+      "test_generate",
+      "test_generate_with_tools_enhanced",
+      "test_get_statistics"
+    ],
+    "classes": [
+      "TestO3Provider"
+    ],
+    "function_calls": {
+      "patch": 3,
+      "O3Provider": 3,
+      "MagicMock": 8,
+      "Exception": 2,
+      "len": 5,
+      "Tool": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_orchestrator_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "publish",
+      "register_handler",
+      "simulate_response",
+      "setUp",
+      "tearDown",
+      "test_initialization",
+      "test_handle_task_request_file_healing",
+      "test_handle_task_request_folder_healing",
+      "test_execute_workflow_step",
+      "test_orchestrate_file_healing_with_bug",
+      "test_orchestrate_folder_healing",
+      "mock_execute_workflow_step",
+      "mock_execute_folder_analysis_step"
+    ],
+    "classes": [
+      "MockMessageBus",
+      "TestOrchestratorAgent"
+    ],
+    "function_calls": {
+      "AgentMessage": 4,
+      "MockMessageBus": 1,
+      "OrchestratorAgent": 1,
+      "len": 8
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_priority_analyzer_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message_bus.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "publish",
+      "register_handler",
+      "subscribe",
+      "unsubscribe",
+      "setUp",
+      "tearDown",
+      "test_initialization",
+      "test_build_dependency_graph",
+      "test_calculate_centrality_metrics",
+      "test_calculate_prioritization_factors",
+      "test_calculate_priority_score",
+      "test_estimate_business_impact",
+      "test_analyze_priorities",
+      "test_handle_task_request",
+      "test_empty_bugs"
+    ],
+    "classes": [
+      "MockMessageBus",
+      "TestPriorityAnalyzerAgent"
+    ],
+    "function_calls": {
+      "MockMessageBus": 1,
+      "PriorityAnalyzerAgent": 1,
+      "AgentMessage": 1,
+      "len": 8,
+      "min": 1,
+      "open": 1,
+      "list": 2,
+      "max": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_quantum_entanglement.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\entanglement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py"
+    ],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_quantum_parallelization.py"
+    ],
+    "functions": [
+      "__init__",
+      "add_node",
+      "add_edge",
+      "get_all_nodes",
+      "get_all_edges",
+      "test_initialization",
+      "test_add_component",
+      "test_set_entanglement",
+      "test_hadamard_and_measure",
+      "test_get_entanglement_map",
+      "setUp",
+      "test_initialization_from_graph",
+      "test_calculate_bug_probabilities",
+      "test_simulate_repairs",
+      "test_get_optimal_repair_strategy"
+    ],
+    "classes": [
+      "MockDependencyGraph",
+      "TestEntangledState",
+      "TestQuantumBugSimulator"
+    ],
+    "function_calls": {
+      "str": 1,
+      "FileNode": 1,
+      "DependencyMetadata": 1,
+      "DependencyEdge": 1,
+      "EntangledState": 6,
+      "range": 1,
+      "MockDependencyGraph": 1,
+      "QuantumBugSimulator": 1,
+      "len": 11,
+      "abs": 4,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_quantum_parallelization.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\parallelization.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\entanglement.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_quantum_entanglement.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_initialization",
+      "test_set_dependency_graph",
+      "test_add_task",
+      "test_compute_repair_strategies",
+      "test_prioritize_tasks",
+      "test_execute_parallel_repairs",
+      "test_quantum_vs_classical_mode",
+      "test_parallel_repair_example"
+    ],
+    "classes": [
+      "TestQuantumParallelization"
+    ],
+    "function_calls": {
+      "str": 1,
+      "MockDependencyGraph": 1,
+      "QuantumParallelizer": 3,
+      "range": 1,
+      "RepairTask": 1,
+      "parallel_repair_example": 1,
+      "len": 5,
+      "max": 1,
+      "Path": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\parallelization.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_relationship_analyst_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_graph.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "create_test_graph",
+      "create_test_project",
+      "test_analyze_codebase",
+      "test_get_most_central_files",
+      "test_find_cycles",
+      "test_get_file_dependents",
+      "test_get_file_dependencies",
+      "test_prioritize_files_for_repair",
+      "test_get_impacted_files",
+      "test_handle_task_request_analyze_codebase",
+      "test_handle_query_central_files",
+      "test_handle_query_file_dependencies",
+      "test_error_handling",
+      "test_process_message"
+    ],
+    "classes": [
+      "TestRelationshipAnalystAgent"
+    ],
+    "function_calls": {
+      "MagicMock": 1,
+      "RelationshipAnalystAgent": 1,
+      "DependencyGraph": 1,
+      "range": 1,
+      "DependencyMetadata": 1,
+      "DependencyAnalyzer": 1,
+      "AgentMessage": 4,
+      "FileNode": 1,
+      "open": 6,
+      "patch": 1,
+      "len": 11
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_relationship_context_provider.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\relationship_context_provider.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_provider_initialization",
+      "test_load_relationships",
+      "test_get_related_files",
+      "test_get_relationship_context"
+    ],
+    "classes": [
+      "TestRelationshipContextProvider"
+    ],
+    "function_calls": {
+      "patch": 1,
+      "MagicMock": 1,
+      "RelationshipContextProvider": 1,
+      "sorted": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_router.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\router.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_router_initialization",
+      "test_route_code_analysis_task",
+      "test_route_bug_fixing_task",
+      "test_route_refactoring_task",
+      "test_route_unknown_task"
+    ],
+    "classes": [
+      "TestRouter"
+    ],
+    "function_calls": {
+      "MagicMock": 1,
+      "Router": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\router.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "route",
+      "add_keyword_mapping",
+      "get_all_agent_types"
+    ],
+    "classes": [
+      "Router"
+    ],
+    "function_calls": {
+      "list": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_state.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_module_imports",
+      "test_basic_functionality"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_strategy_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\strategy_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_determine_bug_type",
+      "test_formulate_strategy_null_pointer",
+      "test_formulate_strategy_resource_leak",
+      "test_evaluate_strategy_acceptable",
+      "test_evaluate_strategy_unacceptable",
+      "test_extract_variables",
+      "test_handle_task_request_formulate_strategy",
+      "test_handle_query_get_strategy_templates",
+      "test_handle_error_messages",
+      "test_handle_other_message"
+    ],
+    "classes": [
+      "TestStrategyAgent"
+    ],
+    "function_calls": {
+      "MagicMock": 1,
+      "StrategyAgent": 1,
+      "AgentMessage": 4,
+      "len": 6
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_system_monitor.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\system_monitor.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_initialization",
+      "test_check_health",
+      "test_start_stop_monitoring",
+      "test_get_health_status",
+      "test_check_component_health",
+      "test_diagnose_issue",
+      "test_generate_health_report",
+      "test_export_metrics"
+    ],
+    "classes": [
+      "TestSystemMonitor"
+    ],
+    "function_calls": {
+      "patch": 9,
+      "MagicMock": 5,
+      "SystemMonitor": 1,
+      "len": 10,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_thought_chain.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_traversal_orders",
+      "setUp",
+      "test_initialization",
+      "test_add_node",
+      "test_remove_node",
+      "test_get_node",
+      "test_add_relationship",
+      "test_remove_relationship",
+      "test_traverse_depth_first",
+      "test_traverse_breadth_first",
+      "test_traverse_chronological",
+      "test_traverse_by_confidence",
+      "test_find_nodes",
+      "test_find_paths",
+      "filter_evidence"
+    ],
+    "classes": [
+      "TestTraversalOrder",
+      "TestThoughtChain"
+    ],
+    "function_calls": {
+      "ThoughtChain": 3,
+      "ChainNode": 29,
+      "list": 9,
+      "len": 22,
+      "set": 2,
+      "all": 1,
+      "sorted": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_thought_chain_manager.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\chain_node.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\thought_chain_manager.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "tearDown",
+      "test_create_chain",
+      "test_add_thought",
+      "test_get_chain",
+      "test_get_chain_by_name",
+      "test_get_thought",
+      "test_list_chains",
+      "test_get_agent_chains",
+      "test_search_thoughts",
+      "test_find_related_thoughts",
+      "test_merge_chains",
+      "test_delete_chain",
+      "test_validate_all_chains",
+      "test_persistence"
+    ],
+    "classes": [
+      "TestThoughtChainManager"
+    ],
+    "function_calls": {
+      "ThoughtChainManager": 3,
+      "next": 3,
+      "len": 19,
+      "iter": 1,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_transition.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\transition.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_module_imports",
+      "test_basic_functionality"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\transition.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\test_transition.py"
+    ],
+    "functions": [],
+    "classes": [],
+    "function_calls": {
+      "BugState": 8
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\test_verification_agent.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\verification_agent.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\message.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "setUp",
+      "test_determine_language",
+      "test_calculate_confidence",
+      "test_apply_changes",
+      "test_check_basic_python_standards",
+      "test_verify_syntax_python",
+      "test_run_test",
+      "test_find_corresponding_test",
+      "test_create_verification_sandbox",
+      "test_sandbox_cleanup",
+      "test_handle_task_request_verify_implementation",
+      "test_handle_query_get_verification_result",
+      "test_get_verification_result"
+    ],
+    "classes": [
+      "TestVerificationAgent"
+    ],
+    "function_calls": {
+      "patch": 19,
+      "MagicMock": 2,
+      "VerificationAgent": 1,
+      "AgentMessage": 2,
+      "len": 1,
+      "any": 5,
+      "open": 3,
+      "SyntaxError": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\tests\\unit\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\breakthrough_meta_agent.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "apply_meta_agent_breakthrough",
+      "__init__",
+      "enhance_system_health",
+      "generate_meta_improvements"
+    ],
+    "classes": [
+      "BreakthroughMetaAgent"
+    ],
+    "function_calls": {
+      "BreakthroughMetaAgent": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\enhanced_coordinator.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "select_next_agent",
+      "record_state_transition",
+      "_calculate_score",
+      "_is_agent_in_loop",
+      "_update_history"
+    ],
+    "classes": [
+      "AgentCoordinator"
+    ],
+    "function_calls": {
+      "max": 1,
+      "len": 4,
+      "min": 1,
+      "set": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\response_cache.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_response_cache",
+      "__init__",
+      "_init_db",
+      "_create_hash",
+      "get",
+      "put"
+    ],
+    "classes": [
+      "ResponseCache"
+    ],
+    "function_calls": {
+      "Path": 2,
+      "isinstance": 1,
+      "ResponseCache": 1,
+      "LLMResponse": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\roles.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\breakthrough_emergence.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "apply_emergent_breakthrough",
+      "__init__",
+      "synthesize_breakthrough_behaviors",
+      "generate_emergent_improvements"
+    ],
+    "classes": [
+      "BreakthroughEmergenceSynthesizer"
+    ],
+    "function_calls": {
+      "BreakthroughEmergenceSynthesizer": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\compatibility.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "ensure_backwards_compatibility",
+      "deprecated",
+      "compare_versions",
+      "is_compatible",
+      "__init__",
+      "_register_migrations",
+      "_migrate_1_0_to_1_1",
+      "_migrate_1_1_to_1_2",
+      "_migrate_1_2_to_2_0",
+      "migrate_config",
+      "legacy_provider_interface",
+      "legacy_response_format",
+      "migrate_cache_format",
+      "decorator",
+      "wrapper"
+    ],
+    "classes": [
+      "Migration",
+      "VersionManager",
+      "ConfigurationMigrator",
+      "APICompatibilityLayer",
+      "DataFormatMigrator"
+    ],
+    "function_calls": {
+      "ConfigurationMigrator": 1,
+      "max": 1,
+      "zip": 1,
+      "get_provider_config": 1,
+      "get_provider": 1,
+      "hasattr": 1,
+      "int": 2,
+      "len": 4,
+      "Migration": 3,
+      "str": 1,
+      "func": 1,
+      "getattr": 3,
+      "open": 4,
+      "isinstance": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\llm_config.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\entropy_explainer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "humanise",
+      "get_entropy_status",
+      "explain_verification_result",
+      "format_entropy_chart"
+    ],
+    "classes": [],
+    "function_calls": {
+      "max": 1,
+      "int": 1,
+      "min": 2,
+      "humanise": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\exceptions.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "classify_provider_exception",
+      "__init__",
+      "__init__",
+      "__init__",
+      "__init__",
+      "__init__",
+      "__init__",
+      "__init__",
+      "__init__"
+    ],
+    "classes": [
+      "TriangulumError",
+      "ProviderError",
+      "RateLimitError",
+      "AuthenticationError",
+      "ModelNotFoundError",
+      "ProviderUnavailableError",
+      "DeterministicMismatchError",
+      "ConfigurationError",
+      "RouteError",
+      "EngineError",
+      "EntropyBudgetExceededError",
+      "MaxTicksExceededError"
+    ],
+    "function_calls": {
+      "str": 1,
+      "AuthenticationError": 2,
+      "super": 8,
+      "RateLimitError": 1,
+      "ModelNotFoundError": 1,
+      "any": 1,
+      "ProviderUnavailableError": 1,
+      "ProviderError": 1,
+      "int": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\monitor.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\test_simple_bug.py"
+    ],
+    "functions": [
+      "__init__",
+      "record_llm_response",
+      "get_metrics",
+      "after_tick",
+      "done"
+    ],
+    "classes": [
+      "EngineMonitor"
+    ],
+    "function_calls": {
+      "log2": 1,
+      "hasattr": 3,
+      "all": 2,
+      "SystemExit": 1,
+      "RuntimeError": 1,
+      "len": 2,
+      "get_agent_config": 1,
+      "get_provider_config": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\llm_config.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\parallel_executor.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "get_metrics",
+      "__init__",
+      "add_bug",
+      "_spawn_bug",
+      "get_all_metrics"
+    ],
+    "classes": [
+      "BugContext",
+      "ParallelExecutor"
+    ],
+    "function_calls": {
+      "EngineMonitor": 1,
+      "AutoGenCoordinator": 1,
+      "get_triangulum_engine": 1,
+      "TriangulumEngine": 1,
+      "BugContext": 1,
+      "getattr": 1,
+      "deque": 1,
+      "len": 19,
+      "all": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\rollback_manager.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "save_patch_record",
+      "rollback_patch",
+      "list_patches",
+      "clean_patches"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 2,
+      "open": 7
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\tracing.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "trace_span",
+      "start_trace",
+      "add_attribute",
+      "add_event",
+      "get_trace_data",
+      "export_trace_to_json",
+      "clear_trace",
+      "duration_ms",
+      "add_attribute",
+      "add_event",
+      "__init__",
+      "start_trace",
+      "start_span",
+      "end_span",
+      "get_current_span",
+      "add_attribute",
+      "add_event",
+      "trace_llm_request",
+      "trace_debugging_step",
+      "trace_patch_application"
+    ],
+    "classes": [
+      "Span",
+      "TracingContext",
+      "TracingMiddleware"
+    ],
+    "function_calls": {
+      "TracingContext": 1,
+      "field": 2,
+      "str": 2,
+      "Span": 1,
+      "get_trace_data": 1,
+      "trace_span": 3,
+      "len": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\ultimate_health_booster.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "apply_ultimate_health_boost",
+      "__init__",
+      "apply_ultimate_boost",
+      "generate_ultimate_improvements"
+    ],
+    "classes": [
+      "UltimateHealthBooster"
+    ],
+    "function_calls": {
+      "UltimateHealthBooster": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\future\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\goal\\goal_loader.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_loader",
+      "load_goals_from_file",
+      "create_goal",
+      "__post_init__",
+      "to_dict",
+      "from_dict",
+      "validate",
+      "is_valid",
+      "__init__",
+      "load_from_file",
+      "load_from_directory",
+      "_parse_goal_data",
+      "_create_goal_from_data",
+      "create_goal",
+      "get_goal",
+      "list_goals",
+      "remove_goal",
+      "save_goals_to_file",
+      "validate_all_goals",
+      "get_goal_statistics",
+      "load_goal",
+      "clear_goals"
+    ],
+    "classes": [
+      "Goal",
+      "GoalLoader"
+    ],
+    "function_calls": {
+      "get_loader": 2,
+      "asdict": 1,
+      "cls": 1,
+      "Path": 7,
+      "list": 4,
+      "isinstance": 3,
+      "enumerate": 1,
+      "len": 6,
+      "sum": 1,
+      "set": 3,
+      "GoalLoader": 1,
+      "FileNotFoundError": 2,
+      "ValueError": 7,
+      "str": 3,
+      "open": 2,
+      "any": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\goal\\prioritiser.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "score",
+      "prioritize_bugs"
+    ],
+    "classes": [],
+    "function_calls": {
+      "getattr": 2,
+      "sorted": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\goal\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\hub.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "create_review_api",
+      "get_hub",
+      "__init__",
+      "_init_db",
+      "add_item",
+      "get_item",
+      "get_queue",
+      "update_item",
+      "get_history",
+      "get_stats"
+    ],
+    "classes": [
+      "ReviewItem",
+      "ReviewDecision",
+      "HumanReviewHub"
+    ],
+    "function_calls": {
+      "Path": 4,
+      "FastAPI": 1,
+      "HumanReviewHub": 2,
+      "create_review_api": 1,
+      "StaticFiles": 1,
+      "Query": 1,
+      "File": 1,
+      "Form": 1,
+      "int": 1,
+      "FileResponse": 1,
+      "dict": 3,
+      "HTTPException": 5,
+      "open": 1,
+      "str": 1,
+      "round": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\interactive_mode.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ],
+    "functions": [
+      "launch_interactive_mode",
+      "__init__",
+      "_load_config",
+      "do_start",
+      "do_status",
+      "do_step",
+      "do_auto",
+      "do_reset",
+      "do_feedback",
+      "_request_feedback",
+      "do_viz",
+      "do_exit",
+      "do_help",
+      "emptyline"
+    ],
+    "classes": [
+      "InteractiveDebugger"
+    ],
+    "function_calls": {
+      "InteractiveDebugger": 1,
+      "print": 50,
+      "launch_interactive_mode": 1,
+      "TriangulumEngine": 2,
+      "Monitor": 2,
+      "MetricsCollector": 2,
+      "FeedbackManager": 1,
+      "Path": 1,
+      "Coordinator": 1,
+      "input": 5,
+      "enumerate": 2,
+      "FeedbackItem": 1,
+      "int": 3,
+      "create_dashboard": 1,
+      "super": 2,
+      "open": 1,
+      "list": 1,
+      "len": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\visualization.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\bug_predictor.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "load_model",
+      "predict",
+      "_gather_file_metrics",
+      "_dummy_prediction"
+    ],
+    "classes": [
+      "BugPredictor"
+    ],
+    "function_calls": {
+      "Path": 1,
+      "print": 2,
+      "max": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\optimizer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "suggest_parameters",
+      "_calculate_reward",
+      "_explore_parameters",
+      "_exploit_parameters"
+    ],
+    "classes": [
+      "TriangulumOptimizer"
+    ],
+    "function_calls": {
+      "sorted": 1,
+      "len": 1,
+      "max": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\learning\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\metrics.py": {
+    "imports": [],
+    "imported_by": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py"
+    ],
+    "functions": [
+      "total_bugs",
+      "completion_rate",
+      "__init__",
+      "record_metric",
+      "get_metric",
+      "get_all_metrics",
+      "record_comprehensive_metrics",
+      "_save_comprehensive_metrics",
+      "record_tick",
+      "record_agent_activity",
+      "update_bug_metrics",
+      "finalize_run",
+      "_save_tick_metrics",
+      "_save_agent_metrics",
+      "_save_bug_metrics"
+    ],
+    "classes": [
+      "ComprehensiveMetrics",
+      "TickMetrics",
+      "AgentMetrics",
+      "BugMetrics",
+      "MetricsCollector"
+    ],
+    "function_calls": {
+      "Path": 1,
+      "int": 2,
+      "isinstance": 1,
+      "TickMetrics": 1,
+      "AgentMetrics": 1,
+      "len": 5,
+      "asdict": 4,
+      "float": 1,
+      "BugMetrics": 1,
+      "sum": 2,
+      "open": 5,
+      "hasattr": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\metrics_exporter.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "create_exporter",
+      "__init__",
+      "export",
+      "__init__",
+      "_start_flush_thread",
+      "export",
+      "_flush",
+      "__init__",
+      "_start_server",
+      "export",
+      "_format_metrics",
+      "__init__",
+      "export",
+      "_flatten_metrics",
+      "_open_file",
+      "_rewrite_headers",
+      "_close_file",
+      "__init__",
+      "export",
+      "add_exporter",
+      "flush_loop",
+      "process_metric",
+      "do_GET",
+      "log_message"
+    ],
+    "classes": [
+      "MetricsExporter",
+      "FileExporter",
+      "PrometheusExporter",
+      "CSVExporter",
+      "MultiExporter",
+      "PrometheusHandler"
+    ],
+    "function_calls": {
+      "NotImplementedError": 1,
+      "Path": 2,
+      "HTTPServer": 1,
+      "int": 2,
+      "set": 2,
+      "open": 2,
+      "sorted": 1,
+      "FileExporter": 1,
+      "isinstance": 6,
+      "process_metric": 3,
+      "PrometheusExporter": 1,
+      "super": 4,
+      "len": 2,
+      "CSVExporter": 1,
+      "ValueError": 1,
+      "enumerate": 2,
+      "dict": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\visualization.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "create_dashboard",
+      "_generate_system_state_plot",
+      "_generate_entropy_plot",
+      "_generate_bug_flow_plot",
+      "_generate_agent_performance_plot",
+      "_generate_html_dashboard"
+    ],
+    "classes": [],
+    "function_calls": {
+      "Path": 1,
+      "_generate_system_state_plot": 1,
+      "_generate_entropy_plot": 1,
+      "_generate_bug_flow_plot": 1,
+      "_generate_agent_performance_plot": 1,
+      "_generate_html_dashboard": 1,
+      "list": 3,
+      "len": 2,
+      "sum": 5,
+      "str": 2,
+      "hasattr": 1,
+      "open": 1,
+      "dict": 1,
+      "getattr": 1,
+      "max": 2,
+      "int": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\anthropic.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools",
+      "_normalize_messages"
+    ],
+    "classes": [
+      "AnthropicProvider"
+    ],
+    "function_calls": {
+      "Anthropic": 1,
+      "isinstance": 2,
+      "LLMResponse": 3,
+      "ValueError": 1,
+      "super": 1,
+      "ToolCall": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\capability_discovery.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "get_capability_registry",
+      "__init__",
+      "__init__",
+      "get_profile",
+      "save_profile",
+      "has_capability",
+      "get_models_with_capability",
+      "export_to_json",
+      "__init__"
+    ],
+    "classes": [
+      "CapabilityType",
+      "ModelCapability",
+      "ModelProfile",
+      "CapabilityTester",
+      "CapabilityRegistry",
+      "CapabilityDiscoveryService"
+    ],
+    "function_calls": {
+      "CapabilityRegistry": 2,
+      "field": 2,
+      "ModelCapability": 11,
+      "Tool": 1,
+      "provider": 1,
+      "CapabilityTester": 1,
+      "ModelProfile": 2,
+      "hasattr": 1,
+      "isinstance": 3,
+      "ValueError": 1,
+      "len": 3,
+      "get_provider_map": 1,
+      "print": 1,
+      "str": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\groq.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools"
+    ],
+    "classes": [
+      "GroqProvider"
+    ],
+    "function_calls": {
+      "Groq": 1,
+      "isinstance": 2,
+      "LLMResponse": 3,
+      "ValueError": 1,
+      "super": 1,
+      "ToolCall": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\local.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools",
+      "__init__",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools",
+      "__init__",
+      "is_available",
+      "generate_response",
+      "generate_llm_response",
+      "generate",
+      "generate_with_tools"
+    ],
+    "classes": [
+      "OllamaProvider",
+      "LMStudioProvider",
+      "LocalProvider"
+    ],
+    "function_calls": {
+      "isinstance": 5,
+      "LLMResponse": 7,
+      "super": 3,
+      "len": 2,
+      "ToolCall": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\openai.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_ensure_deterministic",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools"
+    ],
+    "classes": [
+      "OpenAIProvider"
+    ],
+    "function_calls": {
+      "OpenAI": 1,
+      "isinstance": 2,
+      "LLMResponse": 3,
+      "ValueError": 1,
+      "super": 1,
+      "ToolCall": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\openrouter.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "generate",
+      "_generate_non_stream",
+      "_generate_stream",
+      "generate_with_tools"
+    ],
+    "classes": [
+      "OpenRouterProvider"
+    ],
+    "function_calls": {
+      "OpenAI": 1,
+      "isinstance": 2,
+      "getattr": 1,
+      "LLMResponse": 3,
+      "ValueError": 1,
+      "super": 1,
+      "ToolCall": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\request_manager.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "managed_generate",
+      "__init__",
+      "execute",
+      "_execute_with_retries"
+    ],
+    "classes": [
+      "RequestManager"
+    ],
+    "function_calls": {
+      "RequestManager": 1,
+      "get_response_cache": 1,
+      "RuntimeError": 1,
+      "range": 1,
+      "get_provider": 1,
+      "func": 1,
+      "get_provider_config": 3
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\response_cache.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\factory.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\llm_config.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\breakthrough_optimizer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "apply_quantum_breakthrough",
+      "__init__",
+      "optimize_health_score",
+      "generate_quantum_improvements"
+    ],
+    "classes": [
+      "QuantumBreakthroughOptimizer"
+    ],
+    "function_calls": {
+      "QuantumBreakthroughOptimizer": 1,
+      "min": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\quantum\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\system_monitor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\scripts\\run_benchmarks.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "cli",
+      "run",
+      "analyze",
+      "benchmark"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 1,
+      "TriangulumEngine": 1,
+      "start_monitor": 1,
+      "CodeRelationshipAnalyzer": 1,
+      "Path": 2,
+      "run_benchmarks_main": 1,
+      "cli": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\scripts\\cli_fixed.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\monitor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\coordinator.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\monitoring\\metrics.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\interactive_mode.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "main"
+    ],
+    "classes": [],
+    "function_calls": {
+      "str": 3,
+      "TriangulumEngine": 2,
+      "AgentCoordinator": 1,
+      "Monitor": 2,
+      "MetricsCollector": 1,
+      "main": 1,
+      "Path": 2,
+      "open": 1,
+      "sum": 2,
+      "launch_interactive_mode": 1,
+      "run_automatic_mode": 1,
+      "list": 1,
+      "run_triangulum": 1,
+      "run_batch_mode": 1,
+      "BugState": 2,
+      "len": 1
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\__init__.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\human\\interactive_mode.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\spec\\ltl_properties.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "bug_in_phase",
+      "agent_free_count",
+      "entropy_below_threshold",
+      "__init__",
+      "_validate_formula",
+      "evaluate",
+      "_evaluate_condition"
+    ],
+    "classes": [
+      "LTLOperator",
+      "LTLFormula"
+    ],
+    "function_calls": {
+      "LTLFormula": 5,
+      "bug_in_phase": 6,
+      "agent_free_count": 1,
+      "all": 2,
+      "any": 2,
+      "bool": 1,
+      "float": 1,
+      "LTLOperator": 1,
+      "ValueError": 1,
+      "enumerate": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\spec\\model_checker.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "build_state_graph",
+      "_extract_state",
+      "_hash_state",
+      "_get_next_states",
+      "verify_properties",
+      "_generate_traces",
+      "visualize_graph",
+      "save_results",
+      "generate_report",
+      "dfs"
+    ],
+    "classes": [
+      "TriangulumModelChecker"
+    ],
+    "function_calls": {
+      "set": 1,
+      "tuple": 1,
+      "hash": 1,
+      "TriangulationEngine": 2,
+      "dfs": 2,
+      "sum": 2,
+      "BugState": 1,
+      "hasattr": 4,
+      "ValueError": 2,
+      "open": 2,
+      "len": 5,
+      "print": 1,
+      "enumerate": 2
+    },
+    "dependencies": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\graph_models.py"
+    ]
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\spec\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\test_simple_bug.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\monitor.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\agents\\coordinator.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "increment_age",
+      "__repr__",
+      "setUp",
+      "tearDown",
+      "_create_test_project",
+      "_setup_mock_coordinator",
+      "test_bug_resolution_flow",
+      "__init__"
+    ],
+    "classes": [
+      "MockBug",
+      "TestSimpleBug",
+      "MockCoordinator"
+    ],
+    "function_calls": {
+      "str": 1,
+      "BugState": 1,
+      "Path": 2,
+      "TriangulationEngine": 1,
+      "EngineMonitor": 1,
+      "MockCoordinator": 1,
+      "MockBug": 1,
+      "len": 1,
+      "step": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\smoke\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\test_state.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_phase_enum",
+      "test_bug_state_creation",
+      "test_bug_state_immutability",
+      "test_bug_state_equality"
+    ],
+    "classes": [
+      "TestState"
+    ],
+    "function_calls": {
+      "str": 1,
+      "BugState": 5,
+      "hasattr": 1,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\test_transition.py": {
+    "imports": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\state.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\transition.py"
+    ],
+    "imported_by": [],
+    "functions": [
+      "test_wait_to_repro",
+      "test_wait_stays_waiting",
+      "test_timer_countdown",
+      "test_phase_transitions",
+      "test_terminal_states"
+    ],
+    "classes": [
+      "TestTransition"
+    ],
+    "function_calls": {
+      "str": 1,
+      "BugState": 9,
+      "step": 9,
+      "Path": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tests\\unit\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\canary_runner.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "run_canary_test",
+      "__init__",
+      "_setup_environment",
+      "_build_docker_image",
+      "_spin_up",
+      "_health_check",
+      "run",
+      "_cleanup"
+    ],
+    "classes": [
+      "CanaryRunner"
+    ],
+    "function_calls": {
+      "CanaryRunner": 1,
+      "Path": 3,
+      "round": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\compress.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "compress",
+      "replace_code_block"
+    ],
+    "classes": [],
+    "function_calls": {
+      "len": 4,
+      "any": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\dependency_analyzer.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "analyze_dependencies",
+      "get_repair_cascades",
+      "__init__",
+      "build_graph",
+      "_find_all_files",
+      "_map_file_to_module",
+      "_analyze_dependencies",
+      "_extract_imports",
+      "_extract_python_imports",
+      "_extract_js_imports",
+      "_extract_java_imports",
+      "_extract_go_imports",
+      "get_dependent_files",
+      "get_dependencies",
+      "get_strongly_connected_components",
+      "get_repair_batches",
+      "save_graph",
+      "load_graph"
+    ],
+    "classes": [
+      "DependencyAnalyzer"
+    ],
+    "function_calls": {
+      "DependencyAnalyzer": 1,
+      "analyze_dependencies": 1,
+      "list": 10,
+      "Path": 1,
+      "set": 4,
+      "open": 3,
+      "any": 2,
+      "range": 2,
+      "len": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\fix_impact_tracker.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "_load_database",
+      "_save_database",
+      "record_fix",
+      "analyze_fix_impact",
+      "update_dependencies",
+      "get_affected_files",
+      "validate_fixes",
+      "_to_relative_path",
+      "suggest_tests"
+    ],
+    "classes": [
+      "FixImpactTracker"
+    ],
+    "function_calls": {
+      "Path": 5,
+      "set": 2,
+      "list": 3,
+      "enumerate": 1,
+      "str": 4,
+      "open": 2,
+      "int": 1,
+      "len": 3
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\patch_bundle.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "create_bundle",
+      "apply_bundle",
+      "revert_bundle",
+      "__init__",
+      "get_manifest",
+      "_count_affected_files",
+      "create",
+      "from_bundle",
+      "verify_integrity",
+      "apply",
+      "revert"
+    ],
+    "classes": [
+      "PatchBundle"
+    ],
+    "function_calls": {
+      "PatchBundle": 1,
+      "Path": 5,
+      "FileNotFoundError": 1,
+      "cls": 1,
+      "open": 4
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\scope_filter.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "load_from_goal",
+      "allowed",
+      "filter_files"
+    ],
+    "classes": [
+      "ScopeFilter"
+    ],
+    "function_calls": {
+      "Path": 1,
+      "hasattr": 1,
+      "str": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\smoke_runner.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "run_smoke",
+      "run_smoke_with_canary",
+      "__init__",
+      "_load_config",
+      "_check_endpoints",
+      "_run_commands",
+      "_run_pytest_smoke",
+      "run"
+    ],
+    "classes": [
+      "SmokeTestRunner"
+    ],
+    "function_calls": {
+      "SmokeTestRunner": 1,
+      "CanaryRunner": 1,
+      "Path": 3,
+      "run_pytest": 1,
+      "isinstance": 1,
+      "run_smoke": 1,
+      "TestResult": 2,
+      "str": 3,
+      "round": 1,
+      "open": 1,
+      "type": 1
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\timeout_manager.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [
+      "__init__",
+      "calculate_timeout",
+      "enable_checkpointing",
+      "save_checkpoint",
+      "load_checkpoint"
+    ],
+    "classes": [
+      "TimeoutManager"
+    ],
+    "function_calls": {
+      "min": 1,
+      "open": 3,
+      "sum": 1,
+      "int": 2
+    },
+    "dependencies": []
+  },
+  "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\tooling\\__init__.py": {
+    "imports": [],
+    "imported_by": [],
+    "functions": [],
+    "classes": [],
+    "function_calls": {},
+    "dependencies": []
+  }
+}

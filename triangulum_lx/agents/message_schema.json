@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Triangulum Agent Message Schema",
+  "description": "Schema for the standardized message format used for inter-agent communication in Triangulum",
+  "type": "object",
+  "required": ["message_type", "content", "sender", "message_id", "timestamp", "conversation_id", "schema_version"],
+  "properties": {
+    "message_type": {
+      "type": "string",
+      "description": "Type of the message, indicating its purpose and how it should be handled",
+      "enum": [
+        "task_request", 
+        "task_result", 
+        "query", 
+        "query_response", 
+        "problem_analysis", 
+        "code_analysis", 
+        "relationship_analysis", 
+        "repair_suggestion", 
+        "verification_result", 
+        "error", 
+        "status", 
+        "log"
+      ]
+    },
+    "content": {
+      "type": "object",
+      "description": "Main content of the message, structured based on the message type"
+    },
+    "sender": {
+      "type": "string",
+      "description": "ID of the agent sending the message"
+    },
+    "message_id": {
+      "type": "string",
+      "description": "Unique identifier for the message",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "number",
+      "description": "Unix timestamp when the message was created"
+    },
+    "receiver": {
+      "type": ["string", "null"],
+      "description": "ID of the agent the message is intended for, or null for broadcast messages"
+    },
+    "parent_id": {
+      "type": ["string", "null"],
+      "description": "ID of the parent message this is responding to, or null if this is the first message in a thread",
+      "format": "uuid"
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "ID of the conversation this message belongs to",
+      "format": "uuid"
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "description": "Confidence level of the message content, between 0.0 and 1.0",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the message"
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Version of the message schema",
+      "enum": ["1.0", "1.1"]
+    },
+    "problem_context": {
+      "type": "object",
+      "description": "Context information about the problem being addressed",
+      "properties": {
+        "file_path": {
+          "type": ["string", "null"],
+          "description": "Path to the file related to the problem"
+        },
+        "error_message": {
+          "type": ["string", "null"],
+          "description": "Error message related to the problem"
+        },
+        "stack_trace": {
+          "type": ["array", "null"],
+          "description": "Stack trace related to the error",
+          "items": {
+            "type": "string"
+          }
+        },
+        "code_snippet": {
+          "type": ["string", "null"],
+          "description": "Relevant code snippet"
+        },
+        "line_number": {
+          "type": ["integer", "null"],
+          "description": "Line number in the file where the problem occurs"
+        },
+        "related_files": {
+          "type": ["array", "null"],
+          "description": "Other files related to the problem",
+          "items": {
+            "type": "string"
+          }
+        },
+        "environment_info": {
+          "type": ["object", "null"],
+          "description": "Information about the environment where the problem occurs"
+        },
+        "additional_context": {
+          "type": ["object", "null"],
+          "description": "Any additional context that helps understand the problem"
+        }
+      }
+    },
+    "analysis_results": {
+      "type": "object",
+      "description": "Results of analysis performed by agents",
+      "properties": {
+        "error_type": {
+          "type": ["string", "null"],
+          "description": "Type of error identified"
+        },
+        "error_cause": {
+          "type": ["string", "null"],
+          "description": "Root cause of the error"
+        },
+        "affected_code": {
+          "type": ["string", "null"],
+          "description": "Code affected by the error"
+        },
+        "impact": {
+          "type": ["string", "null"],
+          "description": "Impact of the error on the system"
+        },
+        "severity": {
+          "type": ["string", "null"],
+          "description": "Severity of the error",
+          "enum": ["low", "medium", "high", "critical", null]
+        },
+        "relationships": {
+          "type": ["object", "null"],
+          "description": "Relationships between files or components"
+        },
+        "code_metrics": {
+          "type": ["object", "null"],
+          "description": "Metrics about the code"
+        },
+        "additional_findings": {
+          "type": ["object", "null"],
+          "description": "Any additional findings from the analysis"
+        }
+      }
+    },
+    "suggested_actions": {
+      "type": "array",
+      "description": "Actions suggested by agents to address the problem",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action_type": {
+            "type": "string",
+            "description": "Type of action being suggested",
+            "enum": ["code_change", "test_addition", "refactor", "dependency_update", "configuration_change", "further_analysis"]
+          },
+          "file": {
+            "type": ["string", "null"],
+            "description": "File to apply the action to"
+          },
+          "line": {
+            "type": ["integer", "null"],
+            "description": "Line number to apply the action to"
+          },
+          "original": {
+            "type": ["string", "null"],
+            "description": "Original code to be replaced"
+          },
+          "replacement": {
+            "type": ["string", "null"],
+            "description": "Replacement code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the suggested action"
+          },
+          "rationale": {
+            "type": ["string", "null"],
+            "description": "Rationale for the suggested action"
+          },
+          "confidence": {
+            "type": ["number", "null"],
+            "description": "Confidence in this specific suggestion",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "priority": {
+            "type": ["string", "null"],
+            "description": "Priority of the action",
+            "enum": ["low", "medium", "high", "critical", null]
+          },
+          "dependencies": {
+            "type": ["array", "null"],
+            "description": "Other actions this action depends on",
+            "items": {
+              "type": "string"
+            }
+          },
+          "additional_info": {
+            "type": ["object", "null"],
+            "description": "Any additional information about the action"
+          }
+        },
+        "required": ["action_type", "description"]
+      }
+    }
+  }
+}

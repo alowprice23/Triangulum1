@@ -1,0 +1,48 @@
+# Prometheus configuration for Triangulum LX
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing endpoints to scrape
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Scrape Triangulum engine metrics
+  - job_name: "triangulum-engine"
+    static_configs:
+      - targets: ["engine:9091"]
+    scrape_interval: 5s
+
+  # Scrape Triangulum dashboard metrics
+  - job_name: "triangulum-dashboard"
+    static_configs:
+      - targets: ["dashboard:9091"]
+    scrape_interval: 5s
+
+  # Scrape Triangulum human hub metrics
+  - job_name: "triangulum-hub"
+    static_configs:
+      - targets: ["hub:9091"]
+    scrape_interval: 5s
+
+  # Node exporter for host metrics
+  - job_name: "node"
+    static_configs:
+      - targets: ["node-exporter:9100"]

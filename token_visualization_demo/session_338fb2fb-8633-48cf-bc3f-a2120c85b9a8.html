@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token Processing Session</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background-color: #001529; color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .title { font-size: 24px; font-weight: bold; }
+        .timestamp { font-size: 14px; color: #d9d9d9; }
+        .session-container { background-color: white; border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .session-title { font-size: 18px; font-weight: bold; color: #333; }
+        .session-meta { font-size: 14px; color: #666; }
+        .token-text { font-family: 'Courier New', monospace; margin-bottom: 15px; padding: 15px; background-color: #f9f9f9; border-radius: 4px; line-height: 1.5; white-space: pre-wrap; }
+        .token { display: inline-block; padding: 2px 4px; margin: 2px; border-radius: 3px; }
+        .confidence-high { background-color: rgba(82, 196, 26, 0.2); }
+        .confidence-medium { background-color: rgba(250, 173, 20, 0.2); }
+        .confidence-low { background-color: rgba(245, 34, 45, 0.2); }
+        .chart-container { margin-top: 20px; margin-bottom: 20px; }
+        .chart-container img { max-width: 100%; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .chart-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-item { padding: 8px 16px; background-color: white; border-radius: 4px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .nav-item:hover { background-color: #e6f7ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Token Processing Session</div>
+            <div class="timestamp">Last updated: 2025-07-07 23:45:44</div>
+        </div>
+        <div class="nav">
+            <div class="nav-item" onclick="location.href='token_processing.html'">Back to All Sessions</div>
+            <div class="nav-item" onclick="location.reload()">Refresh</div>
+            <div class="nav-item" onclick="window.open('data/session_338fb2fb-8633-48cf-bc3f-a2120c85b9a8.json', '_blank')">View Raw Data</div>
+        </div>
+        <div class="session-container">
+            <div class="session-header">
+                <div class="session-title">agent_1 - completed</div>
+                <div class="session-meta">Started: 2025-07-07 23:44:48 | Ended: 2025-07-07 23:45:42</div>
+            </div>
+            <div class="session-meta">
+                <p>Description: Simulated processing by agent_1</p>
+                <p>Tokens: 21 | Avg. Confidence: 77.5% | Avg. Processing Time: 73.8ms</p>
+            </div>
+            <div class="token-text"><span class="token confidence-high" title="Confidence: 95.0%, Time: 68.6ms">The</span><span class="token confidence-high" title="Confidence: 92.0%, Time: 85.5ms">Triangulum</span><span class="token confidence-high" title="Confidence: 89.0%, Time: 81.0ms">system</span><span class="token confidence-high" title="Confidence: 86.0%, Time: 64.9ms">is</span><span class="token confidence-high" title="Confidence: 83.0%, Time: 67.1ms">designed</span><span class="token confidence-high" title="Confidence: 80.0%, Time: 59.2ms">to</span><span class="token confidence-medium" title="Confidence: 77.0%, Time: 80.3ms">provide</span><span class="token confidence-medium" title="Confidence: 74.0%, Time: 75.3ms">transparent</span><span class="token confidence-medium" title="Confidence: 71.0%, Time: 65.8ms">LLM</span><span class="token confidence-medium" title="Confidence: 68.0%, Time: 97.8ms">processing.</span><span class="token confidence-medium" title="Confidence: 70.0%, Time: 58.3ms">This</span><span class="token confidence-high" title="Confidence: 87.7%, Time: 90.1ms">transparency</span><span class="token confidence-high" title="Confidence: 95.0%, Time: 60.5ms">helps</span><span class="token confidence-high" title="Confidence: 87.7%, Time: 73.4ms">users</span><span class="token confidence-medium" title="Confidence: 70.0%, Time: 86.9ms">understand</span><span class="token confidence-medium" title="Confidence: 52.3%, Time: 62.0ms">why</span><span class="token confidence-low" title="Confidence: 45.0%, Time: 66.0ms">the</span><span class="token confidence-medium" title="Confidence: 52.3%, Time: 75.6ms">model</span><span class="token confidence-medium" title="Confidence: 70.0%, Time: 63.4ms">makes</span><span class="token confidence-high" title="Confidence: 87.7%, Time: 72.7ms">certain</span><span class="token confidence-high" title="Confidence: 95.0%, Time: 95.0ms">decisions.</span></div>
+            <div class="chart-container"><div class="chart-title">Token Confidence</div><img src="charts\confidence_338fb2fb-8633-48cf-bc3f-a2120c85b9a8.png?t=1751946344" alt="Confidence chart"></div>
+            <div class="chart-container"><div class="chart-title">Processing Time (ms)</div><img src="charts\processing_338fb2fb-8633-48cf-bc3f-a2120c85b9a8.png?t=1751946344" alt="Processing time chart"></div>
+            
+        </div>
+    </div>
+    <script>
+        if ("completed" === "active") { setInterval(() => { location.reload(); }, 2000); }
+    </script>
+</body>
+</html>

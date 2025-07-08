@@ -1,0 +1,248 @@
+{
+  "version": "1.0",
+  "nodes": {
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_coordinator.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_coordinator.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745246.6346688,
+      "file_hash": "045617a196d0e5e36ba1a1722805ff08e14636241fdf664ffb2c0a51c0405885",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_memory.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_memory.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745081.7993503,
+      "file_hash": "4e91e0fa235824a98d8f26bb8f3528a2a8ca410202b8f58079d0347ee102c935",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\canary_runner.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\canary_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745846.6807594,
+      "file_hash": "87b7a30e21193b1f942f30c31f27af0ff1df6004441359b5b9b3aaf807b5106b",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747591.232541,
+      "file_hash": "cf91502d84f14633bd735e544e29946b316eb53622137179515fc806f00bfde6",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\compress.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\compress.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745381.2113404,
+      "file_hash": "2a26d77fbd10c7f2a1a5c4b15662480a1740910d0448be7785599972126fabe7",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\dashboard_stub.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\dashboard_stub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746946.83747,
+      "file_hash": "4be9ee1aa535bc1efa5ed1d0d125852ed42932fec8bea01135edac2e54fde608",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Data Structures.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Data Structures.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751743567.8740778,
+      "file_hash": "1ce3e31e2b78057663da0de4c8eb5ef433c1f0058731a3c471369125d504a60d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\entropy_explainer.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\entropy_explainer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747022.0187192,
+      "file_hash": "816f19afa590800c3da573fdf2945b81d75956067f1d9a3a8b71f675463884de",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747102.1703436,
+      "file_hash": "27bbc2bde98e4bd4f40c67755628fa32ab17f7470464737e7ecd7344ef0f4793",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\llm_integrations.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\llm_integrations.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747282.5266848,
+      "file_hash": "43daabb6248c413f2bb309d399056a7d6cd01905da84dc1d990c1913311e818f",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\main.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\main.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751773994.3339584,
+      "file_hash": "47e2aaa19c1c90c228b5c456f38e693fd049f19582f8701e571fee153982ebc1",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\meta_agent.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\meta_agent.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745153.3058553,
+      "file_hash": "dbd88d48bebc4f62cd410bed33afb1f9fa2f31db7af6a2faa3b0eb8e3738dca8",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746780.7340136,
+      "file_hash": "ae07937b85b99406511a883889411a0770cf225ffac2671d2cad6a5bcd6e9906",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\parallel_executor.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\parallel_executor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744861.6169186,
+      "file_hash": "a2a2ed7f0e8f9db81bd78202878b0e5e65c1129b4f2d3cba287e35f416031948",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745642.954082,
+      "file_hash": "2458aeab947c0f1daaee940e9abdd2c4e00d2307cc8008548b0b453fb278fd67",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\prioritiser.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\prioritiser.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744920.6114695,
+      "file_hash": "4e595571f1546e1d3cc150713c81085a20201f0d5cdeedd7a3f89d2166b1786d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\repair.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\repair.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745428.0648484,
+      "file_hash": "31880252384e27235ad45128bb6300f8803f241ed4747629b0e2c996de2f479b",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746799.6621234,
+      "file_hash": "a3cf1619dff75158086c9aae3c63516f9ee6ce53ea264246ad82d49ec603ebd8",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\resource_manager.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\resource_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744074.4002285,
+      "file_hash": "914350ce02af7efaf9af73652840299fa618d4de4872726cff9a9c250762103d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\rollback_manager.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\rollback_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744721.3957899,
+      "file_hash": "a2a2ed7f0e8f9db81bd78202878b0e5e65c1129b4f2d3cba287e35f416031948",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scheduler.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scheduler.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751774075.2673,
+      "file_hash": "10f1142c8facf437cbd8b4df62ab54e1b1fc43b1a30c45b3f8c08e291abe178a",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scope_filter.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scope_filter.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745304.9800582,
+      "file_hash": "aab04a50d6a4722b11cc686a767c43d208783d4e56514aec529ae8cf6f2ffc10",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\smoke_runner.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\smoke_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746492.1662815,
+      "file_hash": "5567d9d01187762a372e87956b8836042248ccd0d57bd6328b59369fa55ee89a",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745003.272163,
+      "file_hash": "2bf2cbb51aef9f55a5b46d09c5a263983ee13c6b7b8ac1db73c01094406f9970",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\state_machine.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\state_machine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751743441.7505887,
+      "file_hash": "999fd43e3c2c70282bccb785c93e74bde7b97069d0382e446b36f8f94fcc72ad",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\system_monitor.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\system_monitor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746875.3271327,
+      "file_hash": "ca634f1965b1727a34da127d3e77267eba6972afeeaa632263e4fa23b3b8932f",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\terminal_interface.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\terminal_interface.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747340.124937,
+      "file_hash": "623595dec2732ce6aa65086912285cd6d1d9708027b8c92a4045f16e3c78c0af",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746575.5751398,
+      "file_hash": "3ad70ee3f5b22bc2bb3c4f916c218fdb50e24cc5c65548f7e83dbd3d16a9e610",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\triangulation_engine.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\triangulation_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751774136.9715364,
+      "file_hash": "2c27875dc95b5b9a39da97702d9be9d440fbd405d48ffb33262f934f3d68936c",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Verification_engine.py": {
+      "path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Verification_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744639.3821468,
+      "file_hash": "545f3e7658200024c4b8ff640d02c6d12b81dd040ffcb15d6d05d69e9fe0a9b3",
+      "metadata": {}
+    }
+  },
+  "edges": [],
+  "created_at": 1751776548.54264,
+  "modified_at": 1751776548.554642
+}

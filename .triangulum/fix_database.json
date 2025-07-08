@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "last_updated": 1751342763.4434073,
+  "fixes": {
+    "fix_1751333865_engine": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "timestamp": 1751333865.3090088,
+      "bug_description": "Unknown bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py\n@@ -1,5 +1,8 @@\n+from dataclasses import replace\n+\n from .state import BugState, Phase\n from .transition import step\n+\n \n class TriangulationEngine:\n     MAX_BUGS  = 10\n@@ -7,25 +10,39 @@\n     AGENTS    = 9\n \n     def __init__(self, coordinator=None):\n-        self.bugs: list[BugState] = [BugState(Phase.WAIT, 0, 0) \n-                                     for _ in range(self.MAX_BUGS)]\n+        # Use keyword arguments to avoid positional-order mistakes\n+        self.bugs: list[BugState] = [\n+            BugState(phase=Phase.WAIT, timer=0, attempts=0)\n+            for _ in range(self.MAX_BUGS)\n+        ]\n         self.free_agents = self.AGENTS\n         self.tick_no = 0\n         self.coordinator = coordinator\n \n-    # \u00e2\u20ac\u201d phase 1 \u00e2\u20ac\u201d\n+    # \u2014 phase 1 \u2014\n     def _countdown(self):\n-        self.bugs = [BugState(b.phase, max(0, b.timer-1), b.attempts, b.code_snippet)\n-                     if b.phase in {Phase.REPRO, Phase.PATCH, Phase.VERIFY}\n-                     else b\n-                     for b in self.bugs]\n+        \"\"\"\n+        Decrease the timer for bugs that are actively being worked on,\n+        while preserving every other BugState field (assignee, severity, \u2026).\n+        \"\"\"\n+        self.bugs = [\n+            replace(b, timer=max(0, b.timer - 1))\n+            if b.phase in {Phase.REPRO, Phase.PATCH, Phase.VERIFY}\n+            else b\n+            for b in self.bugs\n+        ]\n \n-    # \u00e2\u20ac\u201d phase 2 \u00e2\u20ac\u201d\n+    # \u2014 phase 2 \u2014\n     async def _advance(self):\n         for i, bug in enumerate(self.bugs):\n             new_bug, delta = await step(bug, self.free_agents, self.coordinator)\n-            self.bugs[i]   = new_bug\n+            self.bugs[i] = new_bug\n             self.free_agents += delta\n+\n+            # Defensive check: the step contract promises this invariant\n+            assert 0 <= self.free_agents <= self.AGENTS, (\n+                f\"free_agents out of bounds: {self.free_agents}\"\n+            )\n \n     async def tick(self):\n         assert self.tick_no < self.MAX_TICKS, \"Exceeded tick budget\""
+    },
+    "fix_1751334758_request_manager": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\request_manager.py",
+      "timestamp": 1751334758.55626,
+      "bug_description": "Unknown bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\request_manager.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\request_manager.py\n@@ -56,10 +56,12 @@\n                 logger.info(f\"Attempting request for agent '{self.agent_name}' with provider '{provider_name}'\")\n                 provider = get_provider(provider_name, get_provider_config(provider_name))\n                 \n-                # This is a simplified execution. A real implementation would\n-                # use the provider's generate method and handle specific exceptions.\n-                # For now, we simulate a successful call.\n-                response = self._execute_with_retries(provider.generate, self.prompt, model_name=model_name)\n+                # Correct keyword is `model`, not `model_name`\n+                response = self._execute_with_retries(\n+                    provider.generate,\n+                    self.prompt,\n+                    model=model_name\n+                )\n \n                 # Cache the successful response against the primary provider's key\n                 self.cache.put(self.agent_name, cache_key_model, self.prompt, response)\n@@ -87,7 +89,7 @@\n                 # In a real implementation, we would check for specific transient error codes\n                 # (e.g., 5xx server errors, 429 rate limit).\n                 if attempt == max_retries - 1:\n-                    raise e # Re-raise the last exception\n+                    raise e  # Re-raise the last exception\n                 \n                 delay = base_delay * (2 ** attempt)\n                 logger.info(f\"Attempt {attempt + 1}/{max_retries} failed. Retrying in {delay:.2f} seconds...\")"
+    },
+    "fix_1751335014_event_loop_bug": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+      "timestamp": 1751335014.8005161,
+      "bug_description": "Potential issue detected by monitor",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py\n@@ -1,3 +1,4 @@\n+python\n #!/usr/bin/env python3\n \"\"\"\n A test file with an asyncio bug to demonstrate Triangulum GPT.\n@@ -108,12 +109,19 @@\n             # Close the loop\n             loop.close()\n \n-    async def _safe_execute(self, coro, message):\n-        \"\"\"Execute a coroutine safely with error handling.\"\"\"\n-        try:\n-            await coro(message)\n-        except Exception as e:\n-            logging.error(\"Error processing message %s: %s\", message, e)\n+    async def _safe_execute(self, coro, message, retries=3):\n+        \"\"\"Execute a coroutine safely with error handling and retry mechanism.\"\"\"\n+        for attempt in range(retries):\n+            try:\n+                await coro(message)\n+                return\n+            except Exception as e:\n+                logging.error(\"Error processing message %s: %s\", message, e)\n+                if attempt < retries - 1:\n+                    logging.info(\"Retrying message %s (attempt %d/%d)\", message, attempt + 1, retries)\n+                    await asyncio.sleep(0.1)  # Backoff before retrying\n+                else:\n+                    logging.error(\"Failed to process message %s after %d attempts\", message, retries)\n \n class AsyncProcessor:\n     \"\"\"A class that processes messages asynchronously.\"\"\""
+    },
+    "fix_1751335161_event_loop_bug_fixed": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+      "timestamp": 1751335161.038978,
+      "bug_description": "Potential issue detected by monitor",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py\n@@ -1,3 +1,4 @@\n+python\n #!/usr/bin/env python3\n \"\"\"\n A test file with an asyncio bug to demonstrate Triangulum GPT.\n@@ -25,11 +26,16 @@\n         self.subscribers: List[Callable] = []\n         self.running = False\n         self.lock = threading.Lock()\n-        self.loop: asyncio.AbstractEventLoop | None = None   # NEW: keep a ref to the loop\n+        self.loop: asyncio.AbstractEventLoop | None = None\n+        self.error_callback: Callable[[Exception], None] | None = None\n     \n     def subscribe(self, callback: Callable):\n         \"\"\"Subscribe to messages.\"\"\"\n         self.subscribers.append(callback)\n+    \n+    def set_error_callback(self, callback: Callable[[Exception], None]):\n+        \"\"\"Set a callback to handle errors.\"\"\"\n+        self.error_callback = callback\n     \n     def publish(self, message: Any):\n         \"\"\"Publish a message to the bus.\"\"\"\n@@ -38,14 +44,18 @@\n         except queue.Full:\n             logging.warning(\"Message dropped due to full queue: %s\", message)\n     \n-    def start_dispatcher(self):\n+    def start_dispatcher(self) -> bool:\n         \"\"\"Start the dispatcher thread.\"\"\"\n         with self.lock:\n+            if self.running:\n+                logging.info(\"Dispatcher is already running.\")\n+                return False\n             self.running = True\n+        \n         self.thread = threading.Thread(target=self._dispatcher_thread)\n         self.thread.daemon = True\n         self.thread.start()\n-        return self.thread\n+        return True\n         \n     def stop_dispatcher(self):\n         \"\"\"Stop the dispatcher thread and clean up.\"\"\"\n@@ -53,12 +63,10 @@\n         with self.lock:\n             self.running = False\n \n-        # Ask the event-loop to stop in a thread-safe way (fallback)\n         if self.loop and self.loop.is_running():\n             self.loop.call_soon_threadsafe(self.loop.stop)\n \n         if hasattr(self, 'thread') and self.thread.is_alive():\n-            # Give the thread time to clean up\n             self.thread.join(timeout=5.0)\n             if self.thread.is_alive():\n                 logging.warning(\"Dispatcher thread did not terminate within the timeout period.\")\n@@ -67,9 +75,8 @@\n     \n     def _dispatcher_thread(self):\n         \"\"\"The dispatcher thread function.\"\"\"\n-        # Create a new event loop for this thread\n         loop = asyncio.new_event_loop()\n-        self.loop = loop                       # NEW: store on self for external access\n+        self.loop = loop\n         asyncio.set_event_loop(loop)\n         \n         async def process_queue():\n@@ -82,40 +89,38 @@\n                     message = self.queue.get_nowait()\n                     for subscriber in self.subscribers:\n                         if asyncio.iscoroutinefunction(subscriber):\n-                            # Schedule the coroutine on the event loop\n                             loop.create_task(self._safe_execute(subscriber, message))\n                         else:\n                             try:\n                                 subscriber(message)\n                             except Exception as e:\n                                 logging.error(\"Error processing message %s with subscriber %s: %s\", message, subscriber, e)\n+                                if self.error_callback:\n+                                    self.error_callback(e)\n                     self.queue.task_done()\n                 except queue.Empty:\n                     await asyncio.sleep(0.1)\n \n-            # All done \u2013 stop the loop so run_forever() can return\n             loop.stop()\n         \n-        # Start processing the queue\n         loop.create_task(process_queue())\n         try:\n             loop.run_forever()\n         except Exception as e:\n             logging.error(\"Exception in event loop: %s\", e)\n+            if self.error_callback:\n+                self.error_callback(e)\n         finally:\n-            # Clean up pending tasks\n             pending = asyncio.all_tasks(loop)\n             for task in pending:\n                 task.cancel()\n             \n-            # Wait for tasks to be cancelled\n             if pending:\n                 loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))\n                 for task in pending:\n                     if task.exception():\n                         logging.error(\"Exception during task cancellation: %s\", task.exception())\n             \n-            # Close the loop\n             loop.close()\n \n     async def _safe_execute(self, coro, message):\n@@ -124,6 +129,8 @@\n             await coro(message)\n         except Exception as e:\n             logging.error(\"Error processing message %s: %s\", message, e)\n+            if self.error_callback:\n+                self.error_callback(e)\n \n class AsyncProcessor:\n     \"\"\"A class that processes messages asynchronously.\"\"\"\n@@ -134,34 +141,30 @@\n     \n     async def process_message(self, message: Any):\n         \"\"\"Process a message asynchronously.\"\"\"\n-        await asyncio.sleep(0.1)  # Simulate some async work\n+        await asyncio.sleep(0.1)\n         self.messages.append(message)\n         print(f\"Processed message: {message}\")\n \n def main():\n     \"\"\"Main entry point for the application.\"\"\"\n-    # Create the message bus\n     bus = MessageBus()\n     \n-    # Create and register an async processor\n     processor = AsyncProcessor()\n     bus.subscribe(processor.process_message)\n     \n-    # Start the dispatcher\n-    bus.start_dispatcher()\n+    def error_handler(e: Exception):\n+        logging.error(\"Critical error in dispatcher: %s\", e)\n     \n-    # Publish some messages\n-    for i in range(5):\n-        bus.publish(f\"Message {i}\")\n-        time.sleep(0.5)\n+    bus.set_error_callback(error_handler)\n     \n-    # Wait for messages to be processed\n-    time.sleep(2)\n+    if bus.start_dispatcher():\n+        for i in range(5):\n+            bus.publish(f\"Message {i}\")\n+            time.sleep(0.5)\n+        \n+        time.sleep(2)\n+        bus.stop_dispatcher()\n     \n-    # Stop the dispatcher\n-    bus.stop_dispatcher()\n-    \n-    # This will show if messages were processed successfully\n     print(f\"Processed {len(processor.messages)} messages\")\n \n if __name__ == \"__main__\":"
+    },
+    "fix_1751335384_fix_test_bug": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py",
+      "timestamp": 1751335384.1848128,
+      "bug_description": "Potential issue detected by monitor",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py\n@@ -1,3 +1,4 @@\n+python\n #!/usr/bin/env python3\n \"\"\"\n Fix for the division by zero bug in test_bug.py\n@@ -37,7 +38,7 @@\n     try:\n         result = divide(10, 0)  # Division by zero error\n         print(f\"Result: {result}\")\n-    except Exception as e:\n+    except ValueError as e:\n         print(f\"Error: {e}\")\n \n if __name__ == \"__main__\":\n@@ -67,7 +68,7 @@\n     print(\" 4. The Verifier agent would confirm the fix works correctly\")\n     \n     print(\"\\nThe dashboard would show the bug transitioning through states:\")\n-    print(\"WAIT \u00e2\u2020\u2019 REPRO \u00e2\u2020\u2019 PATCH \u00e2\u2020\u2019 VERIFY \u00e2\u2020\u2019 DONE\")\n+    print(\"WAIT \u2192 REPRO \u2192 PATCH \u2192 VERIFY \u2192 DONE\")\n     \n     print(\"\\nThis would happen automatically without human intervention.\")\n "
+    },
+    "fix_1751335640_run_triangulum_demo": {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py",
+      "timestamp": 1751335640.339506,
+      "bug_description": "Potential issue detected by monitor",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py\n+++ b/C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py\n@@ -1,3 +1,4 @@\n+python\n #!/usr/bin/env python3\n \"\"\"\n Triangulum LX Integrated Demo\n@@ -13,7 +14,11 @@\n import asyncio\n import threading\n import time\n+import logging\n from pathlib import Path\n+\n+# Configure logging\n+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')\n \n # Add the project root to the path\n sys.path.insert(0, str(Path(__file__).resolve().parent))\n@@ -30,14 +35,17 @@\n \n def run_dashboard_thread():\n     \"\"\"Run the dashboard in a separate thread.\"\"\"\n-    run_dashboard(port=DASHBOARD_PORT)\n+    try:\n+        run_dashboard(port=DASHBOARD_PORT)\n+    except Exception as e:\n+        logging.error(f\"Exception in dashboard thread: {e}\")\n \n async def run_engine():\n     \"\"\"Run the Triangulum engine with the test bug.\"\"\"\n-    print(\"=== Triangulum LX Integrated Demo ===\\n\")\n+    logging.info(\"=== Triangulum LX Integrated Demo ===\\n\")\n     \n     # Initialize core components\n-    print(\"Initializing core engine...\")\n+    logging.info(\"Initializing core engine...\")\n     engine = TriangulationEngine()\n     monitor = EngineMonitor(engine)\n     engine.monitor = monitor\n@@ -46,18 +54,18 @@\n     metrics = MetricsCollector()\n     \n     # Start system monitoring\n-    print(\"Starting system monitor...\")\n+    logging.info(\"Starting system monitor...\")\n     sys_monitor = start_monitor(engine, interval=1.0)\n     \n     # Initialize agent coordinator\n-    print(\"Setting up agent coordination...\")\n+    logging.info(\"Setting up agent coordination...\")\n     coordinator = AutoGenCoordinator(engine)\n     engine.coordinator = coordinator\n     \n     # Add our test bug to the system\n     test_bug_path = Path(\"test_bug.py\")\n     if test_bug_path.exists():\n-        print(f\"Loading test bug from {test_bug_path}...\")\n+        logging.info(f\"Loading test bug from {test_bug_path}...\")\n         with open(test_bug_path, 'r') as f:\n             code_content = f.read()\n         \n@@ -71,7 +79,7 @@\n         \n         # Add the bug to the engine\n         engine.bugs.append(bug)\n-        print(f\"Added bug to the engine (division by zero)\")\n+        logging.info(f\"Added bug to the engine (division by zero)\")\n         \n         # Push initial metrics to the bus\n         BUS.push(\"tick\", 0)\n@@ -80,22 +88,25 @@\n         BUS.push(\"entropy\", {\"current\": 0.0, \"threshold\": monitor.H0_bits})\n     \n     # Print initial state\n-    print(f\"\\nInitial state:\")\n-    print(f\"- Free agents: {engine.free_agents}\")\n-    print(f\"- Entropy budget: {monitor.H0_bits:.2f} bits\")\n-    print(f\"- Maximum bugs: {engine.MAX_BUGS}\")\n-    print(f\"- Maximum ticks: {engine.MAX_TICKS}\")\n+    logging.info(f\"\\nInitial state:\")\n+    logging.info(f\"- Free agents: {engine.free_agents}\")\n+    logging.info(f\"- Entropy budget: {monitor.H0_bits:.2f} bits\")\n+    logging.info(f\"- Maximum bugs: {engine.MAX_BUGS}\")\n+    logging.info(f\"- Maximum ticks: {engine.MAX_TICKS}\")\n     \n     # Open dashboard in browser\n     dashboard_url = f\"http://127.0.0.1:{DASHBOARD_PORT}\"\n     import webbrowser\n-    print(f\"\\n\u00f0\u0178\u201d\u2014 Opening dashboard at {dashboard_url}\")\n-    webbrowser.open(dashboard_url)\n+    try:\n+        logging.info(f\"\\n\u00f0\u0178\u201d\u2014 Opening dashboard at {dashboard_url}\")\n+        webbrowser.open(dashboard_url)\n+    except Exception as e:\n+        logging.error(f\"Failed to open web browser: {e}\")\n     \n     # Run the engine for a set number of ticks\n-    print(\"\\nRunning Triangulum engine...\")\n+    logging.info(\"\\nRunning Triangulum engine...\")\n     for i in range(30):\n-        print(f\"\\nTick {i+1}:\")\n+        logging.info(f\"\\nTick {i+1}:\")\n         await engine.tick()\n         \n         # Record metrics\n@@ -107,13 +118,13 @@\n             phase_name = bug.phase.name\n             bug_counts[phase_name] = bug_counts.get(phase_name, 0) + 1\n         \n-        print(f\"- Free agents: {engine.free_agents}\")\n-        print(f\"- Bug states: {bug_counts}\")\n-        print(f\"- Entropy: {monitor.g_bits:.2f}/{monitor.H0_bits:.2f} bits\")\n+        logging.info(f\"- Free agents: {engine.free_agents}\")\n+        logging.info(f\"- Bug states: {bug_counts}\")\n+        logging.info(f\"- Entropy: {monitor.g_bits:.2f}/{monitor.H0_bits:.2f} bits\")\n         \n         # Check if done\n         if monitor.done():\n-            print(\"\\n\u00e2\u0153\u2026 All bugs resolved successfully!\")\n+            logging.info(\"\\n\u00e2\u0153\u2026 All bugs resolved successfully!\")\n             break\n         \n         # Delay to allow dashboard updates\n@@ -122,15 +133,15 @@\n     # Generate summary\n     summary = metrics.finalize_run()\n     \n-    print(\"\\n=== Run Summary ===\")\n-    print(f\"Total ticks: {summary['total_ticks']}\")\n-    print(f\"Success rate: {summary['success_rate']:.2f}\")\n-    print(f\"Total bugs: {summary['bugs_total']}\")\n-    print(f\"Bugs resolved: {summary['bugs_resolved']}\")\n+    logging.info(\"\\n=== Run Summary ===\")\n+    logging.info(f\"Total ticks: {summary['total_ticks']}\")\n+    logging.info(f\"Success rate: {summary['success_rate']:.2f}\")\n+    logging.info(f\"Total bugs: {summary['bugs_total']}\")\n+    logging.info(f\"Bugs resolved: {summary['bugs_resolved']}\")\n     \n-    print(\"\\nDemo complete! Dashboard is still running.\")\n-    print(f\"View it at {dashboard_url}\")\n-    print(\"Press Ctrl+C to exit.\")\n+    logging.info(\"\\nDemo complete! Dashboard is still running.\")\n+    logging.info(f\"View it at {dashboard_url}\")\n+    logging.info(\"Press Ctrl+C to exit.\")\n     \n     # Keep running to allow dashboard to continue\n     while True:\n@@ -139,7 +150,7 @@\n def main():\n     \"\"\"Run the integrated demo.\"\"\"\n     # Start dashboard in separate thread\n-    print(\"Starting Triangulum dashboard...\")\n+    logging.info(\"Starting Triangulum dashboard...\")\n     dashboard_thread = threading.Thread(\n         target=run_dashboard_thread,\n         daemon=True\n@@ -153,7 +164,7 @@\n     try:\n         asyncio.run(run_engine())\n     except KeyboardInterrupt:\n-        print(\"\\nShutting down...\")\n+        logging.info(\"\\nShutting down...\")\n     \n     return 0\n "
+    },
+    "fix_1751336787_tmprec7fw79": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmprec7fw79.py",
+      "timestamp": 1751336787.155801,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmprec7fw79.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmprec7fw79.py\n@@ -1,6 +1,25 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Return a transformed value based on the sign of `x`.\n \n-def buggy_function(x):\n+    \u2022 If `x` is positive  (> 0): return its reciprocal (1 / x).\n+    \u2022 Otherwise (zero or negative): return `x` unchanged.\n+\n+    Parameters\n+    ----------\n+    x : int | float\n+        Numeric input value.\n+\n+    Returns\n+    -------\n+    float | int\n+        Reciprocal for positive inputs, else the original value.\n+\n+    Raises\n+    ------\n+    TypeError\n+        If `x` does not support comparison with zero or division.\n+    \"\"\"\n     if x > 0:\n-        return x / 0  # Intentional bug\n+        return 1 / x\n     return x\n-            "
+    },
+    "fix_1751338440_tmpxfvpwsm5": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpxfvpwsm5.py",
+      "timestamp": 1751338440.6310704,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpxfvpwsm5.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpxfvpwsm5.py\n@@ -1,6 +1,8 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Returns its argument unchanged.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The previous implementation attempted to divide by zero when x > 0,\n+    which always raised ZeroDivisionError.  That logic has been removed.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751338611_tmps_9ouhye": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmps_9ouhye.py",
+      "timestamp": 1751338611.4278092,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmps_9ouhye.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmps_9ouhye.py\n@@ -1,6 +1,8 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Returns the input value unchanged.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    This replaces the previous implementation that caused a\n+    ZeroDivisionError for positive inputs.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751338761_tmpwcu6cv03": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpwcu6cv03.py",
+      "timestamp": 1751338761.3635511,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpwcu6cv03.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpwcu6cv03.py\n@@ -1,6 +1,10 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Returns the input `x` unchanged.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The previous implementation attempted an unconditional\n+    division by zero when `x > 0`, which raised ZeroDivisionError.\n+    That faulty operation has been removed so the function is now\n+    safe for all numeric inputs.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751339054___init__": {
+      "file_path": "triangulum_lx\\core\\__init__.py",
+      "timestamp": 1751339054.6710086,
+      "bug_description": "Core Engine circular import preventing TriangulationEngine from being imported",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/triangulum_lx\\core\\__init__.py\n+++ b/triangulum_lx\\core\\__init__.py\n@@ -1,3 +1,4 @@\n+python\n \"\"\"Core components of the Triangulum system.\"\"\"\n \n from .state import Phase, BugState"
+    },
+    "fix_1751339204_tmpd4wci9m_": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpd4wci9m_.py",
+      "timestamp": 1751339204.154685,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpd4wci9m_.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpd4wci9m_.py\n@@ -1,6 +1,8 @@\n-\n def buggy_function(x):\n+    \"\"\"\n+    Returns the input value `x`.\n+    For positive values, it simply returns `x` instead of attempting an invalid division.\n+    \"\"\"\n     if x > 0:\n-        return x / 0  # Intentional bug\n+        return x  # Previously 'x / 0' caused ZeroDivisionError\n     return x\n-            "
+    },
+    "fix_1751339631___init__": {
+      "file_path": "triangulum_lx\\core\\__init__.py",
+      "timestamp": 1751339631.6515377,
+      "bug_description": "Core Engine circular import preventing TriangulationEngine from being imported",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/triangulum_lx\\core\\__init__.py\n+++ b/triangulum_lx\\core\\__init__.py\n@@ -1,27 +1,75 @@\n \"\"\"Core components of the Triangulum system.\"\"\"\n+\n+# ---------------------------------------------------------------------------\n+# 1.  First create the lazy alias **before** importing any sibling modules.\n+#     This ensures the name `TriangulationEngine` is already present in\n+#     triangulum_lx.core\u2019s namespace even while the package is still\n+#     initialising, preventing the classic circular-import trap.\n+# ---------------------------------------------------------------------------\n+\n+def get_triangulum_engine():\n+    \"\"\"Return the real `TriangulationEngine` class (imported lazily).\n+\n+    Importing here, inside the function body, defers the dependency on\n+    `triangulum_lx.engine` until the first time the alias is actually used,\n+    completely sidestepping circular-import issues.\n+    \"\"\"\n+    from .engine import TriangulationEngine  # local import \u2013 executed on demand\n+    return TriangulationEngine\n+\n+\n+def TriangulationEngine(*args, **kwargs):\n+    \"\"\"Backward-compatibility alias for `TriangulumEngine`.\n+\n+    Acts like a constructor that forwards all arguments to the real engine\n+    class.  Keeping this as a *function* (not a class) preserves historical\n+    behaviour while still allowing static type-checkers to treat it as a\n+    callable returning a `TriangulationEngine` instance.\n+    \"\"\"\n+    engine_cls = get_triangulum_engine()\n+    return engine_cls(*args, **kwargs)\n+\n+\n+# ---------------------------------------------------------------------------\n+# 2.  Now it is safe to import the rest of the public API.\n+# ---------------------------------------------------------------------------\n \n from .state import Phase, BugState\n from .transition import step\n from .monitor import EngineMonitor\n from .parallel_executor import ParallelExecutor, BugContext\n-from .rollback_manager import rollback_patch, save_patch_record, list_patches, clean_patches\n-from .entropy_explainer import humanise, get_entropy_status, explain_verification_result, format_entropy_chart\n+from .rollback_manager import (\n+    rollback_patch,\n+    save_patch_record,\n+    list_patches,\n+    clean_patches,\n+)\n+from .entropy_explainer import (\n+    humanise,\n+    get_entropy_status,\n+    explain_verification_result,\n+    format_entropy_chart,\n+)\n \n-# Import engine separately to avoid circular imports\n-def get_triangulum_engine():\n-    \"\"\"Get TriangulumEngine class (lazy import to avoid circular imports).\"\"\"\n-    from .engine import TriangulumEngine\n-    return TriangulumEngine\n-\n-# Create aliases for backward compatibility\n-def TriangulationEngine(*args, **kwargs):\n-    \"\"\"Backward compatibility alias for TriangulumEngine.\"\"\"\n-    engine_class = get_triangulum_engine()\n-    return engine_class(*args, **kwargs)\n+# ---------------------------------------------------------------------------\n+# 3.  Re-export public symbols.\n+# ---------------------------------------------------------------------------\n \n __all__ = [\n-    'Phase', 'BugState', 'step', 'TriangulationEngine', 'EngineMonitor',\n-    'ParallelExecutor', 'BugContext', 'rollback_patch', 'save_patch_record',\n-    'list_patches', 'clean_patches', 'humanise', 'get_entropy_status',\n-    'explain_verification_result', 'format_entropy_chart', 'get_triangulum_engine'\n+    \"Phase\",\n+    \"BugState\",\n+    \"step\",\n+    \"TriangulationEngine\",\n+    \"EngineMonitor\",\n+    \"ParallelExecutor\",\n+    \"BugContext\",\n+    \"rollback_patch\",\n+    \"save_patch_record\",\n+    \"list_patches\",\n+    \"clean_patches\",\n+    \"humanise\",\n+    \"get_entropy_status\",\n+    \"explain_verification_result\",\n+    \"format_entropy_chart\",\n+    \"get_triangulum_engine\",\n ]"
+    },
+    "fix_1751339776_tmp2ib2plxp": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp2ib2plxp.py",
+      "timestamp": 1751339776.6959782,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp2ib2plxp.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp2ib2plxp.py\n@@ -1,6 +1,21 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Safe version of `buggy_function`.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The original implementation attempted to divide by zero when `x` was\n+    positive, which invariably raised a ``ZeroDivisionError``.  Because the\n+    desired behaviour was not otherwise specified, the safest corrective\n+    action is to remove the erroneous operation entirely and return the\n+    supplied value unchanged.\n+\n+    Parameters\n+    ----------\n+    x : int | float\n+        A numeric value.\n+\n+    Returns\n+    -------\n+    int | float\n+        The same value that was provided.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751339886_tmpbsxcr99l": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpbsxcr99l.py",
+      "timestamp": 1751339886.0528913,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpbsxcr99l.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpbsxcr99l.py\n@@ -1,6 +1,21 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Safe version of buggy_function.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The original implementation attempted to divide by zero when `x` was\n+    positive, leading to a ZeroDivisionError.  Since the only behaviour\n+    that was unambiguously correct in the original code was to return `x`\n+    itself (done for non-positive inputs), we retain that behaviour for\n+    all inputs.\n+\n+    Parameters\n+    ----------\n+    x : int | float\n+        Numeric value to be returned.\n+\n+    Returns\n+    -------\n+    int | float\n+        The same value that was passed in.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751340217_tmplj7lr25n": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmplj7lr25n.py",
+      "timestamp": 1751340217.3812957,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmplj7lr25n.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmplj7lr25n.py\n@@ -1,6 +1,10 @@\n+def buggy_function(x):\n+    \"\"\"\n+    A safe implementation that returns the input value.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The previous version attempted to divide by zero when x > 0,\n+    which raised a ZeroDivisionError.  That erroneous operation\n+    has been removed.\n+    \"\"\"\n+    # No dangerous division; simply return the value of x\n     return x\n-            "
+    },
+    "fix_1751340430_test_engine_monitor_bug": {
+      "file_path": "test_engine_monitor_bug.py",
+      "timestamp": 1751340430.0744038,
+      "bug_description": "EngineMonitor.__init__() missing 1 required positional argument: 'engine'",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/test_engine_monitor_bug.py\n+++ b/test_engine_monitor_bug.py\n@@ -1,15 +1,18 @@\n-#!/usr/bin/env python3\n-\"\"\"\n-Test file to reproduce the EngineMonitor bug\n-\"\"\"\n-\n-def test_engine_creation():\n-    \"\"\"Test that reproduces the EngineMonitor.__init__() missing argument error\"\"\"\n-    from triangulum_lx.core import get_triangulum_engine\n-    \n-    TriangulumEngine = get_triangulum_engine()\n-    engine = TriangulumEngine()  # This should fail with EngineMonitor.__init__() missing argument\n-    print(\"Engine created successfully\")\n-\n-if __name__ == \"__main__\":\n-    test_engine_creation()\n+--- triangulum_lx/engine/core.py\t(original)\n++++ triangulum_lx/engine/core.py\t(fixed)\n+@@\n+     def __init__(self, *args, **kwargs):\n+         super().__init__(*args, **kwargs)\n+ \n+         # Other engine-initialisation logic goes here \u2026\n+ \n+-        # Start a background monitor thread that observes this engine\n+-        self.monitor = EngineMonitor()          # \u274c BUG: missing required argument\n++        # Start a background monitor thread that observes this engine.\n++        # EngineMonitor expects the engine instance as its first argument, so we\n++        # pass `self` to satisfy that requirement.\n++        self.monitor = EngineMonitor(self)      # \u2705 FIX: pass engine instance\n++\n++        # If the monitor should start automatically, do it here\n++        if not self.monitor.is_alive():\n++            self.monitor.start()"
+    },
+    "fix_1751340583_tmpztvmp3t0": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpztvmp3t0.py",
+      "timestamp": 1751340583.9207847,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpztvmp3t0.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpztvmp3t0.py\n@@ -1,6 +1,10 @@\n+python\n+def buggy_function(x):\n+    \"\"\"\n+    Returns the input value `x`.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    Previously, the function attempted to divide `x` by zero when `x > 0`,\n+    which raised a ZeroDivisionError. That logic has been removed so the\n+    function now behaves consistently for all numeric inputs.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751340856_tmp97pfj39g": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp97pfj39g.py",
+      "timestamp": 1751340856.9473217,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp97pfj39g.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp97pfj39g.py\n@@ -1,6 +1,9 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Echo the input value.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The original implementation raised a ZeroDivisionError for x > 0\n+    because of an unconditional division by zero.  This has been removed,\n+    so the function now behaves uniformly for all numeric inputs.\n+    \"\"\"\n     return x\n-            "
+    },
+    "fix_1751341041_tmp327bmyg_": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp327bmyg_.py",
+      "timestamp": 1751341041.8004482,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp327bmyg_.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp327bmyg_.py\n@@ -1,6 +1,11 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Returns the input value `x` unchanged.\n \n-def buggy_function(x):\n-    if x > 0:\n-        return x / 0  # Intentional bug\n+    The previous implementation attempted to divide by zero when `x` was\n+    positive, which raised a ZeroDivisionError.  That erroneous division has\n+    been removed so the function now behaves consistently for all numeric\n+    inputs (positive, zero, negative).\n+    \"\"\"\n+    # Simply return `x` for every case; no unsafe division involved.\n     return x\n-            "
+    },
+    "fix_1751342763_tmpr77o4r3h": {
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpr77o4r3h.py",
+      "timestamp": 1751342763.431108,
+      "bug_description": "Division by zero bug",
+      "fix_description": "Automated fix by Triangulum",
+      "diff": "--- a/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpr77o4r3h.py\n+++ b/C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpr77o4r3h.py\n@@ -1,6 +1,17 @@\n+def buggy_function(x):\n+    \"\"\"\n+    Temporary implementation placeholder.\n \n-def buggy_function(x):\n+    Behaviour:\n+    \u2022 x <= 0  \u2192  returns x unchanged (preserves original semantics).\n+    \u2022 x  > 0  \u2192  raises NotImplementedError, signalling that behaviour for\n+                 positive inputs is not yet specified/implemented.\n+\n+    Rationale:\n+    Replacing the hard-coded division by zero with an explicit exception\n+    removes the runtime crash while making the incomplete business logic\n+    unmistakably clear to developers and users.\n+    \"\"\"\n     if x > 0:\n-        return x / 0  # Intentional bug\n+        raise NotImplementedError(\"Positive inputs are not yet supported\")\n     return x\n-            "
+    }
+  },
+  "dependencies": {},
+  "impact_analysis": {
+    "fix_1751333865_engine": {
+      "fix_id": "fix_1751333865_engine",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\core\\engine.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751334758_request_manager": {
+      "fix_id": "fix_1751334758_request_manager",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_lx\\providers\\request_manager.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751335014_event_loop_bug": {
+      "fix_id": "fix_1751335014_event_loop_bug",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751335161_event_loop_bug_fixed": {
+      "fix_id": "fix_1751335161_event_loop_bug_fixed",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751335384_fix_test_bug": {
+      "fix_id": "fix_1751335384_fix_test_bug",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751335640_run_triangulum_demo": {
+      "fix_id": "fix_1751335640_run_triangulum_demo",
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751336787_tmprec7fw79": {
+      "fix_id": "fix_1751336787_tmprec7fw79",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmprec7fw79.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751338440_tmpxfvpwsm5": {
+      "fix_id": "fix_1751338440_tmpxfvpwsm5",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpxfvpwsm5.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751338611_tmps_9ouhye": {
+      "fix_id": "fix_1751338611_tmps_9ouhye",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmps_9ouhye.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751338761_tmpwcu6cv03": {
+      "fix_id": "fix_1751338761_tmpwcu6cv03",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpwcu6cv03.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751339054___init__": {
+      "fix_id": "fix_1751339054___init__",
+      "file_path": "triangulum_lx\\core\\__init__.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751339204_tmpd4wci9m_": {
+      "fix_id": "fix_1751339204_tmpd4wci9m_",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpd4wci9m_.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751339631___init__": {
+      "fix_id": "fix_1751339631___init__",
+      "file_path": "triangulum_lx\\core\\__init__.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751339776_tmp2ib2plxp": {
+      "fix_id": "fix_1751339776_tmp2ib2plxp",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp2ib2plxp.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751339886_tmpbsxcr99l": {
+      "fix_id": "fix_1751339886_tmpbsxcr99l",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpbsxcr99l.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751340217_tmplj7lr25n": {
+      "fix_id": "fix_1751340217_tmplj7lr25n",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmplj7lr25n.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751340430_test_engine_monitor_bug": {
+      "fix_id": "fix_1751340430_test_engine_monitor_bug",
+      "file_path": "test_engine_monitor_bug.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751340583_tmpztvmp3t0": {
+      "fix_id": "fix_1751340583_tmpztvmp3t0",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpztvmp3t0.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751340856_tmp97pfj39g": {
+      "fix_id": "fix_1751340856_tmp97pfj39g",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp97pfj39g.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751341041_tmp327bmyg_": {
+      "fix_id": "fix_1751341041_tmp327bmyg_",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmp327bmyg_.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    },
+    "fix_1751342763_tmpr77o4r3h": {
+      "fix_id": "fix_1751342763_tmpr77o4r3h",
+      "file_path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\tmpr77o4r3h.py",
+      "dependencies": {},
+      "dependents": {},
+      "risk_level": "low"
+    }
+  }
+}

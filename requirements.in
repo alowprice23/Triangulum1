@@ -1,0 +1,4 @@
+click
+numpy
+psutil
+networkx>=3.0

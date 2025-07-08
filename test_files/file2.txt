@@ -1,0 +1,5 @@
+The second test file contains information about resource management.
+Files need to be properly closed after opening.
+Using with statements or context managers helps ensure resources are released.
+Python's garbage collector might eventually close files, 
+but relying on this is not good practice as it can lead to resource exhaustion.

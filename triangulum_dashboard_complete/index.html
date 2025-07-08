@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Triangulum Agentic System Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .dashboard-header {
+            grid-column: 1 / -1;
+        }
+        .dashboard-nav {
+            grid-column: 1 / -1;
+        }
+        .main-content {
+            grid-column: 1 / -1;
+        }
+        .thought-chain-container {
+            grid-column: 1 / 2;
+        }
+        .agent-network-container {
+            grid-column: 2 / 3;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #001529;
+            padding: 15px 20px;
+            border-radius: 6px;
+            color: white;
+        }
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .dashboard-timestamp {
+            font-size: 14px;
+            color: #d9d9d9;
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        .dashboard-section {
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .section-action {
+            display: none;
+        }
+        .global-progress {
+            margin-bottom: 20px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #1890ff;
+            transition: width 0.3s ease;
+        }
+        .thought-chain {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .agent-card {
+            background-color: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+        }
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .agent-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .agent-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        .agent-status.active {
+            background-color: #f6ffed;
+            color: #52c41a;
+        }
+        .agent-status.idle {
+            background-color: #f5f5f5;
+            color: #8c8c8c;
+        }
+        .agent-status.error {
+            background-color: #fff2f0;
+            color: #f5222d;
+        }
+        .agent-progress {
+            margin-top: 10px;
+        }
+        .agent-activity {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .agent-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8c8c8c;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 800px;
+            border: none;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .tab-container {
+            display: none;
+        }
+        .tab-container.active {
+            display: block;
+        }
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline-event {
+            position: relative;
+            padding: 10px 20px;
+            margin-left: 30px;
+            border-left: 2px solid #e8e8e8;
+        }
+        .timeline-event:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 10px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #1890ff;
+            border: 2px solid white;
+        }
+        .timeline-event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .timeline-agent {
+            font-weight: bold;
+            color: #333;
+        }
+        .timeline-timestamp {
+            font-size: 12px;
+            color: #999;
+        }
+        .timeline-content {
+            font-size: 14px;
+            color: #666;
+        }
+        .feedback-form {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .feedback-form button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .feedback-form button:hover {
+            background-color: #40a9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Triangulum Agentic System Dashboard</div>
+            <div class="dashboard-timestamp">Last updated: <span id="update-time">2025-07-08 02:19:53</span></div>
+        </div>
+        
+        <div class="dashboard-nav">
+            <div class="nav-item active" data-tab="overview">Overview</div>
+            <div class="nav-item" data-tab="thought-chains">Thought Chains</div>
+            <div class="nav-item" data-tab="agent-network">Agent Network</div>
+            <div class="nav-item" data-tab="decision-trees">Decision Trees</div>
+            <div class="nav-item" data-tab="timeline">Timeline View</div>
+            <div class="nav-item" data-tab="progress">Progress Tracking</div>
+        </div>
+        
+        <div id="overview" class="tab-container active">
+            <div class="dashboard-section global-progress">
+                <div class="section-header">
+                    <div class="section-title">System Progress</div>
+                    <div class="section-action" id="refresh-progress">Refresh</div>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 100.0%"></div>
+                </div>
+                
+                <div class="progress-stats">
+                    <div>Status: Completed</div>
+                    <div>100 / 100 steps completed</div>
+                    <div>Est. completion: 02:09:52</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Agent Status</div>
+                    <div class="section-action" id="refresh-agents">Refresh</div>
+                </div>
+                
+                <div class="agent-grid">
+                    
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">orchestrator</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Reviewing code from relationship_analyst</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 27</div>
+                </div>
+            </div>
+            
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">bug_detector</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Analyzing module 13</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 33</div>
+                </div>
+            </div>
+            
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">relationship_analyst</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Analyzing module 9</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 24</div>
+                </div>
+            </div>
+            
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">verification_agent</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Reviewing code from relationship_analyst</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 27</div>
+                </div>
+            </div>
+            
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">priority_analyzer</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Optimizing function in tooling module</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 27</div>
+                </div>
+            </div>
+            
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-name">code_fixer</div>
+                    <div class="agent-status active">Active</div>
+                </div>
+                
+                <div class="agent-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="agent-activity">Fixing bug #722</div>
+                
+                <div class="agent-stats">
+                    <div>Tasks: 10/10</div>
+                    <div>Thoughts: 27</div>
+                </div>
+            </div>
+            
+                </div>
+                
+                <div class="feedback-form">
+                    <h3>Provide Feedback</h3>
+                    <textarea id="feedback-text" rows="3" placeholder="Enter feedback for an agent..."></textarea>
+                    <select id="feedback-agent-select">
+                        <option value="orchestrator">orchestrator</option><option value="bug_detector">bug_detector</option><option value="relationship_analyst">relationship_analyst</option><option value="verification_agent">verification_agent</option><option value="priority_analyzer">priority_analyzer</option><option value="code_fixer">code_fixer</option>
+                    </select>
+                    <button onclick="submitFeedback()">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="thought-chains" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Thought Chain Visualization</div>
+                    <div class="section-action" id="refresh-thoughts">Refresh</div>
+                </div>
+                
+                <iframe src="thought_chains/thought_chains.html" class="iframe-container"></iframe>
+            </div>
+        </div>
+        
+        <div id="agent-network" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Agent Communication Network</div>
+                    <div class="section-action" id="refresh-network">Refresh</div>
+                </div>
+                
+                <iframe src="agent_network/agent_network.html" class="iframe-container"></iframe>
+            </div>
+        </div>
+        
+        <div id="decision-trees" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Agent Decision Trees</div>
+                    <div class="section-action" id="refresh-trees">Refresh</div>
+                </div>
+                
+                <iframe src="decision_trees/decision_trees.html" class="iframe-container"></iframe>
+            </div>
+        </div>
+        
+        <div id="progress" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Detailed Progress Tracking</div>
+                    <div class="section-action" id="refresh-detailed">Refresh</div>
+                </div>
+                
+                <div id="detailed-progress">
+                    <ul><li><strong>orchestrator</strong>: Reviewing code from relationship_analyst</li><li><strong>bug_detector</strong>: Analyzing module 13</li><li><strong>relationship_analyst</strong>: Analyzing module 9</li><li><strong>verification_agent</strong>: Reviewing code from relationship_analyst</li><li><strong>priority_analyzer</strong>: Optimizing function in tooling module</li><li><strong>code_fixer</strong>: Fixing bug #722</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="timeline" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Agent Reasoning Timeline</div>
+                    <div class="section-action" id="refresh-timeline">Refresh</div>
+                </div>
+                
+                <div class="timeline-container">
+                    
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:09:43</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (response): Completed task. Found 8 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:09:44</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (request): Please analyze function 18</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:09:44</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (command): Pause analysis process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:09:45</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (command): Stop verification process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:09:45</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (request): Please analyze bug #24</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:09:46</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (request): Please review module 47</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:09:47</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (notification): System info: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:09:48</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (notification): System error: Memory usage high</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:09:48</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (response): Completed task. Found 5 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:09:49</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (notification): System error: Memory usage high</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:09:49</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (command): Start verification process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:09:49</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (notification): System info: CPU overload</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:09:50</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (notification): System error: CPU overload</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:09:50</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (response): Completed task. Found 5 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:09:51</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (command): Resume analysis process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:09:52</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (command): Stop analysis process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:10:07</div>
+                    </div>
+                    <div class="timeline-content">Message to code_fixer (response): Completed task. Found 1 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:10:22</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (request): Please analyze function 68</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:10:37</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (request): Please analyze function 81</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:10:52</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (notification): System warning: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:11:07</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (request): Please review function 29</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:11:22</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (notification): System warning: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:11:37</div>
+                    </div>
+                    <div class="timeline-content">Message to code_fixer (notification): System info: CPU overload</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:11:52</div>
+                    </div>
+                    <div class="timeline-content">Message to code_fixer (response): Completed task. Found 1 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">priority_analyzer</div>
+                        <div class="timeline-timestamp">02:12:07</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (request): Please review module 3</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:12:23</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (request): Please review module 11</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:12:38</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (command): Start repair process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">priority_analyzer</div>
+                        <div class="timeline-timestamp">02:12:53</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (request): Please fix bug #57</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:13:08</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (response): Completed task. Found 7 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:13:23</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (response): Completed task. Found 8 issues.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:13:38</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (request): Please analyze bug #60</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:13:53</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (request): Please analyze bug #25</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:14:08</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (response): Completed task. Found 3 issues.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:14:23</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (request): Please fix module 74</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:14:38</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (response): Completed task. Found 6 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:14:53</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (response): Completed task. Found 3 issues.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:15:08</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (command): Stop analysis process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:15:23</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (request): Please fix function 7</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:15:38</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (command): Pause analysis process</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:15:53</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (notification): System error: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:16:08</div>
+                    </div>
+                    <div class="timeline-content">Message to code_fixer (notification): System warning: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">priority_analyzer</div>
+                        <div class="timeline-timestamp">02:16:23</div>
+                    </div>
+                    <div class="timeline-content">Message to verification_agent (request): Please review module 38</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:16:38</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (notification): System info: Memory usage high</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:16:53</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (notification): System error: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:17:08</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (request): Please analyze bug #45</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:17:23</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (response): Completed task. Found 2 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:17:38</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (notification): System error: CPU overload</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:17:53</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (notification): System error: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:18:08</div>
+                    </div>
+                    <div class="timeline-content">Message to relationship_analyst (notification): System info: New data available</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:18:23</div>
+                    </div>
+                    <div class="timeline-content">Message to code_fixer (response): Completed task. Found 7 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:18:38</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (response): Completed task. Found 7 bugs.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">orchestrator</div>
+                        <div class="timeline-timestamp">02:18:53</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (response): Completed task. Found 4 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">bug_detector</div>
+                        <div class="timeline-timestamp">02:19:08</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (request): Please analyze module 5</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">verification_agent</div>
+                        <div class="timeline-timestamp">02:19:23</div>
+                    </div>
+                    <div class="timeline-content">Message to bug_detector (response): Completed task. Found 9 improvements.</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">code_fixer</div>
+                        <div class="timeline-timestamp">02:19:38</div>
+                    </div>
+                    <div class="timeline-content">Message to priority_analyzer (request): Please fix module 46</div>
+                </div>
+                
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">relationship_analyst</div>
+                        <div class="timeline-timestamp">02:19:53</div>
+                    </div>
+                    <div class="timeline-content">Message to orchestrator (request): Please review bug #83</div>
+                </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all tabs and containers
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-container').forEach(container => {
+                    container.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab and corresponding container
+                item.classList.add('active');
+                const tabId = item.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        function submitFeedback() {
+            const agentId = document.getElementById('feedback-agent-select').value;
+            const feedbackText = document.getElementById('feedback-text').value;
+            
+            if (!agentId || !feedbackText) {
+                alert("Please select an agent and enter feedback.");
+                return;
+            }
+            
+            // Send feedback to the backend (this part requires a proper API endpoint)
+            // For now, we'll just log it to the console.
+            console.log(`Submitting feedback for ${agentId}: ${feedbackText}`);
+            
+            // In a real application, you would use fetch() to send this to a server endpoint
+            // that calls the feedback_handler.submit_feedback() method.
+            
+            alert("Feedback submitted (logged to console).");
+            document.getElementById('feedback-text').value = '';
+        }
+    </script>
+</body>
+</html>

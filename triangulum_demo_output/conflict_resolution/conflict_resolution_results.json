@@ -1,0 +1,44 @@
+{
+  "CONSENSUS": {
+    "status": "RESOLVED",
+    "result": "Unknown",
+    "confidence": 0.0,
+    "explanation": "No explanation provided"
+  },
+  "CONFIDENCE": {
+    "status": "RESOLVED",
+    "result": {
+      "fix_type": "add_null_check",
+      "priority": "high"
+    },
+    "confidence": 0.85,
+    "explanation": "Decision selected based on highest confidence (85.0%) from agent bug_detector_agent"
+  },
+  "EXPERTISE": {
+    "status": "RESOLVED",
+    "result": {
+      "fix_type": "add_null_check",
+      "priority": "high"
+    },
+    "confidence": 0.885,
+    "explanation": "Decision selected based on agent expertise. Agent bug_detector_agent has 90.0% expertise in domain 'code_repair' with base confidence 85.0%, resulting in overall score 88.5%"
+  },
+  "WEIGHTED_VOTE": {
+    "status": "RESOLVED",
+    "result": "Unknown",
+    "confidence": 0.0,
+    "explanation": "No explanation provided"
+  },
+  "HIERARCHICAL": {
+    "status": "RESOLVED",
+    "result": "Unknown",
+    "confidence": 0.0,
+    "explanation": "No explanation provided"
+  },
+  "HYBRID": {
+    "status": "RESOLVED",
+    "result": "Unknown",
+    "confidence": 0.0,
+    "explanation": "No explanation provided"
+  }
+}

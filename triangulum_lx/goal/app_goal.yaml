@@ -1,0 +1,39 @@
+id: TRIANGULUM-SELF-IMPROVEMENT-001
+name: Continuous Self-Improvement
+description: >
+  The primary goal of the Triangulum system is to autonomously improve its own performance
+  across all six core metrics: agility, bug-freedom, efficiency, self-awareness,
+  operational functionality, and feature completeness.
+
+# The target state we want to achieve
+target_state:
+  - metric: comprehensive_metrics.agility_score
+    condition: ">="
+    value: 0.95
+  - metric: comprehensive_metrics.bug_free_score
+    condition: ">="
+    value: 0.95
+  - metric: comprehensive_metrics.efficiency_score
+    condition: ">="
+    value: 0.95
+  - metric: comprehensive_metrics.self_awareness_score
+    condition: ">="
+    value: 0.95
+  - metric: comprehensive_metrics.operational_score
+    condition: ">="
+    value: 0.95
+  - metric: comprehensive_metrics.feature_completeness
+    condition: ">="
+    value: 0.95
+
+# Constraints on the system's behavior
+constraints:
+  - type: resource
+    limit: cpu_percent < 80
+  - type: resource
+    limit: memory_percent < 80
+  - type: operational
+    description: "Do not introduce new test failures."
+
+# Maximum number of iterations for this goal
+max_iterations: 100

@@ -1,0 +1,18 @@
+{
+  "timestamp": 1751947277.987903,
+  "agents": {
+    "orchestrator": {
+      "status": "active",
+      "task": "manage_workflow"
+    },
+    "bug_detector": {
+      "status": "idle",
+      "last_bug": "null_pointer"
+    },
+    "code_fixer": {
+      "status": "active",
+      "current_fix": "add_null_check"
+    }
+  },
+  "global_progress": 75.0
+}

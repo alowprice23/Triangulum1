@@ -1,0 +1,1647 @@
+{
+  "repo_path": ".",
+  "total_files": 410,
+  "total_lines": 139122,
+  "file_details": [
+    {
+      "path": ".\\deploy_triangulum_fix.py",
+      "line_count": 155
+    },
+    {
+      "path": ".\\file1.py",
+      "line_count": 1
+    },
+    {
+      "path": ".\\fix_agent_message_params.py",
+      "line_count": 299
+    },
+    {
+      "path": ".\\fix_all_recipient_params.py",
+      "line_count": 389
+    },
+    {
+      "path": ".\\fix_bug_detector.py",
+      "line_count": 980
+    },
+    {
+      "path": ".\\fix_demo.py",
+      "line_count": 29
+    },
+    {
+      "path": ".\\fix_demo_enhanced.py",
+      "line_count": 114
+    },
+    {
+      "path": ".\\fix_demo_progress.py",
+      "line_count": 224
+    },
+    {
+      "path": ".\\fix_message_bus.py",
+      "line_count": 101
+    },
+    {
+      "path": ".\\fix_orchestrator_agent.py",
+      "line_count": 113
+    },
+    {
+      "path": ".\\fix_orchestrator_agent_complete.py",
+      "line_count": 820
+    },
+    {
+      "path": ".\\fix_orchestrator_agent_final.py",
+      "line_count": 620
+    },
+    {
+      "path": ".\\fix_orchestrator_agent_fix_test.py",
+      "line_count": 169
+    },
+    {
+      "path": ".\\fix_orchestrator_agent_full.py",
+      "line_count": 720
+    },
+    {
+      "path": ".\\fix_response_handling.py",
+      "line_count": 306
+    },
+    {
+      "path": ".\\fix_script.py",
+      "line_count": 30
+    },
+    {
+      "path": ".\\fix_status_update.py",
+      "line_count": 62
+    },
+    {
+      "path": ".\\fix_system_startup.py",
+      "line_count": 1132
+    },
+    {
+      "path": ".\\fix_test_orchestrator_agent.py",
+      "line_count": 133
+    },
+    {
+      "path": ".\\fix_timeout_and_progress.py",
+      "line_count": 450
+    },
+    {
+      "path": ".\\fix_timeout_and_progress_minimal.py",
+      "line_count": 867
+    },
+    {
+      "path": ".\\fix_triangulum_enhancements.py",
+      "line_count": 755
+    },
+    {
+      "path": ".\\fix_triangulum_enhancements_complete.py",
+      "line_count": 754
+    },
+    {
+      "path": ".\\orchestrator_agent_patch.py",
+      "line_count": 106
+    },
+    {
+      "path": ".\\run_agentic_dashboard.py",
+      "line_count": 289
+    },
+    {
+      "path": ".\\run_agentic_system_test.py",
+      "line_count": 229
+    },
+    {
+      "path": ".\\run_all_demos.py",
+      "line_count": 135
+    },
+    {
+      "path": ".\\run_comprehensive_tests.py",
+      "line_count": 362
+    },
+    {
+      "path": ".\\run_demos.py",
+      "line_count": 128
+    },
+    {
+      "path": ".\\run_fixed_relationship_analyst.py",
+      "line_count": 136
+    },
+    {
+      "path": ".\\run_system_startup_tests.py",
+      "line_count": 96
+    },
+    {
+      "path": ".\\run_tests.py",
+      "line_count": 47
+    },
+    {
+      "path": ".\\run_triangulum_agentic_demo.py",
+      "line_count": 540
+    },
+    {
+      "path": ".\\run_triangulum_agentic_test.py",
+      "line_count": 241
+    },
+    {
+      "path": ".\\run_triangulum_demo.py",
+      "line_count": 424
+    },
+    {
+      "path": ".\\run_triangulum_fixwurx_assessment.py",
+      "line_count": 852
+    },
+    {
+      "path": ".\\run_triangulum_fixwurx_repair.py",
+      "line_count": 869
+    },
+    {
+      "path": ".\\run_triangulum_fixwurx_repair_fixed.py",
+      "line_count": 736
+    },
+    {
+      "path": ".\\run_triangulum_fixwurx_repair_minimal.py",
+      "line_count": 448
+    },
+    {
+      "path": ".\\run_triangulum_fixwurx_verify.py",
+      "line_count": 669
+    },
+    {
+      "path": ".\\run_triangulum_folder_healer.py",
+      "line_count": 131
+    },
+    {
+      "path": ".\\run_triangulum_with_monitoring.py",
+      "line_count": 143
+    },
+    {
+      "path": ".\\setup.py",
+      "line_count": 45
+    },
+    {
+      "path": ".\\simple_fix_demo.py",
+      "line_count": 3
+    },
+    {
+      "path": ".\\test_agentic_system.py",
+      "line_count": 609
+    },
+    {
+      "path": ".\\test_incremental_analysis.py",
+      "line_count": 191
+    },
+    {
+      "path": ".\\test_repair_planning.py",
+      "line_count": 150
+    },
+    {
+      "path": ".\\test_repair_workflow.py",
+      "line_count": 161
+    },
+    {
+      "path": ".\\test_startup_sequence.py",
+      "line_count": 493
+    },
+    {
+      "path": ".\\test_timeout_progress.py",
+      "line_count": 247
+    },
+    {
+      "path": ".\\triangulation_engine_fixed.py",
+      "line_count": 152
+    },
+    {
+      "path": ".\\triangulum_agent_test.py",
+      "line_count": 697
+    },
+    {
+      "path": ".\\triangulum_backtesting_fix.py",
+      "line_count": 208
+    },
+    {
+      "path": ".\\triangulum_folder_healer.py",
+      "line_count": 493
+    },
+    {
+      "path": ".\\triangulum_integrated_system.py",
+      "line_count": 495
+    },
+    {
+      "path": ".\\triangulum_monitor.py",
+      "line_count": 103
+    },
+    {
+      "path": ".\\triangulum_orchestrator_extensions.py",
+      "line_count": 0
+    },
+    {
+      "path": ".\\triangulum_orchestrator_fix.py",
+      "line_count": 695
+    },
+    {
+      "path": ".\\triangulum_self_heal.py",
+      "line_count": 509
+    },
+    {
+      "path": ".\\triangulum_system_enhancements.py",
+      "line_count": 549
+    },
+    {
+      "path": ".\\examples\\agentic_communication_demo.py",
+      "line_count": 661
+    },
+    {
+      "path": ".\\examples\\agentic_dashboard_demo.py",
+      "line_count": 541
+    },
+    {
+      "path": ".\\examples\\agentic_dashboard_with_decision_trees_demo.py",
+      "line_count": 346
+    },
+    {
+      "path": ".\\examples\\agent_communication_demo.py",
+      "line_count": 292
+    },
+    {
+      "path": ".\\examples\\agent_message_protocol_demo.py",
+      "line_count": 178
+    },
+    {
+      "path": ".\\examples\\agent_system_demo.py",
+      "line_count": 244
+    },
+    {
+      "path": ".\\examples\\auto_verification_demo.py",
+      "line_count": 388
+    },
+    {
+      "path": ".\\examples\\bug_detector_demo.py",
+      "line_count": 392
+    },
+    {
+      "path": ".\\examples\\bug_detector_enhancements_demo.py",
+      "line_count": 366
+    },
+    {
+      "path": ".\\examples\\dependency_graph_demo.py",
+      "line_count": 254
+    },
+    {
+      "path": ".\\examples\\enhanced_agent_communication_demo.py",
+      "line_count": 549
+    },
+    {
+      "path": ".\\examples\\enhanced_implementation_agent_demo.py",
+      "line_count": 462
+    },
+    {
+      "path": ".\\examples\\enhanced_message_bus_demo.py",
+      "line_count": 625
+    },
+    {
+      "path": ".\\examples\\enhanced_message_bus_thought_chain_demo.py",
+      "line_count": 173
+    },
+    {
+      "path": ".\\examples\\enhanced_strategy_agent_demo.py",
+      "line_count": 327
+    },
+    {
+      "path": ".\\examples\\enhanced_verification_agent_demo.py",
+      "line_count": 407
+    },
+    {
+      "path": ".\\examples\\feedback_handler_demo.py",
+      "line_count": 124
+    },
+    {
+      "path": ".\\examples\\folder_debug_demo.py",
+      "line_count": 181
+    },
+    {
+      "path": ".\\examples\\folder_healing_demo.py",
+      "line_count": 732
+    },
+    {
+      "path": ".\\examples\\incremental_analyzer_demo.py",
+      "line_count": 97
+    },
+    {
+      "path": ".\\examples\\integrated_triangulum_demo.py",
+      "line_count": 135
+    },
+    {
+      "path": ".\\examples\\learning_engine_demo.py",
+      "line_count": 127
+    },
+    {
+      "path": ".\\examples\\learning_system_demo.py",
+      "line_count": 206
+    },
+    {
+      "path": ".\\examples\\memory_manager_demo.py",
+      "line_count": 335
+    },
+    {
+      "path": ".\\examples\\message_schema_demo.py",
+      "line_count": 366
+    },
+    {
+      "path": ".\\examples\\o3_provider_api_test.py",
+      "line_count": 150
+    },
+    {
+      "path": ".\\examples\\o3_provider_demo.py",
+      "line_count": 169
+    },
+    {
+      "path": ".\\examples\\parallel_executor_demo.py",
+      "line_count": 353
+    },
+    {
+      "path": ".\\examples\\priority_analyzer_demo.py",
+      "line_count": 313
+    },
+    {
+      "path": ".\\examples\\quantum_acceleration_demo.py",
+      "line_count": 368
+    },
+    {
+      "path": ".\\examples\\quantum_acceleration_simple_demo.py",
+      "line_count": 105
+    },
+    {
+      "path": ".\\examples\\quantum_code_analyzer_demo.py",
+      "line_count": 229
+    },
+    {
+      "path": ".\\examples\\relationship_analyst_demo.py",
+      "line_count": 229
+    },
+    {
+      "path": ".\\examples\\repair_pattern_learner_demo.py",
+      "line_count": 638
+    },
+    {
+      "path": ".\\examples\\repair_tool_demo.py",
+      "line_count": 609
+    },
+    {
+      "path": ".\\examples\\repo_analyzer_demo.py",
+      "line_count": 80
+    },
+    {
+      "path": ".\\examples\\response_handling_demo.py",
+      "line_count": 536
+    },
+    {
+      "path": ".\\examples\\rollback_manager_demo.py",
+      "line_count": 425
+    },
+    {
+      "path": ".\\examples\\self_healing_demo.py",
+      "line_count": 387
+    },
+    {
+      "path": ".\\examples\\self_healing_workflow_demo.py",
+      "line_count": 684
+    },
+    {
+      "path": ".\\examples\\simple_bug_detector_demo.py",
+      "line_count": 205
+    },
+    {
+      "path": ".\\examples\\simple_demo.py",
+      "line_count": 117
+    },
+    {
+      "path": ".\\examples\\strategy_agent_demo.py",
+      "line_count": 461
+    },
+    {
+      "path": ".\\examples\\thought_chain_demo.py",
+      "line_count": 576
+    },
+    {
+      "path": ".\\examples\\thought_chain_manager_demo.py",
+      "line_count": 687
+    },
+    {
+      "path": ".\\examples\\token_processing_visualizer_demo.py",
+      "line_count": 213
+    },
+    {
+      "path": ".\\examples\\verification_agent_demo.py",
+      "line_count": 184
+    },
+    {
+      "path": ".\\examples\\verification_agent_simple_demo.py",
+      "line_count": 176
+    },
+    {
+      "path": ".\\examples\\verify_and_fix_demo.py",
+      "line_count": 106
+    },
+    {
+      "path": ".\\examples\\verify_x_demo.py",
+      "line_count": 209
+    },
+    {
+      "path": ".\\example_files\\code_fixed.py",
+      "line_count": 50
+    },
+    {
+      "path": ".\\example_files\\code_with_issues.py",
+      "line_count": 38
+    },
+    {
+      "path": ".\\example_files\\division.py",
+      "line_count": 14
+    },
+    {
+      "path": ".\\example_files\\exception_swallowing_example.py",
+      "line_count": 15
+    },
+    {
+      "path": ".\\example_files\\hardcoded_credentials_example.py",
+      "line_count": 14
+    },
+    {
+      "path": ".\\example_files\\null_pointer_example.py",
+      "line_count": 15
+    },
+    {
+      "path": ".\\example_files\\resource_leak_example.py",
+      "line_count": 15
+    },
+    {
+      "path": ".\\example_files\\sql_injection_example.py",
+      "line_count": 12
+    },
+    {
+      "path": ".\\example_files\\test_division.py",
+      "line_count": 25
+    },
+    {
+      "path": ".\\example_files\\tests\\test_null_pointer_example.py",
+      "line_count": 27
+    },
+    {
+      "path": ".\\feedback_demo\\index.html",
+      "line_count": 484
+    },
+    {
+      "path": ".\\feedback_demo\\agent_network\\agent_network.html",
+      "line_count": 325
+    },
+    {
+      "path": ".\\feedback_demo\\decision_trees\\decision_trees.html",
+      "line_count": 449
+    },
+    {
+      "path": ".\\feedback_demo\\thought_chains\\thought_chains.html",
+      "line_count": 217
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\agent_coordinator.py",
+      "line_count": 201
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\agent_memory.py",
+      "line_count": 140
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\canary_runner.py",
+      "line_count": 126
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\cli.py",
+      "line_count": 195
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\compress.py",
+      "line_count": 152
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\dashboard_stub.py",
+      "line_count": 219
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\Data Structures.py",
+      "line_count": 174
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\entropy_explainer.py",
+      "line_count": 103
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\hub.py",
+      "line_count": 182
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\llm_integrations.py",
+      "line_count": 267
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\main.py",
+      "line_count": 2
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\meta_agent.py",
+      "line_count": 139
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\optimizer.py",
+      "line_count": 216
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\parallel_executor.py",
+      "line_count": 149
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\patch_bundle.py",
+      "line_count": 223
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\prioritiser.py",
+      "line_count": 93
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\repair.py",
+      "line_count": 200
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\replay_buffer.py",
+      "line_count": 138
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\resource_manager.py",
+      "line_count": 111
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\rollback_manager.py",
+      "line_count": 149
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\scheduler.py",
+      "line_count": 163
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\scope_filter.py",
+      "line_count": 134
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\smoke_runner.py",
+      "line_count": 143
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\Specialized_agents.py",
+      "line_count": 185
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\state_machine.py",
+      "line_count": 162
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\system_monitor.py",
+      "line_count": 79
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\terminal_interface.py",
+      "line_count": 137
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\test_runner.py",
+      "line_count": 159
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\triangulation_engine.py",
+      "line_count": 157
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_repair\\fixwurx_backup\\Verification_engine.py",
+      "line_count": 114
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\agent_coordinator.py",
+      "line_count": 201
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\agent_memory.py",
+      "line_count": 140
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\canary_runner.py",
+      "line_count": 126
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\cli.py",
+      "line_count": 195
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\compress.py",
+      "line_count": 152
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\dashboard_stub.py",
+      "line_count": 219
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\Data Structures.py",
+      "line_count": 174
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\entropy_explainer.py",
+      "line_count": 103
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\hub.py",
+      "line_count": 182
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\llm_integrations.py",
+      "line_count": 267
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\main.py",
+      "line_count": 2
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\meta_agent.py",
+      "line_count": 139
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\optimizer.py",
+      "line_count": 216
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\parallel_executor.py",
+      "line_count": 149
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\patch_bundle.py",
+      "line_count": 223
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\prioritiser.py",
+      "line_count": 93
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\repair.py",
+      "line_count": 200
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\replay_buffer.py",
+      "line_count": 138
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\resource_manager.py",
+      "line_count": 111
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\rollback_manager.py",
+      "line_count": 149
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\scheduler.py",
+      "line_count": 163
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\scope_filter.py",
+      "line_count": 134
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\smoke_runner.py",
+      "line_count": 143
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\Specialized_agents.py",
+      "line_count": 185
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\state_machine.py",
+      "line_count": 162
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\system_monitor.py",
+      "line_count": 79
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\terminal_interface.py",
+      "line_count": 137
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\test_runner.py",
+      "line_count": 159
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\triangulation_engine.py",
+      "line_count": 157
+    },
+    {
+      "path": ".\\fixwurx_eval\\fixwurx_snapshot\\Verification_engine.py",
+      "line_count": 114
+    },
+    {
+      "path": ".\\legacy\\triangulum_adaptive_breakthrough.py",
+      "line_count": 765
+    },
+    {
+      "path": ".\\legacy\\triangulum_comprehensive_self_assessment.py",
+      "line_count": 1314
+    },
+    {
+      "path": ".\\legacy\\triangulum_final_breakthrough.py",
+      "line_count": 399
+    },
+    {
+      "path": ".\\legacy\\triangulum_ultimate_breakthrough.py",
+      "line_count": 1083
+    },
+    {
+      "path": ".\\quantum_analysis_output\\dashboard\\index.html",
+      "line_count": 316
+    },
+    {
+      "path": ".\\quantum_analysis_output\\demo_project\\analysis.py",
+      "line_count": 10
+    },
+    {
+      "path": ".\\quantum_analysis_output\\demo_project\\main.py",
+      "line_count": 15
+    },
+    {
+      "path": ".\\quantum_analysis_output\\demo_project\\models.py",
+      "line_count": 9
+    },
+    {
+      "path": ".\\quantum_analysis_output\\demo_project\\utils.py",
+      "line_count": 16
+    },
+    {
+      "path": ".\\scripts\\analyze_code_relationships.py",
+      "line_count": 155
+    },
+    {
+      "path": ".\\scripts\\bug_detector_cli.py",
+      "line_count": 29
+    },
+    {
+      "path": ".\\scripts\\dependency_graph_cli.py",
+      "line_count": 35
+    },
+    {
+      "path": ".\\scripts\\relationship_analyst_cli.py",
+      "line_count": 24
+    },
+    {
+      "path": ".\\scripts\\repair_tool_cli.py",
+      "line_count": 506
+    },
+    {
+      "path": ".\\scripts\\run_benchmarks.py",
+      "line_count": 102
+    },
+    {
+      "path": ".\\simple_test_folder\\simple_bug.py",
+      "line_count": 16
+    },
+    {
+      "path": ".\\strategy_example_files\\exception_swallowing_example.py",
+      "line_count": 22
+    },
+    {
+      "path": ".\\strategy_example_files\\null_pointer_example.py",
+      "line_count": 27
+    },
+    {
+      "path": ".\\strategy_example_files\\resource_leak_example.py",
+      "line_count": 19
+    },
+    {
+      "path": ".\\strategy_example_files\\sql_injection_example.py",
+      "line_count": 22
+    },
+    {
+      "path": ".\\tests\\benchmarks\\benchmark_folder_healing.py",
+      "line_count": 644
+    },
+    {
+      "path": ".\\tests\\benchmarks\\__init__.py",
+      "line_count": 11
+    },
+    {
+      "path": ".\\tests\\edge_cases\\test_folder_healing_edge_cases.py",
+      "line_count": 477
+    },
+    {
+      "path": ".\\tests\\edge_cases\\__init__.py",
+      "line_count": 15
+    },
+    {
+      "path": ".\\tests\\functional\\__init__.py",
+      "line_count": 0
+    },
+    {
+      "path": ".\\tests\\integration\\test_dependency_analysis.py",
+      "line_count": 315
+    },
+    {
+      "path": ".\\tests\\integration\\test_folder_healing.py",
+      "line_count": 369
+    },
+    {
+      "path": ".\\tests\\integration\\test_learning_integration.py",
+      "line_count": 244
+    },
+    {
+      "path": ".\\tests\\integration\\test_system_startup_integration.py",
+      "line_count": 256
+    },
+    {
+      "path": ".\\tests\\integration\\test_triangulum_system.py",
+      "line_count": 340
+    },
+    {
+      "path": ".\\tests\\integration\\__init__.py",
+      "line_count": 0
+    },
+    {
+      "path": ".\\tests\\unit\\test_agent_message.py",
+      "line_count": 581
+    },
+    {
+      "path": ".\\tests\\unit\\test_base_agent.py",
+      "line_count": 390
+    },
+    {
+      "path": ".\\tests\\unit\\test_bug_detector_agent.py",
+      "line_count": 565
+    },
+    {
+      "path": ".\\tests\\unit\\test_bug_detector_enhancements.py",
+      "line_count": 240
+    },
+    {
+      "path": ".\\tests\\unit\\test_chain_node.py",
+      "line_count": 419
+    },
+    {
+      "path": ".\\tests\\unit\\test_code_fixer.py",
+      "line_count": 131
+    },
+    {
+      "path": ".\\tests\\unit\\test_code_relationship_analyzer.py",
+      "line_count": 212
+    },
+    {
+      "path": ".\\tests\\unit\\test_coordinator.py",
+      "line_count": 47
+    },
+    {
+      "path": ".\\tests\\unit\\test_dependency_graph.py",
+      "line_count": 40
+    },
+    {
+      "path": ".\\tests\\unit\\test_engine.py",
+      "line_count": 88
+    },
+    {
+      "path": ".\\tests\\unit\\test_enhanced_message_bus.py",
+      "line_count": 708
+    },
+    {
+      "path": ".\\tests\\unit\\test_feedback_collector.py",
+      "line_count": 324
+    },
+    {
+      "path": ".\\tests\\unit\\test_implementation_agent.py",
+      "line_count": 367
+    },
+    {
+      "path": ".\\tests\\unit\\test_incremental_analyzer.py",
+      "line_count": 47
+    },
+    {
+      "path": ".\\tests\\unit\\test_learning_components.py",
+      "line_count": 391
+    },
+    {
+      "path": ".\\tests\\unit\\test_memory_manager.py",
+      "line_count": 395
+    },
+    {
+      "path": ".\\tests\\unit\\test_message_bus.py",
+      "line_count": 265
+    },
+    {
+      "path": ".\\tests\\unit\\test_message_schema.py",
+      "line_count": 766
+    },
+    {
+      "path": ".\\tests\\unit\\test_message_schema_validator.py",
+      "line_count": 417
+    },
+    {
+      "path": ".\\tests\\unit\\test_meta_agent.py",
+      "line_count": 49
+    },
+    {
+      "path": ".\\tests\\unit\\test_o3_provider.py",
+      "line_count": 233
+    },
+    {
+      "path": ".\\tests\\unit\\test_orchestrator_agent.py",
+      "line_count": 585
+    },
+    {
+      "path": ".\\tests\\unit\\test_patcher_agent.py",
+      "line_count": 333
+    },
+    {
+      "path": ".\\tests\\unit\\test_priority_analyzer_agent.py",
+      "line_count": 50
+    },
+    {
+      "path": ".\\tests\\unit\\test_quantum_entanglement.py",
+      "line_count": 241
+    },
+    {
+      "path": ".\\tests\\unit\\test_quantum_parallelization.py",
+      "line_count": 229
+    },
+    {
+      "path": ".\\tests\\unit\\test_recipient_params.py",
+      "line_count": 364
+    },
+    {
+      "path": ".\\tests\\unit\\test_relationship_analyst_agent.py",
+      "line_count": 350
+    },
+    {
+      "path": ".\\tests\\unit\\test_relationship_context_provider.py",
+      "line_count": 77
+    },
+    {
+      "path": ".\\tests\\unit\\test_response_handling.py",
+      "line_count": 188
+    },
+    {
+      "path": ".\\tests\\unit\\test_router.py",
+      "line_count": 50
+    },
+    {
+      "path": ".\\tests\\unit\\test_state.py",
+      "line_count": 26
+    },
+    {
+      "path": ".\\tests\\unit\\test_strategy_agent.py",
+      "line_count": 267
+    },
+    {
+      "path": ".\\tests\\unit\\test_system_monitor.py",
+      "line_count": 225
+    },
+    {
+      "path": ".\\tests\\unit\\test_system_startup.py",
+      "line_count": 577
+    },
+    {
+      "path": ".\\tests\\unit\\test_thought_chain.py",
+      "line_count": 994
+    },
+    {
+      "path": ".\\tests\\unit\\test_thought_chain_manager.py",
+      "line_count": 677
+    },
+    {
+      "path": ".\\tests\\unit\\test_timeout_handling.py",
+      "line_count": 434
+    },
+    {
+      "path": ".\\tests\\unit\\test_transition.py",
+      "line_count": 26
+    },
+    {
+      "path": ".\\tests\\unit\\test_verification_agent.py",
+      "line_count": 151
+    },
+    {
+      "path": ".\\tests\\unit\\__init__.py",
+      "line_count": 0
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_2c05aba1-fb0a-48ba-a64d-5474285683a6.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_338fb2fb-8633-48cf-bc3f-a2120c85b9a8.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_3de0ee2f-ac97-4e9f-b087-8b109f1aa4a1.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_55336313-dc22-44c2-8f0d-acb2fd71041c.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_83d42090-db7e-4d84-b8f7-00c7281c045a.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_ca6f4e5e-62f7-4649-8254-9bfaa5805ee0.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_db530511-e38d-408b-999d-ff985c5190fb.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\session_f999d353-ea7e-49a7-bc99-84f8c045d1fe.html",
+      "line_count": 60
+    },
+    {
+      "path": ".\\token_visualization_demo\\token_processing.html",
+      "line_count": 142
+    },
+    {
+      "path": ".\\triangulum_dashboard_demo\\index.html",
+      "line_count": 396
+    },
+    {
+      "path": ".\\triangulum_dashboard_demo\\agent_network\\agent_network.html",
+      "line_count": 325
+    },
+    {
+      "path": ".\\triangulum_dashboard_demo\\thought_chains\\thought_chains.html",
+      "line_count": 643
+    },
+    {
+      "path": ".\\triangulum_lx\\self_heal.py",
+      "line_count": 21
+    },
+    {
+      "path": ".\\triangulum_lx\\__init__.py",
+      "line_count": 8
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\agent_factory.py",
+      "line_count": 632
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\base_agent.py",
+      "line_count": 871
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\breakthrough_meta_agent.py",
+      "line_count": 40
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\bug_detector_agent.py",
+      "line_count": 2449
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\chain_node.py",
+      "line_count": 272
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\conflict_resolver.py",
+      "line_count": 961
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\context_preserver.py",
+      "line_count": 994
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\coordinator.py",
+      "line_count": 61
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\enhanced_coordinator.py",
+      "line_count": 167
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\enhanced_message_bus.py",
+      "line_count": 1204
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\implementation_agent.py",
+      "line_count": 3179
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\llm_config.py",
+      "line_count": 137
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\memory_manager.py",
+      "line_count": 529
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\message.py",
+      "line_count": 619
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\message_bus.py",
+      "line_count": 343
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\message_prioritizer.py",
+      "line_count": 504
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\message_schema.py",
+      "line_count": 560
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\message_schema_validator.py",
+      "line_count": 763
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\meta_agent.py",
+      "line_count": 303
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\orchestrator_agent.py",
+      "line_count": 2584
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\priority_analyzer_agent.py",
+      "line_count": 1358
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\relationship_analyst_agent.py",
+      "line_count": 929
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\response_cache.py",
+      "line_count": 133
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\response_handling.py",
+      "line_count": 850
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\roles.py",
+      "line_count": 19
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\router.py",
+      "line_count": 66
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\strategy_agent.py",
+      "line_count": 1156
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\test_message_bus.py",
+      "line_count": 84
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\test_stubs.py",
+      "line_count": 273
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\test_thought_chain.py",
+      "line_count": 183
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\thought_chain.py",
+      "line_count": 1159
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\thought_chain_manager.py",
+      "line_count": 1650
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\verification_agent.py",
+      "line_count": 1008
+    },
+    {
+      "path": ".\\triangulum_lx\\agents\\__init__.py",
+      "line_count": 21
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\breakthrough_emergence.py",
+      "line_count": 41
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\compatibility.py",
+      "line_count": 346
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\engine.py",
+      "line_count": 1235
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\engine_event_extension.py",
+      "line_count": 698
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\engine_learning_integration.py",
+      "line_count": 884
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\entropy_explainer.py",
+      "line_count": 128
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\exceptions.py",
+      "line_count": 342
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\learning_enabled_engine.py",
+      "line_count": 803
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\learning_manager.py",
+      "line_count": 1132
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\monitor.py",
+      "line_count": 614
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\parallel_executor.py",
+      "line_count": 1341
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\rollback_manager.py",
+      "line_count": 1331
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\state.py",
+      "line_count": 71
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\tracing.py",
+      "line_count": 209
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\transition.py",
+      "line_count": 39
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\ultimate_health_booster.py",
+      "line_count": 36
+    },
+    {
+      "path": ".\\triangulum_lx\\core\\__init__.py",
+      "line_count": 75
+    },
+    {
+      "path": ".\\triangulum_lx\\future\\__init__.py",
+      "line_count": 5
+    },
+    {
+      "path": ".\\triangulum_lx\\goal\\goal_loader.py",
+      "line_count": 479
+    },
+    {
+      "path": ".\\triangulum_lx\\goal\\prioritiser.py",
+      "line_count": 23
+    },
+    {
+      "path": ".\\triangulum_lx\\goal\\__init__.py",
+      "line_count": 6
+    },
+    {
+      "path": ".\\triangulum_lx\\human\\feedback.py",
+      "line_count": 525
+    },
+    {
+      "path": ".\\triangulum_lx\\human\\hub.py",
+      "line_count": 459
+    },
+    {
+      "path": ".\\triangulum_lx\\human\\interactive_mode.py",
+      "line_count": 298
+    },
+    {
+      "path": ".\\triangulum_lx\\human\\__init__.py",
+      "line_count": 9
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\bug_predictor.py",
+      "line_count": 85
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\continuous_improvement.py",
+      "line_count": 1139
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\feedback_processor.py",
+      "line_count": 855
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\optimizer.py",
+      "line_count": 72
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\repair_pattern_extractor.py",
+      "line_count": 712
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\repair_pattern_learner.py",
+      "line_count": 818
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\replay_buffer.py",
+      "line_count": 224
+    },
+    {
+      "path": ".\\triangulum_lx\\learning\\__init__.py",
+      "line_count": 6
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\agentic_dashboard.py",
+      "line_count": 1186
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\agentic_system_monitor.py",
+      "line_count": 362
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\agent_network_visualizer.py",
+      "line_count": 587
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\dashboard_stub.py",
+      "line_count": 749
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\decision_tree_visualizer.py",
+      "line_count": 852
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\feedback_handler.py",
+      "line_count": 59
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\metrics.py",
+      "line_count": 319
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\metrics_exporter.py",
+      "line_count": 515
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\progress_tracker.py",
+      "line_count": 363
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\startup_dashboard.py",
+      "line_count": 356
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\system_monitor.py",
+      "line_count": 343
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\thought_chain_visualizer.py",
+      "line_count": 449
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\token_processing_visualizer.py",
+      "line_count": 615
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\visualization.py",
+      "line_count": 392
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\__init__.py",
+      "line_count": 16
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\templates\\agent_network.html",
+      "line_count": 245
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\templates\\dashboard.html",
+      "line_count": 424
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\templates\\decision_tree.html",
+      "line_count": 449
+    },
+    {
+      "path": ".\\triangulum_lx\\monitoring\\templates\\thought_chain.html",
+      "line_count": 135
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\anthropic.py",
+      "line_count": 150
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\base.py",
+      "line_count": 111
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\capability_discovery.py",
+      "line_count": 341
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\factory.py",
+      "line_count": 796
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\groq.py",
+      "line_count": 127
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\local.py",
+      "line_count": 417
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\o3_provider.py",
+      "line_count": 587
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\openai.py",
+      "line_count": 160
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\openrouter.py",
+      "line_count": 134
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\request_manager.py",
+      "line_count": 101
+    },
+    {
+      "path": ".\\triangulum_lx\\providers\\__init__.py",
+      "line_count": 24
+    },
+    {
+      "path": ".\\triangulum_lx\\quantum\\breakthrough_optimizer.py",
+      "line_count": 38
+    },
+    {
+      "path": ".\\triangulum_lx\\quantum\\code_analyzer.py",
+      "line_count": 1467
+    },
+    {
+      "path": ".\\triangulum_lx\\quantum\\entanglement.py",
+      "line_count": 339
+    },
+    {
+      "path": ".\\triangulum_lx\\quantum\\parallelization.py",
+      "line_count": 883
+    },
+    {
+      "path": ".\\triangulum_lx\\quantum\\__init__.py",
+      "line_count": 32
+    },
+    {
+      "path": ".\\triangulum_lx\\scripts\\cli.py",
+      "line_count": 89
+    },
+    {
+      "path": ".\\triangulum_lx\\scripts\\cli_fixed.py",
+      "line_count": 208
+    },
+    {
+      "path": ".\\triangulum_lx\\spec\\ltl_properties.py",
+      "line_count": 237
+    },
+    {
+      "path": ".\\triangulum_lx\\spec\\model_checker.py",
+      "line_count": 407
+    },
+    {
+      "path": ".\\triangulum_lx\\spec\\__init__.py",
+      "line_count": 10
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\__init__.py",
+      "line_count": 1
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\smoke\\test_simple_bug.py",
+      "line_count": 149
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\smoke\\__init__.py",
+      "line_count": 1
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\unit\\test_state.py",
+      "line_count": 40
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\unit\\test_transition.py",
+      "line_count": 85
+    },
+    {
+      "path": ".\\triangulum_lx\\tests\\unit\\__init__.py",
+      "line_count": 1
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\auto_verification.py",
+      "line_count": 929
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\canary_runner.py",
+      "line_count": 285
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\code_relationship_analyzer.py",
+      "line_count": 348
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\compress.py",
+      "line_count": 60
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\dependency_analyzer.py",
+      "line_count": 426
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\dependency_graph.py",
+      "line_count": 669
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\dependency_graph_path_fix.py",
+      "line_count": 99
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\fix_impact_tracker.py",
+      "line_count": 125
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\graph_models.py",
+      "line_count": 575
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\incremental_analyzer.py",
+      "line_count": 418
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\patch_bundle.py",
+      "line_count": 294
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\relationship_context_provider.py",
+      "line_count": 428
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\repair.py",
+      "line_count": 1499
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\repo_analyzer.py",
+      "line_count": 77
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\scope_filter.py",
+      "line_count": 53
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\smoke_runner.py",
+      "line_count": 306
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\test_runner.py",
+      "line_count": 376
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\timeout_manager.py",
+      "line_count": 121
+    },
+    {
+      "path": ".\\triangulum_lx\\tooling\\__init__.py",
+      "line_count": 28
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\adaptive.py",
+      "line_count": 727
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\ci.py",
+      "line_count": 619
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\code_fixer.py",
+      "line_count": 963
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\core.py",
+      "line_count": 927
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\metrics.py",
+      "line_count": 413
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\__init__.py",
+      "line_count": 14
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\plugins\\python.py",
+      "line_count": 545
+    },
+    {
+      "path": ".\\triangulum_lx\\verification\\plugins\\__init__.py",
+      "line_count": 12
+    }
+  ]
+}

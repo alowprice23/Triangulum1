@@ -1,0 +1,104 @@
+{
+  "parameters": [
+    {
+      "name": "bug_detection_confidence_threshold",
+      "value": 0.7,
+      "min_value": 0.5,
+      "max_value": 0.95,
+      "step_size": 0.05,
+      "description": "Confidence threshold for bug detection",
+      "category": "bug_detection",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "repair_confidence_threshold",
+      "value": 0.8,
+      "min_value": 0.6,
+      "max_value": 0.95,
+      "step_size": 0.05,
+      "description": "Confidence threshold for repair application",
+      "category": "repair",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "max_repair_attempts",
+      "value": 3,
+      "min_value": 1,
+      "max_value": 10,
+      "step_size": 1,
+      "description": "Maximum number of repair attempts",
+      "category": "repair",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "verification_strictness",
+      "value": 0.8,
+      "min_value": 0.5,
+      "max_value": 1.0,
+      "step_size": 0.1,
+      "description": "Strictness of verification checks",
+      "category": "verification",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "parallel_execution_workers",
+      "value": 4,
+      "min_value": 1,
+      "max_value": 16,
+      "step_size": 1,
+      "description": "Number of parallel execution workers",
+      "category": "performance",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "timeout_multiplier",
+      "value": 1.5,
+      "min_value": 1.0,
+      "max_value": 5.0,
+      "step_size": 0.5,
+      "description": "Multiplier for operation timeouts",
+      "category": "performance",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "learning_rate",
+      "value": 0.01,
+      "min_value": 0.001,
+      "max_value": 0.1,
+      "step_size": 0.005,
+      "description": "Learning rate for model updates",
+      "category": "learning",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    },
+    {
+      "name": "feedback_weight",
+      "value": 0.7,
+      "min_value": 0.1,
+      "max_value": 1.0,
+      "step_size": 0.1,
+      "description": "Weight given to user feedback",
+      "category": "learning",
+      "history": [],
+      "created_at": "2025-07-05T18:06:54.472138",
+      "updated_at": "2025-07-05T18:06:54.472138"
+    }
+  ],
+  "experiments": [],
+  "models": [],
+  "metrics": {},
+  "last_updated": "2025-07-05T18:06:54.473136"
+}

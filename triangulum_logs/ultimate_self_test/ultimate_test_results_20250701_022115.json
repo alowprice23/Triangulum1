@@ -1,0 +1,36 @@
+{
+  "session_id": "20250701_022115",
+  "timestamp": 1751350875.2985399,
+  "agents_discovered": 29,
+  "issues_found": 15,
+  "fix_plans_created": 15,
+  "fixes_applied": {
+    "fixes_attempted": 5,
+    "fixes_successful": 0,
+    "fixes_failed": 5,
+    "total_time": 2.8160760402679443,
+    "mathematical_predictions": [
+      {
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "predicted_fixes": 488,
+        "predicted_time": 1.3333333333333333,
+        "fan_out_factors": [
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5
+        ]
+      }
+    ],
+    "actual_results": []
+  },
+  "mathematical_validation": {
+    "time_prediction_accuracy": 0.0,
+    "fix_count_accuracy": 0.0,
+    "overall_model_confidence": 0.0,
+    "domino_effect_observed": false
+  },
+  "overall_success": false,
+  "triangulum_health_score": 0.455
+}

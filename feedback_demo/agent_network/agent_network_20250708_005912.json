@@ -1,0 +1,124 @@
+{
+  "agents": [
+    "bug_detector",
+    "orchestrator"
+  ],
+  "messages": [
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 5% complete",
+      "timestamp": "2025-07-08T00:54:05.765647",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 10% complete",
+      "timestamp": "2025-07-08T00:54:10.783193",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 15% complete",
+      "timestamp": "2025-07-08T00:54:15.825651",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 20% complete",
+      "timestamp": "2025-07-08T00:54:20.842315",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 25% complete",
+      "timestamp": "2025-07-08T00:54:25.865964",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 30% complete",
+      "timestamp": "2025-07-08T00:54:30.883110",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 35% complete",
+      "timestamp": "2025-07-08T00:54:35.911728",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 40% complete",
+      "timestamp": "2025-07-08T00:54:40.937838",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 45% complete",
+      "timestamp": "2025-07-08T00:54:45.955464",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 50% complete",
+      "timestamp": "2025-07-08T00:54:50.983477",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 55% complete",
+      "timestamp": "2025-07-08T00:54:56.015256",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "status_update",
+      "content": "Analysis at 60% complete",
+      "timestamp": "2025-07-08T00:55:01.034637",
+      "metadata": {}
+    }
+  ],
+  "connections": {
+    "bug_detector": {
+      "orchestrator": 12
+    }
+  },
+  "agent_stats": {
+    "bug_detector": {
+      "messages_sent": 12,
+      "messages_received": 0,
+      "last_active": "2025-07-08T00:55:01.034637",
+      "response_times": []
+    },
+    "orchestrator": {
+      "messages_sent": 0,
+      "messages_received": 12,
+      "last_active": "2025-07-08T00:55:01.034637",
+      "response_times": []
+    }
+  },
+  "timestamp": "2025-07-08T00:59:12.646911"
+}

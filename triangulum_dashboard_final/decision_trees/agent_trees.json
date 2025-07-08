@@ -1,0 +1,11 @@
+{
+  "orchestrator": [
+    "ab383b55-0416-44fd-a6f2-88228d075d74"
+  ],
+  "bug_detector": [
+    "2c50249e-ef56-4e14-8ebb-b170c7489c62"
+  ],
+  "relationship_analyst": [
+    "d60c04fa-7940-455a-9e59-5fa85b728cad"
+  ]
+}

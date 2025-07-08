@@ -1,0 +1,135 @@
+{
+  "session": {
+    "agent_id": "agent_1",
+    "description": "Simulated processing by agent_1",
+    "start_time": "2025-07-07T23:47:46.009815",
+    "end_time": "2025-07-07T23:48:58.587672",
+    "status": "completed",
+    "token_count": 10,
+    "average_confidence": 81.5,
+    "average_processing_time": 72.00299405739345
+  },
+  "tokens": [
+    {
+      "token": "The",
+      "confidence": 95.0,
+      "processing_time_ms": 58.96864447744645,
+      "timestamp": "2025-07-07T23:47:46.016815",
+      "index": 0,
+      "attention_weights": null,
+      "metadata": {
+        "position": 0,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "Triangulum",
+      "confidence": 92.0,
+      "processing_time_ms": 74.54712457523925,
+      "timestamp": "2025-07-07T23:47:46.117887",
+      "index": 1,
+      "attention_weights": null,
+      "metadata": {
+        "position": 1,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "system",
+      "confidence": 89.0,
+      "processing_time_ms": 72.16261309919057,
+      "timestamp": "2025-07-07T23:47:46.218853",
+      "index": 2,
+      "attention_weights": null,
+      "metadata": {
+        "position": 2,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "is",
+      "confidence": 86.0,
+      "processing_time_ms": 67.00291568774988,
+      "timestamp": "2025-07-07T23:47:46.978810",
+      "index": 3,
+      "attention_weights": null,
+      "metadata": {
+        "position": 3,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "designed",
+      "confidence": 83.0,
+      "processing_time_ms": 68.76157949482972,
+      "timestamp": "2025-07-07T23:47:47.791120",
+      "index": 4,
+      "attention_weights": null,
+      "metadata": {
+        "position": 4,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "to",
+      "confidence": 80.0,
+      "processing_time_ms": 59.85293630304568,
+      "timestamp": "2025-07-07T23:47:48.431089",
+      "index": 5,
+      "attention_weights": null,
+      "metadata": {
+        "position": 5,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "provide",
+      "confidence": 77.0,
+      "processing_time_ms": 74.26001832660809,
+      "timestamp": "2025-07-07T23:47:49.082055",
+      "index": 6,
+      "attention_weights": null,
+      "metadata": {
+        "position": 6,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "transparent",
+      "confidence": 74.0,
+      "processing_time_ms": 90.05694887693504,
+      "timestamp": "2025-07-07T23:47:49.734413",
+      "index": 7,
+      "attention_weights": null,
+      "metadata": {
+        "position": 7,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "LLM",
+      "confidence": 71.0,
+      "processing_time_ms": 68.02874308572339,
+      "timestamp": "2025-07-07T23:47:50.383080",
+      "index": 8,
+      "attention_weights": null,
+      "metadata": {
+        "position": 8,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "processing.",
+      "confidence": 68.0,
+      "processing_time_ms": 86.38841664716642,
+      "timestamp": "2025-07-07T23:47:51.935019",
+      "index": 9,
+      "attention_weights": null,
+      "metadata": {
+        "position": 9,
+        "text_idx": 0
+      }
+    }
+  ],
+  "last_updated": "2025-07-07T23:49:08.379282"
+}

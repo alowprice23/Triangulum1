@@ -1,0 +1,212 @@
+[
+  {
+    "id": "f1f7bfe7-50f1-46f9-98ea-9e4f641f959e",
+    "source": "relationship_analyst",
+    "target": "verification_agent",
+    "type": "response",
+    "timestamp": "2025-07-08T02:31:35.315025"
+  },
+  {
+    "id": "698cd630-73fe-47c1-903e-860500cadc43",
+    "source": "code_fixer",
+    "target": "priority_analyzer",
+    "type": "request",
+    "timestamp": "2025-07-08T02:31:20.315025"
+  },
+  {
+    "id": "a81b0f76-4d19-498c-8323-d29af2daa7c4",
+    "source": "relationship_analyst",
+    "target": "verification_agent",
+    "type": "info",
+    "timestamp": "2025-07-08T02:31:05.315025"
+  },
+  {
+    "id": "bfa0ac37-b0bd-4838-bfdb-38a76b3b56fc",
+    "source": "orchestrator",
+    "target": "code_fixer",
+    "type": "response",
+    "timestamp": "2025-07-08T02:30:50.315025"
+  },
+  {
+    "id": "5a23a87f-1b95-4f41-8416-7b0a1754badd",
+    "source": "priority_analyzer",
+    "target": "bug_detector",
+    "type": "response",
+    "timestamp": "2025-07-08T02:30:35.315025"
+  },
+  {
+    "id": "15834460-333f-4a33-99ed-c357d9d32e26",
+    "source": "bug_detector",
+    "target": "orchestrator",
+    "type": "response",
+    "timestamp": "2025-07-08T02:30:20.315025"
+  },
+  {
+    "id": "fd883e5b-5084-45de-b08e-b9541c8de5a0",
+    "source": "relationship_analyst",
+    "target": "bug_detector",
+    "type": "request",
+    "timestamp": "2025-07-08T02:30:05.315025"
+  },
+  {
+    "id": "152441f1-e2b6-476e-b673-1d3235f3be75",
+    "source": "bug_detector",
+    "target": "orchestrator",
+    "type": "info",
+    "timestamp": "2025-07-08T02:29:50.315025"
+  },
+  {
+    "id": "7bcf7acb-df2a-47fd-9959-49dc82cb21a3",
+    "source": "orchestrator",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:29:35.315025"
+  },
+  {
+    "id": "6c043385-b9ba-4d92-9dc9-f0bd3096ee87",
+    "source": "priority_analyzer",
+    "target": "code_fixer",
+    "type": "response",
+    "timestamp": "2025-07-08T02:29:20.315025"
+  },
+  {
+    "id": "4f6ca177-5dd3-476b-8d18-2f94a63bb6a6",
+    "source": "priority_analyzer",
+    "target": "orchestrator",
+    "type": "response",
+    "timestamp": "2025-07-08T02:29:05.315025"
+  },
+  {
+    "id": "3db3c679-c54b-4637-a2e4-763184cf2559",
+    "source": "orchestrator",
+    "target": "code_fixer",
+    "type": "info",
+    "timestamp": "2025-07-08T02:28:50.315025"
+  },
+  {
+    "id": "414e2543-2326-4bb9-ba3c-7c260d21da0c",
+    "source": "bug_detector",
+    "target": "verification_agent",
+    "type": "response",
+    "timestamp": "2025-07-08T02:28:35.315025"
+  },
+  {
+    "id": "f616ff19-5c8d-4312-9555-c43fc848597a",
+    "source": "code_fixer",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:28:20.315025"
+  },
+  {
+    "id": "4f3b37f6-ee05-4c36-9eff-a1362b793760",
+    "source": "orchestrator",
+    "target": "priority_analyzer",
+    "type": "info",
+    "timestamp": "2025-07-08T02:28:05.315025"
+  },
+  {
+    "id": "4b13e416-c7a5-4811-a9ad-13d7d754c4de",
+    "source": "bug_detector",
+    "target": "relationship_analyst",
+    "type": "info",
+    "timestamp": "2025-07-08T02:27:50.315025"
+  },
+  {
+    "id": "970ee0f0-131b-4e12-b507-b791f7c4ebea",
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:27:35.315025"
+  },
+  {
+    "id": "4460a45b-371c-48b6-b14e-5bbee0143b1e",
+    "source": "priority_analyzer",
+    "target": "verification_agent",
+    "type": "response",
+    "timestamp": "2025-07-08T02:27:20.315025"
+  },
+  {
+    "id": "b894b12b-27d2-4841-945f-3fa841dc801d",
+    "source": "code_fixer",
+    "target": "bug_detector",
+    "type": "request",
+    "timestamp": "2025-07-08T02:27:05.315025"
+  },
+  {
+    "id": "6736cca6-28f9-44aa-b1e8-bd9363014610",
+    "source": "priority_analyzer",
+    "target": "code_fixer",
+    "type": "response",
+    "timestamp": "2025-07-08T02:26:50.315025"
+  },
+  {
+    "id": "ce6e95ac-fcbd-4f07-b3df-7b92c110bdcd",
+    "source": "orchestrator",
+    "target": "verification_agent",
+    "type": "response",
+    "timestamp": "2025-07-08T02:26:35.315025"
+  },
+  {
+    "id": "14839eb1-0192-4b13-9766-b4651733d993",
+    "source": "orchestrator",
+    "target": "bug_detector",
+    "type": "response",
+    "timestamp": "2025-07-08T02:26:20.315025"
+  },
+  {
+    "id": "231160c7-e62c-4014-9bb4-de51f0374ccf",
+    "source": "orchestrator",
+    "target": "bug_detector",
+    "type": "response",
+    "timestamp": "2025-07-08T02:26:05.315025"
+  },
+  {
+    "id": "cd9e5e61-02c8-49ff-8b09-bbaf077dc68b",
+    "source": "orchestrator",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:25:50.315025"
+  },
+  {
+    "id": "05e6f589-c74f-403f-a5df-b8e85dd7a2f1",
+    "source": "priority_analyzer",
+    "target": "orchestrator",
+    "type": "request",
+    "timestamp": "2025-07-08T02:25:35.315025"
+  },
+  {
+    "id": "591c679e-d460-4282-9d3b-51a0b32a487f",
+    "source": "code_fixer",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:25:20.315025"
+  },
+  {
+    "id": "a710b25a-c271-45dc-860a-31711de56770",
+    "source": "bug_detector",
+    "target": "code_fixer",
+    "type": "info",
+    "timestamp": "2025-07-08T02:25:05.315025"
+  },
+  {
+    "id": "269eee0f-7ebc-4f41-b5f0-9db8378e1a7c",
+    "source": "bug_detector",
+    "target": "verification_agent",
+    "type": "response",
+    "timestamp": "2025-07-08T02:24:50.315025"
+  },
+  {
+    "id": "f46cd0b4-878e-4af1-a5ca-480c1f67ca71",
+    "source": "verification_agent",
+    "target": "orchestrator",
+    "type": "response",
+    "timestamp": "2025-07-08T02:24:35.315025"
+  },
+  {
+    "id": "c1a05a72-6dfe-48cf-a41d-efd4be37eb08",
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "info",
+    "timestamp": "2025-07-08T02:24:20.315025"
+  }
+]

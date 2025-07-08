@@ -1,0 +1,248 @@
+{
+  "version": "1.0",
+  "nodes": {
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\agent_coordinator.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\agent_coordinator.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751785887.167796,
+      "file_hash": "83e831fa843bae5060b42b16679e6c43d6e809af3d7593bb44fc336924801164",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\agent_memory.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\agent_memory.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745081.7993503,
+      "file_hash": "4e91e0fa235824a98d8f26bb8f3528a2a8ca410202b8f58079d0347ee102c935",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\canary_runner.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\canary_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751783672.9445114,
+      "file_hash": "062bb8c04384717ce4f2fb4b740d8b19f5d9648da09da573dc424aa1448dc87e",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\cli.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\cli.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747591.232541,
+      "file_hash": "cf91502d84f14633bd735e544e29946b316eb53622137179515fc806f00bfde6",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\compress.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\compress.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779708.7587905,
+      "file_hash": "85f3f3520f99f3f8f3ec8e3cf4537531e6b8760531c3307000ed73c77f267660",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\dashboard_stub.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\dashboard_stub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746946.83747,
+      "file_hash": "4be9ee1aa535bc1efa5ed1d0d125852ed42932fec8bea01135edac2e54fde608",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Data Structures.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Data Structures.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751743567.8740778,
+      "file_hash": "1ce3e31e2b78057663da0de4c8eb5ef433c1f0058731a3c471369125d504a60d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\entropy_explainer.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\entropy_explainer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747022.0187192,
+      "file_hash": "816f19afa590800c3da573fdf2945b81d75956067f1d9a3a8b71f675463884de",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\hub.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\hub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751747102.1703436,
+      "file_hash": "27bbc2bde98e4bd4f40c67755628fa32ab17f7470464737e7ecd7344ef0f4793",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\llm_integrations.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\llm_integrations.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779826.3560674,
+      "file_hash": "e1cce0b3fa0b90f9bf89544be19d02b6c8941f2fd4a36406fd68e89095452c6f",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\main.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\main.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779314.0558171,
+      "file_hash": "7614482a7f1d434dc7aef3b37a9300de0ee057b29f93a3800c5349a15b62fa81",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\meta_agent.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\meta_agent.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745153.3058553,
+      "file_hash": "dbd88d48bebc4f62cd410bed33afb1f9fa2f31db7af6a2faa3b0eb8e3738dca8",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\optimizer.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\optimizer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746780.7340136,
+      "file_hash": "ae07937b85b99406511a883889411a0770cf225ffac2671d2cad6a5bcd6e9906",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\parallel_executor.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\parallel_executor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744861.6169186,
+      "file_hash": "a2a2ed7f0e8f9db81bd78202878b0e5e65c1129b4f2d3cba287e35f416031948",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\patch_bundle.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\patch_bundle.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745642.954082,
+      "file_hash": "2458aeab947c0f1daaee940e9abdd2c4e00d2307cc8008548b0b453fb278fd67",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\prioritiser.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\prioritiser.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744920.6114695,
+      "file_hash": "4e595571f1546e1d3cc150713c81085a20201f0d5cdeedd7a3f89d2166b1786d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\repair.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\repair.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779858.4513128,
+      "file_hash": "0a34ac034bc6d77a48c472c571b8a783f0a35677d5132d09962d2b83ffa620d7",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\replay_buffer.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\replay_buffer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746799.6621234,
+      "file_hash": "a3cf1619dff75158086c9aae3c63516f9ee6ce53ea264246ad82d49ec603ebd8",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\resource_manager.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\resource_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744074.4002285,
+      "file_hash": "914350ce02af7efaf9af73652840299fa618d4de4872726cff9a9c250762103d",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\rollback_manager.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\rollback_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744721.3957899,
+      "file_hash": "a2a2ed7f0e8f9db81bd78202878b0e5e65c1129b4f2d3cba287e35f416031948",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\scheduler.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\scheduler.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751774075.2673,
+      "file_hash": "10f1142c8facf437cbd8b4df62ab54e1b1fc43b1a30c45b3f8c08e291abe178a",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\scope_filter.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\scope_filter.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779738.7246065,
+      "file_hash": "24ac255846544bd0e516f56db10391e37e34c6adece37425ed53c952440bb748",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\smoke_runner.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\smoke_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746492.1662815,
+      "file_hash": "5567d9d01187762a372e87956b8836042248ccd0d57bd6328b59369fa55ee89a",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Specialized_agents.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Specialized_agents.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751745003.272163,
+      "file_hash": "2bf2cbb51aef9f55a5b46d09c5a263983ee13c6b7b8ac1db73c01094406f9970",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\state_machine.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\state_machine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751743441.7505887,
+      "file_hash": "999fd43e3c2c70282bccb785c93e74bde7b97069d0382e446b36f8f94fcc72ad",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\system_monitor.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\system_monitor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779790.2957487,
+      "file_hash": "012a9305806a1d606bf2a5bac8d8c0318ffb8eac22aba46322e7cee975d1d2d1",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\terminal_interface.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\terminal_interface.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751779886.3016517,
+      "file_hash": "c6fc15dae67e80d911017f742af29d4cc7409487686301ce4fb65c019e4b6093",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\test_runner.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\test_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751746575.5751398,
+      "file_hash": "3ad70ee3f5b22bc2bb3c4f916c218fdb50e24cc5c65548f7e83dbd3d16a9e610",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\triangulation_engine.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\triangulation_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751774136.9715364,
+      "file_hash": "2c27875dc95b5b9a39da97702d9be9d440fbd405d48ffb33262f934f3d68936c",
+      "metadata": {}
+    },
+    "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Verification_engine.py": {
+      "path": "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\triangulum_test_pd12j1a3\\Verification_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751744639.3821468,
+      "file_hash": "545f3e7658200024c4b8ff640d02c6d12b81dd040ffcb15d6d05d69e9fe0a9b3",
+      "metadata": {}
+    }
+  },
+  "edges": [],
+  "created_at": 1751785887.1687958,
+  "modified_at": 1751785887.1897953
+}

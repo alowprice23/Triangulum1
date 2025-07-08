@@ -1,0 +1,32 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy Triangulum code
+COPY . .
+
+# Install the package
+RUN pip install -e .
+
+# Create necessary directories
+RUN mkdir -p data logs
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TRIANGULUM_LOG_LEVEL=INFO
+
+# Expose API port
+EXPOSE 8888
+
+# Default command
+CMD ["python", "-m", "triangulum_lx.scripts.cli", "run"]

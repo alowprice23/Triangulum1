@@ -1,0 +1,109 @@
+{
+  "bug_analysis": {
+    "chain_id": "bug_analysis",
+    "created_at": "2025-07-08T00:54:05.765647",
+    "last_updated": "2025-07-08T00:55:01.033639",
+    "thoughts": [
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 5",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:05.765647",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 10",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:10.783193",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 15",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:15.825651",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 20",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:20.842315",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 25",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:25.864963",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 30",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:30.883110",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 35",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:35.910688",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 40",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:40.936842",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 45",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:45.955464",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 50",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:50.983477",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 55",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:54:56.014256",
+        "metadata": {}
+      },
+      {
+        "agent_id": "bug_detector",
+        "chain_id": "bug_analysis",
+        "content": "Analyzing bug at step 60",
+        "thought_type": "analysis",
+        "timestamp": "2025-07-08T00:55:01.033639",
+        "metadata": {}
+      }
+    ],
+    "agents": [
+      "bug_detector"
+    ],
+    "connections": []
+  }
+}

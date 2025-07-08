@@ -1,0 +1,70 @@
+{
+  "session_id": "20250701_022401",
+  "total_cycles": 3,
+  "session_duration": 9.09768033027649,
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "timestamp": 1751351041.9695628,
+      "issues_found": 14,
+      "fixes_applied": 5,
+      "health_score": 0.758,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 2.896231174468994,
+        "agents_count": 29,
+        "issues_density": 0.4827586206896552,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 2,
+      "timestamp": 1751351046.8669763,
+      "issues_found": 13,
+      "fixes_applied": 5,
+      "health_score": 0.761,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.09986138343811035,
+        "agents_count": 29,
+        "issues_density": 0.4482758620689655,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 3,
+      "timestamp": 1751351048.9675038,
+      "issues_found": 12,
+      "fixes_applied": 5,
+      "health_score": 0.764,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.09771966934204102,
+        "agents_count": 29,
+        "issues_density": 0.41379310344827586,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    }
+  ],
+  "improvement_trends": {
+    "health_score_trend": 0.0030000000000000027,
+    "fixes_applied_trend": 0.0,
+    "domino_effect_trend": 0.0,
+    "mathematical_confidence_trend": 0.0,
+    "cycle_efficiency_trend": -1.3992557525634766,
+    "overall_improvement_direction": "declining"
+  },
+  "final_health_score": 0.764,
+  "target_achieved": false,
+  "total_fixes_applied": 15,
+  "average_domino_effect": 0.0
+}

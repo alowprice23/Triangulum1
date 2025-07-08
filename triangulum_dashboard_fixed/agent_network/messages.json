@@ -1,0 +1,786 @@
+[
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "response",
+    "content": "Completed task. Found 8 bugs.",
+    "timestamp": "2025-07-08T03:29:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954983.2191484
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "response"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "relationship_analyst",
+    "message_type": "request",
+    "content": "Please analyze function 18",
+    "timestamp": "2025-07-08T03:28:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954984.0440333
+    },
+    "source": "bug_detector",
+    "target": "relationship_analyst",
+    "type": "request"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "command",
+    "content": "Pause analysis process",
+    "timestamp": "2025-07-08T03:27:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954984.8941145
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "command"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "orchestrator",
+    "message_type": "command",
+    "content": "Stop verification process",
+    "timestamp": "2025-07-08T03:26:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751954985.7340395
+    },
+    "source": "relationship_analyst",
+    "target": "orchestrator",
+    "type": "command"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "orchestrator",
+    "message_type": "request",
+    "content": "Please analyze bug #24",
+    "timestamp": "2025-07-08T03:25:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954985.7340395
+    },
+    "source": "code_fixer",
+    "target": "orchestrator",
+    "type": "request"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "priority_analyzer",
+    "message_type": "request",
+    "content": "Please review module 47",
+    "timestamp": "2025-07-08T03:24:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954986.5581386
+    },
+    "source": "orchestrator",
+    "target": "priority_analyzer",
+    "type": "request"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "bug_detector",
+    "message_type": "notification",
+    "content": "System info: New data available",
+    "timestamp": "2025-07-08T03:23:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751954987.3988266
+    },
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "notification"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "bug_detector",
+    "message_type": "notification",
+    "content": "System error: Memory usage high",
+    "timestamp": "2025-07-08T03:22:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751954988.2497342
+    },
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "notification"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "verification_agent",
+    "message_type": "response",
+    "content": "Completed task. Found 5 improvements.",
+    "timestamp": "2025-07-08T03:21:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954988.251741
+    },
+    "source": "orchestrator",
+    "target": "verification_agent",
+    "type": "response"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "verification_agent",
+    "message_type": "notification",
+    "content": "System error: Memory usage high",
+    "timestamp": "2025-07-08T03:20:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751954989.1125855
+    },
+    "source": "relationship_analyst",
+    "target": "verification_agent",
+    "type": "notification"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "verification_agent",
+    "message_type": "command",
+    "content": "Start verification process",
+    "timestamp": "2025-07-08T03:19:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954989.9584668
+    },
+    "source": "orchestrator",
+    "target": "verification_agent",
+    "type": "command"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "orchestrator",
+    "message_type": "notification",
+    "content": "System info: CPU overload",
+    "timestamp": "2025-07-08T03:18:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751954989.9604645
+    },
+    "source": "relationship_analyst",
+    "target": "orchestrator",
+    "type": "notification"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "orchestrator",
+    "message_type": "notification",
+    "content": "System error: CPU overload",
+    "timestamp": "2025-07-08T03:17:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751954990.7862768
+    },
+    "source": "code_fixer",
+    "target": "orchestrator",
+    "type": "notification"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "relationship_analyst",
+    "message_type": "response",
+    "content": "Completed task. Found 5 bugs.",
+    "timestamp": "2025-07-08T03:16:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751954990.7872763
+    },
+    "source": "bug_detector",
+    "target": "relationship_analyst",
+    "type": "response"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "priority_analyzer",
+    "message_type": "command",
+    "content": "Resume analysis process",
+    "timestamp": "2025-07-08T03:15:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954991.6182942
+    },
+    "source": "bug_detector",
+    "target": "priority_analyzer",
+    "type": "command"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "priority_analyzer",
+    "message_type": "command",
+    "content": "Stop analysis process",
+    "timestamp": "2025-07-08T03:14:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751954992.4492402
+    },
+    "source": "bug_detector",
+    "target": "priority_analyzer",
+    "type": "command"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "code_fixer",
+    "message_type": "response",
+    "content": "Completed task. Found 1 bugs.",
+    "timestamp": "2025-07-08T03:13:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955007.8709974
+    },
+    "source": "verification_agent",
+    "target": "code_fixer",
+    "type": "response"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "bug_detector",
+    "message_type": "request",
+    "content": "Please analyze function 68",
+    "timestamp": "2025-07-08T03:12:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955022.8841887
+    },
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "request"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "bug_detector",
+    "message_type": "request",
+    "content": "Please analyze function 81",
+    "timestamp": "2025-07-08T03:11:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955037.9003694
+    },
+    "source": "relationship_analyst",
+    "target": "bug_detector",
+    "type": "request"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "relationship_analyst",
+    "message_type": "notification",
+    "content": "System warning: New data available",
+    "timestamp": "2025-07-08T03:10:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955052.9168575
+    },
+    "source": "verification_agent",
+    "target": "relationship_analyst",
+    "type": "notification"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "orchestrator",
+    "message_type": "request",
+    "content": "Please review function 29",
+    "timestamp": "2025-07-08T03:09:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955067.931309
+    },
+    "source": "verification_agent",
+    "target": "orchestrator",
+    "type": "request"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "priority_analyzer",
+    "message_type": "notification",
+    "content": "System warning: New data available",
+    "timestamp": "2025-07-08T03:08:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955082.9443164
+    },
+    "source": "relationship_analyst",
+    "target": "priority_analyzer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "code_fixer",
+    "message_type": "notification",
+    "content": "System info: CPU overload",
+    "timestamp": "2025-07-08T03:07:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955097.9609642
+    },
+    "source": "relationship_analyst",
+    "target": "code_fixer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "code_fixer",
+    "message_type": "response",
+    "content": "Completed task. Found 1 bugs.",
+    "timestamp": "2025-07-08T03:06:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955112.974466
+    },
+    "source": "verification_agent",
+    "target": "code_fixer",
+    "type": "response"
+  },
+  {
+    "source_agent": "priority_analyzer",
+    "target_agent": "relationship_analyst",
+    "message_type": "request",
+    "content": "Please review module 3",
+    "timestamp": "2025-07-08T03:05:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955127.9945095
+    },
+    "source": "priority_analyzer",
+    "target": "relationship_analyst",
+    "type": "request"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "priority_analyzer",
+    "message_type": "request",
+    "content": "Please review module 11",
+    "timestamp": "2025-07-08T03:04:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955143.0205636
+    },
+    "source": "code_fixer",
+    "target": "priority_analyzer",
+    "type": "request"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "verification_agent",
+    "message_type": "command",
+    "content": "Start repair process",
+    "timestamp": "2025-07-08T03:03:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955158.0343292
+    },
+    "source": "code_fixer",
+    "target": "verification_agent",
+    "type": "command"
+  },
+  {
+    "source_agent": "priority_analyzer",
+    "target_agent": "relationship_analyst",
+    "message_type": "request",
+    "content": "Please fix bug #57",
+    "timestamp": "2025-07-08T03:02:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955173.0508542
+    },
+    "source": "priority_analyzer",
+    "target": "relationship_analyst",
+    "type": "request"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "relationship_analyst",
+    "message_type": "response",
+    "content": "Completed task. Found 7 bugs.",
+    "timestamp": "2025-07-08T03:01:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955188.0647423
+    },
+    "source": "orchestrator",
+    "target": "relationship_analyst",
+    "type": "response"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "bug_detector",
+    "message_type": "response",
+    "content": "Completed task. Found 8 issues.",
+    "timestamp": "2025-07-08T03:00:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955203.080409
+    },
+    "source": "relationship_analyst",
+    "target": "bug_detector",
+    "type": "response"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "verification_agent",
+    "message_type": "request",
+    "content": "Please analyze bug #60",
+    "timestamp": "2025-07-08T02:59:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955218.094312
+    },
+    "source": "orchestrator",
+    "target": "verification_agent",
+    "type": "request"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "bug_detector",
+    "message_type": "request",
+    "content": "Please analyze bug #25",
+    "timestamp": "2025-07-08T02:58:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955233.1101224
+    },
+    "source": "orchestrator",
+    "target": "bug_detector",
+    "type": "request"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "relationship_analyst",
+    "message_type": "response",
+    "content": "Completed task. Found 3 issues.",
+    "timestamp": "2025-07-08T02:57:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955248.1252637
+    },
+    "source": "verification_agent",
+    "target": "relationship_analyst",
+    "type": "response"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "verification_agent",
+    "message_type": "request",
+    "content": "Please fix module 74",
+    "timestamp": "2025-07-08T02:56:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955263.13984
+    },
+    "source": "relationship_analyst",
+    "target": "verification_agent",
+    "type": "request"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "response",
+    "content": "Completed task. Found 6 improvements.",
+    "timestamp": "2025-07-08T02:55:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955278.159988
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "response"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "verification_agent",
+    "message_type": "response",
+    "content": "Completed task. Found 3 issues.",
+    "timestamp": "2025-07-08T02:54:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955293.1782386
+    },
+    "source": "orchestrator",
+    "target": "verification_agent",
+    "type": "response"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "orchestrator",
+    "message_type": "command",
+    "content": "Stop analysis process",
+    "timestamp": "2025-07-08T02:53:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955308.1941853
+    },
+    "source": "verification_agent",
+    "target": "orchestrator",
+    "type": "command"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "verification_agent",
+    "message_type": "request",
+    "content": "Please fix function 7",
+    "timestamp": "2025-07-08T02:52:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955323.210656
+    },
+    "source": "bug_detector",
+    "target": "verification_agent",
+    "type": "request"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "relationship_analyst",
+    "message_type": "command",
+    "content": "Pause analysis process",
+    "timestamp": "2025-07-08T02:51:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955338.2280827
+    },
+    "source": "bug_detector",
+    "target": "relationship_analyst",
+    "type": "command"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "priority_analyzer",
+    "message_type": "notification",
+    "content": "System error: New data available",
+    "timestamp": "2025-07-08T02:50:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955353.2441633
+    },
+    "source": "orchestrator",
+    "target": "priority_analyzer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "code_fixer",
+    "message_type": "notification",
+    "content": "System warning: New data available",
+    "timestamp": "2025-07-08T02:49:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955368.2734745
+    },
+    "source": "bug_detector",
+    "target": "code_fixer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "priority_analyzer",
+    "target_agent": "verification_agent",
+    "message_type": "request",
+    "content": "Please review module 38",
+    "timestamp": "2025-07-08T02:48:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955383.2937865
+    },
+    "source": "priority_analyzer",
+    "target": "verification_agent",
+    "type": "request"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "priority_analyzer",
+    "message_type": "notification",
+    "content": "System info: Memory usage high",
+    "timestamp": "2025-07-08T02:47:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955398.309384
+    },
+    "source": "bug_detector",
+    "target": "priority_analyzer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "orchestrator",
+    "message_type": "notification",
+    "content": "System error: New data available",
+    "timestamp": "2025-07-08T02:46:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955413.325867
+    },
+    "source": "relationship_analyst",
+    "target": "orchestrator",
+    "type": "notification"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "request",
+    "content": "Please analyze bug #45",
+    "timestamp": "2025-07-08T02:45:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955428.3429341
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "request"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "priority_analyzer",
+    "message_type": "response",
+    "content": "Completed task. Found 2 improvements.",
+    "timestamp": "2025-07-08T02:44:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955443.367425
+    },
+    "source": "orchestrator",
+    "target": "priority_analyzer",
+    "type": "response"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "notification",
+    "content": "System error: CPU overload",
+    "timestamp": "2025-07-08T02:43:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955458.3894143
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "notification"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "priority_analyzer",
+    "message_type": "notification",
+    "content": "System error: New data available",
+    "timestamp": "2025-07-08T02:42:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955473.4114916
+    },
+    "source": "verification_agent",
+    "target": "priority_analyzer",
+    "type": "notification"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "relationship_analyst",
+    "message_type": "notification",
+    "content": "System info: New data available",
+    "timestamp": "2025-07-08T02:41:02.387835",
+    "metadata": {
+      "priority": "high",
+      "timestamp_sent": 1751955488.4523563
+    },
+    "source": "code_fixer",
+    "target": "relationship_analyst",
+    "type": "notification"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "code_fixer",
+    "message_type": "response",
+    "content": "Completed task. Found 7 improvements.",
+    "timestamp": "2025-07-08T02:40:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955503.4677584
+    },
+    "source": "relationship_analyst",
+    "target": "code_fixer",
+    "type": "response"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "orchestrator",
+    "message_type": "response",
+    "content": "Completed task. Found 7 bugs.",
+    "timestamp": "2025-07-08T02:39:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955518.4872448
+    },
+    "source": "relationship_analyst",
+    "target": "orchestrator",
+    "type": "response"
+  },
+  {
+    "source_agent": "orchestrator",
+    "target_agent": "priority_analyzer",
+    "message_type": "response",
+    "content": "Completed task. Found 4 improvements.",
+    "timestamp": "2025-07-08T02:38:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955533.5183713
+    },
+    "source": "orchestrator",
+    "target": "priority_analyzer",
+    "type": "response"
+  },
+  {
+    "source_agent": "bug_detector",
+    "target_agent": "priority_analyzer",
+    "message_type": "request",
+    "content": "Please analyze module 5",
+    "timestamp": "2025-07-08T02:37:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955548.5397975
+    },
+    "source": "bug_detector",
+    "target": "priority_analyzer",
+    "type": "request"
+  },
+  {
+    "source_agent": "verification_agent",
+    "target_agent": "bug_detector",
+    "message_type": "response",
+    "content": "Completed task. Found 9 improvements.",
+    "timestamp": "2025-07-08T02:36:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955563.561194
+    },
+    "source": "verification_agent",
+    "target": "bug_detector",
+    "type": "response"
+  },
+  {
+    "source_agent": "code_fixer",
+    "target_agent": "priority_analyzer",
+    "message_type": "request",
+    "content": "Please fix module 46",
+    "timestamp": "2025-07-08T02:35:02.387835",
+    "metadata": {
+      "priority": "medium",
+      "timestamp_sent": 1751955578.5832996
+    },
+    "source": "code_fixer",
+    "target": "priority_analyzer",
+    "type": "request"
+  },
+  {
+    "source_agent": "relationship_analyst",
+    "target_agent": "orchestrator",
+    "message_type": "request",
+    "content": "Please review bug #83",
+    "timestamp": "2025-07-08T02:34:02.387835",
+    "metadata": {
+      "priority": "low",
+      "timestamp_sent": 1751955593.6051486
+    },
+    "source": "relationship_analyst",
+    "target": "orchestrator",
+    "type": "request"
+  }
+]

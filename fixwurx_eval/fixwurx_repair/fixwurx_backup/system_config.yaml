@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Triangulum ‣ Runtime Configuration
+#  File:   config/system_config.yaml
+#  Purpose:
+#    • Single-source of truth for high-level knobs that operators may tweak
+#      *without* touching the code-base.
+#    • Parsed once at process boot by `core/triangulation_engine.py`
+#      (see `TriangulationEngine.load_config()`).
+#  ---------------------------------------------------------------------------
+#  Conventions
+#    • All keys kebab-case.
+#    • Comment every non-trivial setting with 1-line summary + valid range.
+#    • Boolean flags default to false (Opt-In).
+#    • Timers measured in **ticks** (1 tick = engine.loop-interval).
+#    • Whenever you change a value, bump `config-revision` so agents can detect
+#      live-reload needs.
+# ─────────────────────────────────────────────────────────────────────────────
+
+config-revision: 4               # increment for any manual edit
+
+# ───────── Core resource envelope ──────────────────────────────────────────
+agents:
+  total: 9                       # physical pool size (integer > 0)
+  per-bug: 3                     # fixed allocation per active bug
+  escalation-share: 0.33         # w_esc in resource formula (0‥1, step 0.33)
+
+timers:
+  default-phase: 3               # starting τ for REPRO/PATCH/VERIFY (ticks)
+  min: 2                         # lower bound safeguard
+  max: 4                         # upper bound safeguard
+
+# ───────── Optimiser / Learning knobs ──────────────────────────────────────
+optimiser:
+  enabled: true                  # master switch for RL tuner
+  algorithm: epsilon-greedy      # future: 'ucb', 'softmax'
+  epsilon: 0.10                  # exploration probability (0‥1)
+  update-freq: 30                # episodes between policy checkpoints
+  buffer-capacity: 500           # replay buffer size
+
+# ───────── Context-compression limits ──────────────────────────────────────
+context:
+  max-tokens-prompt: 4096        # upstream LLM limit
+  compressor:
+    target-ratio: 0.30           # RCC/LLMLingua shrink goal (0‥1)
+
+# ───────── Canary / Smoke testing ──────────────────────────────────────────
+canary:
+  traffic-share: 0.05            # fraction routed to canary stack
+  timeout-s: 90                  # health-probe window
+  smoke-max-tokens: 4096         # compressed failure budget
+
+# ───────── Human review thresholds ─────────────────────────────────────────
+review:
+  auto-approve-success-rate: 0.95  # ≥ 95 % verifier pass → skip human review
+  queue-db-path: ".triangulum/reviews.sqlite"
+
+# ───────── Monitoring sinks ───────────────────────────────────────────────
+metrics:
+  bus: fastapi-sse               # options: 'stdout', 'prometheus', 'fastapi-sse'
+  tick-interval-ms: 1000         # push SystemMonitor gauges every N ms
+
+# ───────── LLM provider defaults  (api/llm_integrations.py) ───────────────
+llm:
+  preferred: openai              # 'openai' | 'anthropic' | 'gemini' | 'auto'
+  temperature: 0.1               # global default if provider supports
+  cost-budget-usd: 2.00          # hard guardrail per 24 h rolling window

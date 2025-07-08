@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "files_analyzed": 30,
+    "dependencies_found": 0,
+    "cycles_detected": 0,
+    "languages_detected": {
+      "PYTHON": 30
+    },
+    "analysis_timestamp": "20250706_010124",
+    "temporal_snapshots": 0,
+    "runtime_traces_incorporated": false,
+    "static_analysis_performed": true
+  },
+  "cycles": [],
+  "central_files": [
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_coordinator.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_memory.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\canary_runner.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\compress.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\dashboard_stub.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Data Structures.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\entropy_explainer.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\llm_integrations.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\main.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\meta_agent.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\parallel_executor.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\prioritiser.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\repair.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\resource_manager.py",
+      0.033333333333333326
+    ],
+    [
+      "C:\\Users\\Yusuf\\Downloads\\FixWurx\\rollback_manager.py",
+      0.033333333333333326
+    ]
+  ],
+  "metadata": {
+    "timestamp": "20250706_010124",
+    "target_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx"
+  }
+}

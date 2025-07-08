@@ -1,0 +1,1540 @@
+"""
+Orchestrator Agent
+
+This agent coordinates the workflow between all specialized agents
+in the Triangulum self-healing system. It manages the execution flow,
+ensures proper communication, and handles error recovery.
+"""
+
+import logging
+import os
+import time
+import traceback
+from typing import Dict, List, Set, Tuple, Any, Optional, Union
+
+from .base_agent import BaseAgent
+from .message import AgentMessage, MessageType, ConfidenceLevel
+from .message_bus import MessageBus
+from ..core.exceptions import TriangulumError
+
+logger = logging.getLogger(__name__)
+
+
+class OrchestratorAgent(BaseAgent):
+    """
+    Agent responsible for orchestrating the entire self-healing workflow.
+    
+    The Orchestrator Agent coordinates between all specialized agents:
+    - Bug Detector Agent
+    - Relationship Analyst Agent
+    - Strategy Agent
+    - Implementation Agent
+    - Verification Agent
+    
+    It manages the workflow, handles errors, and ensures proper communication
+    between agents.
+    """
+    
+    def __init__(
+        self,
+        agent_id: Optional[str] = None,
+        agent_type: str = "orchestrator",
+        message_bus: Optional[MessageBus] = None,
+        subscribed_message_types: Optional[List[MessageType]] = None,
+        config: Optional[Dict[str, Any]] = None
+    ):
+        """
+        Initialize the Orchestrator Agent.
+        
+        Args:
+            agent_id: Unique identifier for the agent (generated if not provided)
+            agent_type: Type of the agent
+            message_bus: Message bus for agent communication
+            subscribed_message_types: Types of messages this agent subscribes to
+            config: Agent configuration dictionary
+        """
+        super().__init__(
+            agent_id=agent_id,
+            agent_type=agent_type,
+            message_bus=message_bus,
+            subscribed_message_types=subscribed_message_types or [
+                MessageType.TASK_REQUEST,
+                MessageType.TASK_RESULT,
+                MessageType.ERROR,
+                MessageType.STATUS
+            ],
+            config=config
+        )
+        
+        # Default configurations
+        self.max_retries = self.config.get("max_retries", 3)
+        self.timeout = self.config.get("timeout", 60)  # seconds
+        self.parallel_execution = self.config.get("parallel_execution", False)
+        
+        # Store for pending tasks and results
+        self.pending_tasks = {}
+        self.task_results = {}
+        self.error_counts = {}
+        
+        # Workflow sequences
+        self.file_workflow = [
+            "bug_detector",
+            "relationship_analyst",
+            "strategy",
+            "implementation",
+            "verification"
+        ]
+        
+        self.folder_workflow = [
+            "bug_detector",
+            "relationship_analyst",
+            "priority_analyzer",
+            "strategy",
+            "implementation",
+            "verification",
+            "integration_tester"
+        ]
+    
+    def orchestrate_file_healing(
+        self,
+        file_path: str,
+        options: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Orchestrate the self-healing process for a single file.
+        
+        Args:
+            file_path: Path to the file to heal
+            options: Optional configuration for the healing process
+            
+        Returns:
+            Results of the healing process
+        """
+        if not os.path.isfile(file_path):
+            raise ValueError(f"File not found: {file_path}")
+        
+        logger.info(f"Orchestrating self-healing for file: {file_path}")
+        
+        options = options or {}
+        
+        # Create a workflow ID for this healing process
+        workflow_id = f"file_heal_{self._generate_id()}"
+        
+        # Initialize workflow state
+        workflow_state = {
+            "id": workflow_id,
+            "type": "file_healing",
+            "target": file_path,
+            "options": options,
+            "start_time": time.time(),
+            "end_time": None,
+            "current_step": 0,
+            "total_steps": len(self.file_workflow),
+            "steps_completed": [],
+            "steps_failed": [],
+            "results": {},
+            "status": "in_progress"
+        }
+        
+        self.pending_tasks[workflow_id] = workflow_state
+        
+        try:
+            # Execute each step in the workflow
+            for step_index, agent_type in enumerate(self.file_workflow):
+                workflow_state["current_step"] = step_index + 1
+                
+                # Execute the current step
+                step_result = self._execute_workflow_step(
+                    workflow_id, agent_type, workflow_state)
+                
+                # Store the result
+                workflow_state["results"][agent_type] = step_result
+                
+                if step_result.get("status") == "success":
+                    workflow_state["steps_completed"].append(agent_type)
+                else:
+                    workflow_state["steps_failed"].append(agent_type)
+                    logger.warning(f"Step {agent_type} failed for {file_path}")
+                    
+                    # If a critical step fails, abort the workflow
+                    if self._is_critical_step(agent_type):
+                        logger.error(f"Critical step {agent_type} failed, aborting workflow")
+                        workflow_state["status"] = "failed"
+                        break
+            
+            # If all steps completed successfully, mark the workflow as complete
+            if len(workflow_state["steps_completed"]) == len(self.file_workflow):
+                workflow_state["status"] = "completed"
+            elif workflow_state["status"] != "failed":
+                workflow_state["status"] = "partial_success"
+            
+            # Calculate metrics
+            workflow_state["metrics"] = self._calculate_metrics(workflow_state)
+            
+        except Exception as e:
+            logger.error(f"Error orchestrating file healing: {str(e)}")
+            logger.debug(traceback.format_exc())
+            workflow_state["status"] = "failed"
+            workflow_state["error"] = str(e)
+        
+        # Finalize workflow
+        workflow_state["end_time"] = time.time()
+        
+        # Remove from pending tasks
+        if workflow_id in self.pending_tasks:
+            del self.pending_tasks[workflow_id]
+        
+        # Store in task results
+        self.task_results[workflow_id] = workflow_state
+        
+        return workflow_state
+    
+    def orchestrate_folder_healing(
+        self,
+        folder_path: str,
+        options: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Orchestrate the self-healing process for an entire folder/repository.
+        
+        Args:
+            folder_path: Path to the folder to heal
+            options: Optional configuration for the healing process
+            
+        Returns:
+            Results of the healing process
+        """
+        if not os.path.isdir(folder_path):
+            raise ValueError(f"Folder not found: {folder_path}")
+        
+        logger.info(f"Orchestrating self-healing for folder: {folder_path}")
+        
+        options = options or {}
+        
+        # Create a workflow ID for this healing process
+        workflow_id = f"folder_heal_{self._generate_id()}"
+        
+        # Initialize workflow state
+        workflow_state = {
+            "id": workflow_id,
+            "type": "folder_healing",
+            "target": folder_path,
+            "options": options,
+            "start_time": time.time(),
+            "end_time": None,
+            "current_step": 0,
+            "total_steps": len(self.folder_workflow),
+            "steps_completed": [],
+            "steps_failed": [],
+            "results": {},
+            "status": "in_progress",
+            "files_processed": [],
+            "files_healed": [],
+            "files_failed": [],
+            "bugs_detected": 0,
+            "bugs_fixed": 0
+        }
+        
+        self.pending_tasks[workflow_id] = workflow_state
+        
+        try:
+            # Execute large-scale analysis steps
+            for step_index, agent_type in enumerate(self.folder_workflow[:3]):
+                workflow_state["current_step"] = step_index + 1
+                
+                # Execute analysis step
+                step_result = self._execute_folder_analysis_step(
+                    workflow_id, agent_type, folder_path, workflow_state)
+                
+                # Store the result
+                workflow_state["results"][agent_type] = step_result
+                
+                if step_result.get("status") == "success":
+                    workflow_state["steps_completed"].append(agent_type)
+                else:
+                    workflow_state["steps_failed"].append(agent_type)
+                    logger.warning(f"Step {agent_type} failed for {folder_path}")
+                    
+                    # If a critical analysis step fails, abort the workflow
+                    if self._is_critical_step(agent_type):
+                        logger.error(f"Critical step {agent_type} failed, aborting workflow")
+                        workflow_state["status"] = "failed"
+                        return workflow_state
+            
+            # Get the prioritized list of files to process
+            prioritized_files = self._get_prioritized_files(workflow_state)
+            total_files = len(prioritized_files)
+            
+            logger.info(f"Processing {total_files} files in prioritized order")
+            
+            # Process each file in order
+            for file_index, file_info in enumerate(prioritized_files):
+                file_path = file_info["file_path"]
+                logger.info(f"Processing file {file_index + 1}/{total_files}: {file_path}")
+                
+                # Try to heal this file
+                file_result = self._heal_single_file_in_folder(
+                    workflow_id, file_path, file_info, workflow_state)
+                
+                workflow_state["files_processed"].append(file_path)
+                
+                if file_result.get("status") == "success":
+                    workflow_state["files_healed"].append(file_path)
+                    workflow_state["bugs_fixed"] += file_result.get("bugs_fixed", 0)
+                else:
+                    workflow_state["files_failed"].append(file_path)
+            
+            # Run integration tests
+            integration_result = self._run_integration_tests(workflow_id, folder_path, workflow_state)
+            workflow_state["results"]["integration_tester"] = integration_result
+            
+            if integration_result.get("status") == "success":
+                workflow_state["steps_completed"].append("integration_tester")
+            else:
+                workflow_state["steps_failed"].append("integration_tester")
+            
+            # Set the overall status based on results
+            if len(workflow_state["files_failed"]) == 0 and len(workflow_state["files_healed"]) > 0:
+                workflow_state["status"] = "completed"
+            elif len(workflow_state["files_healed"]) > 0:
+                workflow_state["status"] = "partial_success"
+            else:
+                workflow_state["status"] = "failed"
+            
+            # Calculate metrics
+            workflow_state["metrics"] = self._calculate_folder_metrics(workflow_state)
+            
+        except Exception as e:
+            logger.error(f"Error orchestrating folder healing: {str(e)}")
+            logger.debug(traceback.format_exc())
+            workflow_state["status"] = "failed"
+            workflow_state["error"] = str(e)
+        
+        # Finalize workflow
+        workflow_state["end_time"] = time.time()
+        
+        # Remove from pending tasks
+        if workflow_id in self.pending_tasks:
+            del self.pending_tasks[workflow_id]
+        
+        # Store in task results
+        self.task_results[workflow_id] = workflow_state
+        
+        return workflow_state
+    
+    def get_task_status(self, task_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get the status of a task.
+        
+        Args:
+            task_id: The ID of the task
+            
+        Returns:
+            The task status or None if not found
+        """
+        # Check pending tasks first
+        if task_id in self.pending_tasks:
+            return self.pending_tasks[task_id]
+        
+        # Then check completed tasks
+        if task_id in self.task_results:
+            return self.task_results[task_id]
+        
+        return None
+    
+    def cancel_task(self, task_id: str) -> bool:
+        """
+        Cancel a running task.
+        
+        Args:
+            task_id: The ID of the task to cancel
+            
+        Returns:
+            True if the task was cancelled, False otherwise
+        """
+        if task_id in self.pending_tasks:
+            task = self.pending_tasks[task_id]
+            task["status"] = "cancelled"
+            task["end_time"] = time.time()
+            
+            # Move to completed tasks
+            self.task_results[task_id] = task
+            del self.pending_tasks[task_id]
+            
+            logger.info(f"Task {task_id} cancelled")
+            return True
+        
+        logger.warning(f"Task {task_id} not found or already completed")
+        return False
+    
+    def _execute_workflow_step(
+        self,
+        workflow_id: str,
+        agent_type: str,
+        workflow_state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Execute a single step in the workflow.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            agent_type: The type of agent to execute
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Result of the step execution
+        """
+        logger.info(f"Executing workflow step: {agent_type}")
+        
+        # Get the target file path
+        file_path = workflow_state["target"]
+        
+        # Prepare the message based on the agent type
+        if agent_type == "bug_detector":
+            message = self._prepare_bug_detector_message(workflow_id, file_path)
+        elif agent_type == "relationship_analyst":
+            message = self._prepare_relationship_analyst_message(workflow_id, file_path)
+        elif agent_type == "strategy":
+            message = self._prepare_strategy_message(workflow_id, file_path, workflow_state)
+        elif agent_type == "implementation":
+            message = self._prepare_implementation_message(workflow_id, file_path, workflow_state)
+        elif agent_type == "verification":
+            message = self._prepare_verification_message(workflow_id, file_path, workflow_state)
+        else:
+            raise ValueError(f"Unknown agent type: {agent_type}")
+        
+        # Send the message and wait for response
+        self.message_bus.publish(message)
+        
+        # Wait for the result with timeout
+        result = self._wait_for_result(workflow_id, agent_type, self.timeout)
+        
+        if result:
+            logger.info(f"Step {agent_type} completed successfully")
+            return result
+        else:
+            logger.warning(f"Step {agent_type} timed out or failed")
+            return {"status": "failed", "error": "Timeout or no response"}
+    
+    def _execute_folder_analysis_step(
+        self,
+        workflow_id: str,
+        agent_type: str,
+        folder_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Execute a folder analysis step in the workflow.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            agent_type: The type of agent to execute
+            folder_path: Path to the folder being analyzed
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Result of the step execution
+        """
+        logger.info(f"Executing folder analysis step: {agent_type}")
+        
+        # Prepare the message based on the agent type
+        if agent_type == "bug_detector":
+            message = self._prepare_folder_bug_detection_message(workflow_id, folder_path)
+        elif agent_type == "relationship_analyst":
+            message = self._prepare_folder_relationship_analysis_message(workflow_id, folder_path)
+        elif agent_type == "priority_analyzer":
+            message = self._prepare_priority_analysis_message(workflow_id, folder_path, workflow_state)
+        else:
+            raise ValueError(f"Unknown analysis agent type: {agent_type}")
+        
+        # Send the message and wait for response
+        self.message_bus.publish(message)
+        
+        # Wait for the result with timeout
+        result = self._wait_for_result(workflow_id, agent_type, self.timeout * 10)  # Much longer timeout for folder analysis
+        
+        if result:
+            logger.info(f"Folder analysis step {agent_type} completed successfully")
+            return result
+        else:
+            logger.warning(f"Folder analysis step {agent_type} timed out or failed")
+            return {"status": "failed", "error": "Timeout or no response"}
+    
+    def _heal_single_file_in_folder(
+        self,
+        workflow_id: str,
+        file_path: str,
+        file_info: Dict[str, Any],
+        workflow_state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Heal a single file as part of folder healing.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to heal
+            file_info: Information about the file (bugs, priority, etc.)
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Result of healing the file
+        """
+        logger.info(f"Healing file within folder: {file_path}")
+        
+        # Get bug information for this file
+        bugs = file_info.get("bugs", [])
+        if not bugs:
+            logger.info(f"No bugs to fix in {file_path}")
+            return {"status": "success", "bugs_fixed": 0}
+        
+        # Get relationship information
+        relationships = workflow_state["results"].get("relationship_analyst", {}).get("relationships", {})
+        file_relationships = {k: v for k, v in relationships.items() if k == file_path or v.get("file_path") == file_path}
+        
+        # Process each bug in the file
+        bugs_fixed = 0
+        
+        for bug in bugs:
+            # Prepare strategy
+            strategy_message = self._prepare_file_strategy_message(
+                workflow_id, file_path, bug, file_relationships)
+            
+            self.message_bus.publish(strategy_message)
+            strategy_result = self._wait_for_result(workflow_id, "strategy", self.timeout)
+            
+            if not strategy_result or strategy_result.get("status") != "success":
+                logger.warning(f"Failed to formulate strategy for bug in {file_path}")
+                continue
+            
+            strategy = strategy_result.get("strategy", {})
+            
+            # Implement the fix
+            implement_message = self._prepare_file_implementation_message(
+                workflow_id, file_path, strategy)
+            
+            self.message_bus.publish(implement_message)
+            implement_result = self._wait_for_result(workflow_id, "implementation", self.timeout)
+            
+            if not implement_result or implement_result.get("status") != "success":
+                logger.warning(f"Failed to implement fix for bug in {file_path}")
+                continue
+            
+            implementation = implement_result.get("implementation", {})
+            
+            # Apply the fix (not in dry run mode for folder healing)
+            apply_message = self._prepare_apply_implementation_message(
+                workflow_id, implementation, False)  # Not dry run
+            
+            self.message_bus.publish(apply_message)
+            apply_result = self._wait_for_result(workflow_id, "apply_implementation", self.timeout)
+            
+            if not apply_result or apply_result.get("status") != "success":
+                logger.warning(f"Failed to apply fix for bug in {file_path}")
+                continue
+            
+            # Verify the fix
+            verify_message = self._prepare_file_verification_message(
+                workflow_id, implementation, strategy, bug)
+            
+            self.message_bus.publish(verify_message)
+            verify_result = self._wait_for_result(workflow_id, "verification", self.timeout)
+            
+            if not verify_result or verify_result.get("success") != True:
+                logger.warning(f"Fix verification failed for bug in {file_path}")
+                continue
+            
+            # Bug fixed successfully
+            bugs_fixed += 1
+        
+        return {
+            "status": "success" if bugs_fixed > 0 else "failed",
+            "bugs_fixed": bugs_fixed,
+            "total_bugs": len(bugs)
+        }
+    
+    def _run_integration_tests(
+        self,
+        workflow_id: str,
+        folder_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Run integration tests after folder healing.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            folder_path: Path to the folder
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Result of running integration tests
+        """
+        logger.info(f"Running integration tests for folder: {folder_path}")
+        
+        # Look for test files in the folder
+        test_files = self._find_test_files(folder_path)
+        
+        if not test_files:
+            logger.info("No test files found, skipping integration tests")
+            return {"status": "skipped", "reason": "No test files found"}
+        
+        # Run the tests
+        test_results = []
+        
+        for test_file in test_files:
+            result = self._run_test(test_file, folder_path)
+            test_results.append({
+                "file": test_file,
+                "success": result.get("success", False),
+                "output": result.get("output", ""),
+                "error": result.get("error", "")
+            })
+        
+        # Check if all tests passed
+        all_passed = all(result["success"] for result in test_results)
+        
+        return {
+            "status": "success" if all_passed else "failed",
+            "test_results": test_results,
+            "tests_passed": sum(1 for result in test_results if result["success"]),
+            "tests_failed": sum(1 for result in test_results if not result["success"]),
+            "total_tests": len(test_results)
+        }
+    
+    def _find_test_files(self, folder_path: str) -> List[str]:
+        """
+        Find test files in a folder.
+        
+        Args:
+            folder_path: Path to the folder
+            
+        Returns:
+            List of test file paths
+        """
+        test_files = []
+        
+        # Check for a tests directory
+        tests_dir = os.path.join(folder_path, "tests")
+        if os.path.isdir(tests_dir):
+            for root, _, files in os.walk(tests_dir):
+                for file in files:
+                    if file.startswith("test_") and file.endswith(".py"):
+                        test_files.append(os.path.join(root, file))
+        
+        # Look for test files in the main directory
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                if file.startswith("test_") and file.endswith(".py"):
+                    test_path = os.path.join(root, file)
+                    if test_path not in test_files:
+                        test_files.append(test_path)
+        
+        return test_files
+    
+    def _run_test(self, test_file: str, working_dir: str) -> Dict[str, Any]:
+        """
+        Run a test file.
+        
+        Args:
+            test_file: Path to the test file
+            working_dir: Working directory for the test
+            
+        Returns:
+            Result of running the test
+        """
+        import subprocess
+        import sys
+        
+        try:
+            # Change to the working directory
+            cwd = os.getcwd()
+            os.chdir(working_dir)
+            
+            # Run the test
+            process = subprocess.run(
+                [sys.executable, "-m", "unittest", test_file],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=self.timeout,
+                text=True
+            )
+            
+            # Change back to the original directory
+            os.chdir(cwd)
+            
+            # Check the result
+            success = process.returncode == 0
+            
+            return {
+                "success": success,
+                "output": process.stdout,
+                "error": process.stderr,
+                "returncode": process.returncode
+            }
+            
+        except subprocess.TimeoutExpired:
+            # Change back to the original directory
+            os.chdir(cwd)
+            return {
+                "success": False,
+                "output": "",
+                "error": f"Test timed out after {self.timeout} seconds",
+                "returncode": -1
+            }
+            
+        except Exception as e:
+            # Change back to the original directory
+            os.chdir(cwd)
+            return {
+                "success": False,
+                "output": "",
+                "error": str(e),
+                "returncode": -1
+            }
+    
+    def _get_prioritized_files(self, workflow_state: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Get a prioritized list of files to process.
+        
+        Args:
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Prioritized list of files
+        """
+        # Get bug detection results
+        bug_detection_result = workflow_state["results"].get("bug_detector", {})
+        bugs_by_file = bug_detection_result.get("bugs_by_file", {})
+        
+        # Get priority analysis results
+        priority_result = workflow_state["results"].get("priority_analyzer", {})
+        file_priorities = priority_result.get("file_priorities", {})
+        
+        # Combine bug information with priorities
+        prioritized_files = []
+        
+        for file_path, bugs in bugs_by_file.items():
+            priority = file_priorities.get(file_path, {}).get("priority", 0)
+            
+            prioritized_files.append({
+                "file_path": file_path,
+                "bugs": bugs,
+                "priority": priority,
+                "bug_count": len(bugs)
+            })
+        
+        # Sort by priority (higher first) and then bug count (higher first)
+        prioritized_files.sort(key=lambda x: (-x["priority"], -x["bug_count"]))
+        
+        return prioritized_files
+    
+    def _prepare_bug_detector_message(
+        self,
+        workflow_id: str,
+        file_path: str
+    ) -> AgentMessage:
+        """
+        Prepare a message for the Bug Detector Agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to analyze
+            
+        Returns:
+            Message for the Bug Detector Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "detect_bugs_in_file",
+                "file_path": file_path,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="bug_detector"
+        )
+    
+    def _prepare_relationship_analyst_message(
+        self,
+        workflow_id: str,
+        file_path: str
+    ) -> AgentMessage:
+        """
+        Prepare a message for the Relationship Analyst Agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to analyze
+            
+        Returns:
+            Message for the Relationship Analyst Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "analyze_file_relationships",
+                "file_path": file_path,
+                "max_depth": 2,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="relationship_analyst"
+        )
+    
+    def _prepare_strategy_message(
+        self,
+        workflow_id: str,
+        file_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for the Strategy Agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to analyze
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Message for the Strategy Agent
+        """
+        # Get bug information
+        bug_detection_result = workflow_state["results"].get("bug_detector", {})
+        bugs = bug_detection_result.get("bugs", [])
+        
+        if not bugs:
+            raise ValueError("No bugs found to formulate strategy")
+        
+        # Get relationship information
+        relationship_result = workflow_state["results"].get("relationship_analyst", {})
+        relationships = relationship_result.get("relationships", {})
+        
+        # Use the first bug for demonstration
+        bug = bugs[0]
+        
+        # Prepare code context
+        with open(file_path, 'r') as f:
+            code_content = f.read()
+        
+        code_context = {
+            "language": os.path.splitext(file_path)[1][1:],  # Get extension without dot
+            "file_content": code_content,
+            "file_path": file_path
+        }
+        
+        # Prepare relationship context
+        relationship_context = {
+            "file_relationships": relationships
+        }
+        
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "formulate_strategy",
+                "bug_report": bug,
+                "code_context": code_context,
+                "relationship_context": relationship_context,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="strategy_agent"
+        )
+    
+    def _prepare_implementation_message(
+        self,
+        workflow_id: str,
+        file_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for the Implementation Agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to analyze
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Message for the Implementation Agent
+        """
+        # Get strategy information
+        strategy_result = workflow_state["results"].get("strategy_agent", {})
+        strategy = strategy_result.get("strategy", {})
+        
+        if not strategy:
+            raise ValueError("No strategy found to implement")
+        
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "implement_strategy",
+                "strategy": strategy,
+                "additional_context": {},
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="implementation_agent"
+        )
+    
+    def _prepare_verification_message(
+        self,
+        workflow_id: str,
+        file_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for the Verification Agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to analyze
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Message for the Verification Agent
+        """
+        # Get implementation information
+        implementation_result = workflow_state["results"].get("implementation_agent", {})
+        implementation = implementation_result.get("implementation", {})
+        
+        if not implementation:
+            raise ValueError("No implementation found to verify")
+        
+        # Get strategy information
+        strategy_result = workflow_state["results"].get("strategy_agent", {})
+        strategy = strategy_result.get("strategy", {})
+        
+        # Get bug information
+        bug_detection_result = workflow_state["results"].get("bug_detector", {})
+        bugs = bug_detection_result.get("bugs", [])
+        
+        if not bugs:
+            raise ValueError("No bugs found to verify fix for")
+        
+        # Use the first bug for demonstration
+        bug = bugs[0]
+        
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "verify_implementation",
+                "implementation": implementation,
+                "strategy": strategy,
+                "bug_report": bug,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="verification_agent"
+        )
+    
+    def _prepare_folder_bug_detection_message(
+        self,
+        workflow_id: str,
+        folder_path: str
+    ) -> AgentMessage:
+        """
+        Prepare a message for folder-level bug detection.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            folder_path: Path to the folder to analyze
+            
+        Returns:
+            Message for the Bug Detector Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "detect_bugs_in_folder",
+                "folder_path": folder_path,
+                "recursive": True,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="bug_detector"
+        )
+    
+    def _prepare_folder_relationship_analysis_message(
+        self,
+        workflow_id: str,
+        folder_path: str
+    ) -> AgentMessage:
+        """
+        Prepare a message for folder-level relationship analysis.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            folder_path: Path to the folder to analyze
+            
+        Returns:
+            Message for the Relationship Analyst Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "analyze_folder_relationships",
+                "folder_path": folder_path,
+                "max_depth": 3,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="relationship_analyst"
+        )
+    
+    def _prepare_priority_analysis_message(
+        self,
+        workflow_id: str,
+        folder_path: str,
+        workflow_state: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for priority analysis.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            folder_path: Path to the folder to analyze
+            workflow_state: The current state of the workflow
+            
+        Returns:
+            Message for the Priority Analyzer Agent
+        """
+        # Get bug detection results
+        bug_detection_result = workflow_state["results"].get("bug_detector", {})
+        bugs_by_file = bug_detection_result.get("bugs_by_file", {})
+        
+        # Get relationship analysis results
+        relationship_result = workflow_state["results"].get("relationship_analyst", {})
+        relationships = relationship_result.get("relationships", {})
+        
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "analyze_priorities",
+                "folder_path": folder_path,
+                "bugs_by_file": bugs_by_file,
+                "relationships": relationships,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="priority_analyzer"
+        )
+    
+    def _prepare_file_strategy_message(
+        self,
+        workflow_id: str,
+        file_path: str,
+        bug: Dict[str, Any],
+        file_relationships: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for strategy formulation for a single bug.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file containing the bug
+            bug: The bug to formulate a strategy for
+            file_relationships: Relationships for this file
+            
+        Returns:
+            Message for the Strategy Agent
+        """
+        # Prepare code context
+        with open(file_path, 'r') as f:
+            code_content = f.read()
+        
+        code_context = {
+            "language": os.path.splitext(file_path)[1][1:],  # Get extension without dot
+            "file_content": code_content,
+            "file_path": file_path
+        }
+        
+        # Prepare relationship context
+        relationship_context = {
+            "file_relationships": file_relationships
+        }
+        
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "formulate_strategy",
+                "bug_report": bug,
+                "code_context": code_context,
+                "relationship_context": relationship_context,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="strategy_agent"
+        )
+    
+    def _prepare_file_implementation_message(
+        self,
+        workflow_id: str,
+        file_path: str,
+        strategy: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for implementation of a strategy.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            file_path: Path to the file to modify
+            strategy: The strategy to implement
+            
+        Returns:
+            Message for the Implementation Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "implement_strategy",
+                "strategy": strategy,
+                "additional_context": {
+                    "file_path": file_path
+                },
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="implementation_agent"
+        )
+    
+    def _prepare_apply_implementation_message(
+        self,
+        workflow_id: str,
+        implementation: Dict[str, Any],
+        dry_run: bool
+    ) -> AgentMessage:
+        """
+        Prepare a message to apply an implementation.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            implementation: The implementation to apply
+            dry_run: Whether to perform a dry run
+            
+        Returns:
+            Message for the Implementation Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "apply_implementation",
+                "implementation": implementation,
+                "dry_run": dry_run,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="implementation_agent"
+        )
+    
+    def _prepare_file_verification_message(
+        self,
+        workflow_id: str,
+        implementation: Dict[str, Any],
+        strategy: Dict[str, Any],
+        bug: Dict[str, Any]
+    ) -> AgentMessage:
+        """
+        Prepare a message for verification of an implementation.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            implementation: The implementation to verify
+            strategy: The strategy that was implemented
+            bug: The bug that was fixed
+            
+        Returns:
+            Message for the Verification Agent
+        """
+        return AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={
+                "action": "verify_implementation",
+                "implementation": implementation,
+                "strategy": strategy,
+                "bug_report": bug,
+                "workflow_id": workflow_id
+            },
+            sender=self.agent_id,
+            receiver="verification_agent"
+        )
+    
+    def _wait_for_result(
+        self,
+        workflow_id: str,
+        agent_type: str,
+        timeout: float
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Wait for a result from an agent.
+        
+        Args:
+            workflow_id: The ID of the workflow
+            agent_type: The type of agent to wait for
+            timeout: Timeout in seconds
+            
+        Returns:
+            The result or None if timed out
+        """
+        # Wait for the result with timeout
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            # Check if the result is available
+            if workflow_id in self.task_results:
+                result = self.task_results[workflow_id].get("results", {}).get(agent_type)
+                if result:
+                    return result
+            
+            # Sleep a bit to avoid busy waiting
+            time.sleep(0.1)
+            
+            # Print periodic status updates (every 10 seconds)
+            elapsed = time.time() - start_time
+            if int(elapsed) % 10 == 0 and int(elapsed) > 0:
+                logger.info(f"Waiting for response from {agent_type} - {int(elapsed)}s elapsed")
+        
+        # Timeout
+        return None
+    
+    def _is_critical_step(self, agent_type: str) -> bool:
+        """
+        Check if a step is critical for the workflow.
+        
+        Args:
+            agent_type: The type of agent
+            
+        Returns:
+            True if the step is critical, False otherwise
+        """
+        # Bug detection and strategy formulation are critical
+        return agent_type in ["bug_detector", "strategy"]
+    
+    def _calculate_metrics(self, workflow_state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Calculate metrics for a file healing workflow.
+        
+        Args:
+            workflow_state: The workflow state
+            
+        Returns:
+            Metrics for the workflow
+        """
+        # Get bug detection results
+        bug_detection_result = workflow_state["results"].get("bug_detector", {})
+        bugs = bug_detection_result.get("bugs", [])
+        
+        # Get verification results
+        verification_result = workflow_state["results"].get("verification", {})
+        
+        # Calculate metrics
+        metrics = {
+            "bugs_detected": len(bugs),
+            "bugs_fixed": 1 if verification_result and verification_result.get("status") == "success" else 0,
+            "duration": workflow_state["end_time"] - workflow_state["start_time"] if workflow_state.get("end_time") else 0,
+            "success_rate": 1.0 if workflow_state["status"] == "completed" else (
+                0.5 if workflow_state["status"] == "partial_success" else 0.0
+            )
+        }
+        
+        return metrics
+    
+    def _calculate_folder_metrics(self, workflow_state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Calculate metrics for a folder healing workflow.
+        
+        Args:
+            workflow_state: The workflow state
+            
+        Returns:
+            Metrics for the workflow
+        """
+        # Calculate metrics
+        metrics = {
+            "bugs_detected": workflow_state["bugs_detected"],
+            "bugs_fixed": workflow_state["bugs_fixed"],
+            "files_processed": len(workflow_state["files_processed"]),
+            "files_healed": len(workflow_state["files_healed"]),
+            "files_failed": len(workflow_state["files_failed"]),
+            "duration": workflow_state["end_time"] - workflow_state["start_time"] if workflow_state.get("end_time") else 0,
+            "success_rate": len(workflow_state["files_healed"]) / len(workflow_state["files_processed"]) if workflow_state["files_processed"] else 0
+        }
+        
+        return metrics
+    
+    def _generate_id(self) -> str:
+        """
+        Generate a unique ID.
+        
+        Returns:
+            A unique ID
+        """
+        import uuid
+        return str(uuid.uuid4())
+    
+    def _handle_task_request(self, message: AgentMessage) -> None:
+        """
+        Handle a task request message.
+        
+        Args:
+            message: The task request message
+        """
+        content = message.content
+        action = content.get("action", "")
+        
+        if action == "orchestrate_file_healing":
+            file_path = content.get("file_path")
+            options = content.get("options", {})
+            
+            if not file_path:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": "file_path is required"
+                    }
+                )
+                return
+            
+            try:
+                result = self.orchestrate_file_healing(file_path, options)
+                
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.TASK_RESULT,
+                    content={
+                        "status": "success",
+                        "result": result
+                    }
+                )
+            except Exception as e:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": str(e)
+                    }
+                )
+        
+        elif action == "orchestrate_folder_healing":
+            folder_path = content.get("folder_path")
+            options = content.get("options", {})
+            
+            if not folder_path:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": "folder_path is required"
+                    }
+                )
+                return
+            
+            try:
+                result = self.orchestrate_folder_healing(folder_path, options)
+                
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.TASK_RESULT,
+                    content={
+                        "status": "success",
+                        "result": result
+                    }
+                )
+            except Exception as e:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": str(e)
+                    }
+                )
+        
+        elif action == "get_task_status":
+            task_id = content.get("task_id")
+            
+            if not task_id:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": "task_id is required"
+                    }
+                )
+                return
+            
+            try:
+                result = self.get_task_status(task_id)
+                
+                if result:
+                    self.send_response(
+                        original_message=message,
+                        message_type=MessageType.TASK_RESULT,
+                        content={
+                            "status": "success",
+                            "result": result
+                        }
+                    )
+                else:
+                    self.send_response(
+                        original_message=message,
+                        message_type=MessageType.ERROR,
+                        content={
+                            "status": "error",
+                            "error": f"Task {task_id} not found"
+                        }
+                    )
+            except Exception as e:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": str(e)
+                    }
+                )
+        
+        elif action == "cancel_task":
+            task_id = content.get("task_id")
+            
+            if not task_id:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": "task_id is required"
+                    }
+                )
+                return
+            
+            try:
+                result = self.cancel_task(task_id)
+                
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.TASK_RESULT,
+                    content={
+                        "status": "success",
+                        "result": result
+                    }
+                )
+            except Exception as e:
+                self.send_response(
+                    original_message=message,
+                    message_type=MessageType.ERROR,
+                    content={
+                        "status": "error",
+                        "error": str(e)
+                    }
+                )
+        
+        else:
+            self.send_response(
+                original_message=message,
+                message_type=MessageType.ERROR,
+                content={
+                    "status": "error",
+                    "error": f"Unknown action: {action}"
+                }
+            )
+    
+    def handle_message(self, message: AgentMessage) -> None:
+        """
+        Handle an incoming message.
+        
+        Args:
+            message: The incoming message
+        """
+        try:
+            # Handle task requests
+            if message.message_type == MessageType.TASK_REQUEST:
+                self._handle_task_request(message)
+            
+            # Handle task results from other agents
+            elif message.message_type == MessageType.TASK_RESULT:
+                # Store the result
+                if message.content.get("workflow_id") in self.pending_tasks:
+                    workflow_id = message.content["workflow_id"]
+                    agent_type = message.sender
+                    
+                    # Store the result
+                    self.pending_tasks[workflow_id]["results"][agent_type] = message.content
+            
+            # Handle error messages from other agents
+            elif message.message_type == MessageType.ERROR:
+                # Increment error count
+                if message.content.get("workflow_id") in self.pending_tasks:
+                    workflow_id = message.content["workflow_id"]
+                    agent_type = message.sender
+                    
+                    # Increment error count
+                    if agent_type not in self.error_counts:
+                        self.error_counts[agent_type] = 0
+                    
+                    self.error_counts[agent_type] += 1
+                    
+                    # Log the error
+                    logger.error(f"Error from {agent_type}: {message.content.get('error', 'Unknown error')}")
+            
+            # Handle other message types using the base class
+            else:
+                super().handle_message(message)
+        
+        except Exception as e:
+            logger.error(f"Error handling message: {str(e)}")
+            logger.debug(traceback.format_exc())
+
+    def _handle_query(self, message: AgentMessage) -> None:
+        """
+        Handle a query message.
+        
+        Args:
+            message: The query message
+        """
+        # Extract message content
+        content = message.content
+        query_type = content.get("query_type", "")
+        
+        # Create a response message
+        response_content = {
+            "status": "success",
+            "query_id": content.get("query_id", ""),
+            "query_type": query_type,
+            "result": {}
+        }
+        
+        # Handle different query types
+        if query_type == "task_status":
+            task_id = content.get("task_id")
+            if task_id:
+                task_status = self.get_task_status(task_id)
+                response_content["result"] = task_status or {"status": "not_found"}
+            else:
+                response_content["status"] = "error"
+                response_content["error"] = "task_id is required"
+        
+        elif query_type == "agent_status":
+            response_content["result"] = {
+                "agent_id": self.agent_id,
+                "agent_type": self.agent_type,
+                "status": "active",
+                "pending_tasks": len(self.pending_tasks),
+                "completed_tasks": len(self.task_results)
+            }
+        
+        else:
+            # Unknown query type
+            response_content["status"] = "error"
+            response_content["error"] = f"Unknown query type: {query_type}"
+        
+        # Send the response
+        self.send_response(
+            original_message=message,
+            message_type=MessageType.QUERY_RESPONSE,
+            content=response_content
+        )

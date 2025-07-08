@@ -1,0 +1,145 @@
+{
+  "features": {
+    "core_engine": {
+      "description": "Core debugging engine with state management",
+      "files": [
+        "triangulum_lx/core/engine.py",
+        "triangulum_lx/core/state.py",
+        "triangulum_lx/core/transition.py"
+      ],
+      "capabilities": [
+        "bug_tracking",
+        "state_transitions",
+        "agent_coordination"
+      ],
+      "status": "operational"
+    },
+    "agent_system": {
+      "description": "Multi-agent coordination and role management",
+      "files": [
+        "triangulum_lx/agents/coordinator.py",
+        "triangulum_lx/agents/roles.py",
+        "triangulum_lx/agents/meta_agent.py"
+      ],
+      "capabilities": [
+        "agent_coordination",
+        "role_assignment",
+        "meta_reasoning"
+      ],
+      "status": "operational"
+    },
+    "llm_providers": {
+      "description": "LLM provider abstraction and management",
+      "files": [
+        "triangulum_lx/providers/factory.py",
+        "triangulum_lx/providers/openai.py",
+        "triangulum_lx/providers/anthropic.py"
+      ],
+      "capabilities": [
+        "provider_abstraction",
+        "request_management",
+        "response_caching"
+      ],
+      "status": "operational"
+    },
+    "monitoring_system": {
+      "description": "System monitoring and metrics collection",
+      "files": [
+        "triangulum_lx/monitoring/metrics.py",
+        "triangulum_lx/monitoring/system_monitor.py",
+        "triangulum_lx/monitoring/dashboard_stub.py"
+      ],
+      "capabilities": [
+        "metrics_collection",
+        "system_monitoring",
+        "dashboard_visualization"
+      ],
+      "status": "operational"
+    },
+    "tooling_suite": {
+      "description": "Development and debugging tools",
+      "files": [
+        "triangulum_lx/tooling/repair.py",
+        "triangulum_lx/tooling/test_runner.py",
+        "triangulum_lx/tooling/code_relationship_analyzer.py"
+      ],
+      "capabilities": [
+        "code_repair",
+        "test_execution",
+        "relationship_analysis"
+      ],
+      "status": "operational"
+    },
+    "learning_system": {
+      "description": "Machine learning and optimization",
+      "files": [
+        "triangulum_lx/learning/bug_predictor.py",
+        "triangulum_lx/learning/optimizer.py",
+        "triangulum_lx/learning/replay_buffer.py"
+      ],
+      "capabilities": [
+        "bug_prediction",
+        "optimization",
+        "experience_replay"
+      ],
+      "status": "operational"
+    },
+    "human_interface": {
+      "description": "Human interaction and feedback systems",
+      "files": [
+        "triangulum_lx/human/feedback.py",
+        "triangulum_lx/human/interactive_mode.py",
+        "triangulum_lx/human/hub.py"
+      ],
+      "capabilities": [
+        "feedback_collection",
+        "interactive_debugging",
+        "human_coordination"
+      ],
+      "status": "operational"
+    },
+    "specification_system": {
+      "description": "Formal specification and verification",
+      "files": [
+        "triangulum_lx/spec/ltl_properties.py",
+        "triangulum_lx/spec/model_checker.py",
+        "triangulum_lx/spec/performance_guarantees.py"
+      ],
+      "capabilities": [
+        "formal_verification",
+        "property_checking",
+        "performance_analysis"
+      ],
+      "status": "operational"
+    },
+    "goal_management": {
+      "description": "Goal setting and prioritization",
+      "files": [
+        "triangulum_lx/goal/goal_loader.py",
+        "triangulum_lx/goal/prioritiser.py"
+      ],
+      "capabilities": [
+        "goal_loading",
+        "priority_management",
+        "objective_tracking"
+      ],
+      "status": "operational"
+    },
+    "self_healing": {
+      "description": "Autonomous self-repair and improvement",
+      "files": [
+        "triangulum_self_heal.py",
+        "triangulum_adaptive_health.py"
+      ],
+      "capabilities": [
+        "self_diagnosis",
+        "autonomous_repair",
+        "adaptive_health"
+      ],
+      "status": "operational"
+    }
+  },
+  "total_features": 10,
+  "last_analyzed": 1751344101.0693812,
+  "analysis_version": "1.0"
+}

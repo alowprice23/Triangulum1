@@ -1,0 +1,1656 @@
+{
+  "repair_sequence": [
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_coordinator.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 168,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\canary_runner.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 113,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Use of weak cryptographic algorithm",
+      "priority": 0,
+      "line_number": 110,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Use of weak cryptographic algorithm",
+      "priority": 0,
+      "line_number": 114,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 176,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 178,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 181,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 185,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 190,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 86,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\dashboard_stub.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 173,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\dashboard_stub.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 95,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "issue_type": "Unknown",
+      "description": "Use of weak cryptographic algorithm",
+      "priority": 0,
+      "line_number": 120,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "issue_type": "Unknown",
+      "description": "Use of weak cryptographic algorithm",
+      "priority": 0,
+      "line_number": 125,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 100,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 115,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\hub.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 124,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\llm_integrations.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 229,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\meta_agent.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 126,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 28,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 29,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 30,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 31,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 32,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 33,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 34,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 36,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 38,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 47,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 48,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 49,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 50,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 51,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 53,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 54,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 55,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 56,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 57,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 58,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 59,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 61,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 62,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 63,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 64,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 67,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 68,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 69,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 71,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 72,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 114,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 115,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 116,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 117,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 118,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 119,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 120,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 121,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 122,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 123,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 124,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 125,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 126,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 127,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 128,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 129,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 130,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 133,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 134,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 134,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 135,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 136,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 137,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 138,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 139,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 140,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 141,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 142,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 143,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 144,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 145,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 145,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 146,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 147,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 148,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 152,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 153,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 154,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 155,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 156,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 157,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 158,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 159,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 160,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 161,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 162,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 163,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 164,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 165,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 167,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 168,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 171,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 172,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 172,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 173,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 174,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 175,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 176,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 178,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 179,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 180,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 180,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 181,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 182,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 183,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 183,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\optimizer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 184,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 70,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 120,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 146,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 74,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 84,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 114,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 115,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 173,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\patch_bundle.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 213,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 35,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 36,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 37,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 38,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 39,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 40,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 41,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 42,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 43,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 44,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 45,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 46,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 47,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 48,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 51,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 52,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 53,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 54,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 55,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 57,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 59,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 70,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 84,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 85,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 86,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 87,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 89,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 90,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 91,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 92,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 93,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 94,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 95,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 98,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 99,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 100,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 101,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 102,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 103,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 106,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 107,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 108,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 109,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 110,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\replay_buffer.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 111,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scheduler.py",
+      "issue_type": "Unknown",
+      "description": "Potential command injection vulnerability",
+      "priority": 0,
+      "line_number": 19,
+      "severity": "critical"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scheduler.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 133,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scheduler.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 151,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scope_filter.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 87,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scope_filter.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 101,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\scope_filter.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 110,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 162,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 167,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 172,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 82,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 84,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 34,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\Specialized_agents.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 107,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\terminal_interface.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 80,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\terminal_interface.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 124,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 131,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 92,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Potential null/None reference detected by AST analysis",
+      "priority": 0,
+      "line_number": 92,
+      "severity": "high"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 31,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 32,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 33,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 34,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 35,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 36,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 37,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 39,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 41,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 62,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 63,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\test_runner.py",
+      "issue_type": "Unknown",
+      "description": "Use of insecure random number generator",
+      "priority": 0,
+      "line_number": 64,
+      "severity": "medium"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\triangulation_engine.py",
+      "issue_type": "Unknown",
+      "description": "Potential command injection vulnerability",
+      "priority": 0,
+      "line_number": 73,
+      "severity": "critical"
+    },
+    {
+      "file_path": "C:\\Users\\Yusuf\\Downloads\\FixWurx\\triangulation_engine.py",
+      "issue_type": "Unknown",
+      "description": "Exception caught but not handled properly",
+      "priority": 0,
+      "line_number": 51,
+      "severity": "medium"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2025-07-07T16:14:36.466667",
+    "source": "agentic_system",
+    "thought_process": [
+      {
+        "agent": "priority_analyzer",
+        "timestamp": "2025-07-07T16:14:36.466667",
+        "thought": "Starting prioritization of 202 issues",
+        "type": "initialization"
+      },
+      {
+        "agent": "priority_analyzer",
+        "timestamp": "2025-07-07T16:14:36.466667",
+        "thought": "Analyzing Bug 1: C:\\Users\\Yusuf\\Downloads\\FixWurx\\agent_coordinator.py - unknown - Potential null/None reference detected by AST analysis",
+        "type": "analysis"
+      },
+      {
+        "agent": "priority_analyzer",
+        "timestamp": "2025-07-07T16:14:36.466667",
+        "thought": "Analyzing Bug 2: C:\\Users\\Yusuf\\Downloads\\FixWurx\\canary_runner.py - unknown - Exception caught but not handled properly",
+        "type": "analysis"
+      },
+      {
+        "agent": "priority_analyzer",
+        "timestamp": "2025-07-07T16:14:36.466667",
+        "thought": "Analyzing Bug 3: C:\\Users\\Yusuf\\Downloads\\FixWurx\\cli.py - unknown - Use of weak cryptographic algorithm",
+        "type": "analysis"
+      },
+      {
+        "agent": "orchestrator",
+        "timestamp": "2025-07-07T16:14:36.466667",
+        "thought": "Generated repair plan with 202 steps",
+        "type": "planning"
+      }
+    ]
+  }
+}

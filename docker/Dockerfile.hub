@@ -1,0 +1,34 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir fastapi uvicorn python-multipart aiofiles
+
+# Copy Triangulum code
+COPY . .
+
+# Install the package
+RUN pip install -e .
+
+# Create necessary directories
+RUN mkdir -p triangulum_data/bundles logs
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TRIANGULUM_LOG_LEVEL=INFO
+
+# Expose hub port
+EXPOSE 8000
+
+# Default command
+CMD ["python", "-m", "triangulum_lx.human.hub"]

@@ -1,0 +1,8 @@
+Third test file with various content.
+This file will help test our file processing script.
+The original code had a resource leak
+because it didn't properly close file handles.
+This could lead to running out of file descriptors
+if processing many files in a large directory structure.
+The fixed version uses a context manager (with statement)
+to ensure files are properly closed after being used.

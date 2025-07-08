@@ -1,0 +1,248 @@
+{
+  "version": "1.0",
+  "nodes": {
+    "agent_coordinator.py": {
+      "path": "agent_coordinator.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2346168,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "agent_memory.py": {
+      "path": "agent_memory.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2346168,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "canary_runner.py": {
+      "path": "canary_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2346168,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "cli.py": {
+      "path": "cli.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "compress.py": {
+      "path": "compress.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "dashboard_stub.py": {
+      "path": "dashboard_stub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "Data Structures.py": {
+      "path": "Data Structures.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "entropy_explainer.py": {
+      "path": "entropy_explainer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "hub.py": {
+      "path": "hub.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "llm_integrations.py": {
+      "path": "llm_integrations.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "main.py": {
+      "path": "main.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2356162,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "meta_agent.py": {
+      "path": "meta_agent.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "optimizer.py": {
+      "path": "optimizer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "parallel_executor.py": {
+      "path": "parallel_executor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "patch_bundle.py": {
+      "path": "patch_bundle.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "prioritiser.py": {
+      "path": "prioritiser.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "repair.py": {
+      "path": "repair.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "replay_buffer.py": {
+      "path": "replay_buffer.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "resource_manager.py": {
+      "path": "resource_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "rollback_manager.py": {
+      "path": "rollback_manager.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.236616,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "scheduler.py": {
+      "path": "scheduler.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "scope_filter.py": {
+      "path": "scope_filter.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "smoke_runner.py": {
+      "path": "smoke_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "Specialized_agents.py": {
+      "path": "Specialized_agents.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "state_machine.py": {
+      "path": "state_machine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "system_monitor.py": {
+      "path": "system_monitor.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "terminal_interface.py": {
+      "path": "terminal_interface.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "test_runner.py": {
+      "path": "test_runner.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "triangulation_engine.py": {
+      "path": "triangulation_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    },
+    "Verification_engine.py": {
+      "path": "Verification_engine.py",
+      "language": "PYTHON",
+      "module_name": null,
+      "last_modified": 1751782298.2376153,
+      "file_hash": null,
+      "metadata": {}
+    }
+  },
+  "edges": [],
+  "created_at": 1751782298.2326183,
+  "modified_at": 1751782298.2386158
+}

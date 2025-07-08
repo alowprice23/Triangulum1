@@ -1,0 +1,33 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir matplotlib fastapi uvicorn
+
+# Copy Triangulum code
+COPY . .
+
+# Install the package
+RUN pip install -e .
+
+# Create necessary directories
+RUN mkdir -p data/metrics dashboard logs
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TRIANGULUM_LOG_LEVEL=INFO
+
+# Expose dashboard port
+EXPOSE 8080
+
+# Default command
+CMD ["python", "-m", "triangulum_lx.monitoring.dashboard_stub"]

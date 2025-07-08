@@ -1,0 +1,76 @@
+{
+  "assessment_timestamp": "2025-07-06T20:56:57.495983",
+  "fixwurx_directory": "C:\\Users\\Yusuf\\Downloads\\FixWurx",
+  "component_inventory": {
+    "total_files": 30,
+    "modules": {
+      "": [
+        "agent_coordinator.py",
+        "agent_memory.py",
+        "canary_runner.py",
+        "cli.py",
+        "compress.py",
+        "dashboard_stub.py",
+        "Data Structures.py",
+        "entropy_explainer.py",
+        "hub.py",
+        "llm_integrations.py",
+        "main.py",
+        "meta_agent.py",
+        "optimizer.py",
+        "parallel_executor.py",
+        "patch_bundle.py",
+        "prioritiser.py",
+        "repair.py",
+        "replay_buffer.py",
+        "resource_manager.py",
+        "rollback_manager.py",
+        "scheduler.py",
+        "scope_filter.py",
+        "smoke_runner.py",
+        "Specialized_agents.py",
+        "state_machine.py",
+        "system_monitor.py",
+        "terminal_interface.py",
+        "test_runner.py",
+        "triangulation_engine.py",
+        "Verification_engine.py"
+      ]
+    },
+    "timestamp": "2025-07-06T20:56:57.495983"
+  },
+  "dependency_analysis": {
+    "total_files": 30,
+    "total_dependencies": 0,
+    "missing_connections": [
+      {
+        "file1": "agent_coordinator.py",
+        "file2": "Verification_engine.py",
+        "reason": "Same directory with similar names",
+        "similarity": 0.7692307692307693
+      },
+      {
+        "file1": "llm_integrations.py",
+        "file2": "triangulation_engine.py",
+        "reason": "Same directory with similar names",
+        "similarity": 0.7692307692307693
+      }
+    ]
+  },
+  "bug_detection": {
+    "total_bugs": 202,
+    "files_with_bugs": 16
+  },
+  "relationship_analysis": {
+    "files_analyzed": 30,
+    "dependencies_found": 0,
+    "cycles_detected": 0,
+    "languages_detected": {
+      "PYTHON": 30
+    },
+    "analysis_timestamp": "20250706_205657",
+    "temporal_snapshots": 0,
+    "runtime_traces_incorporated": false,
+    "static_analysis_performed": true
+  }
+}

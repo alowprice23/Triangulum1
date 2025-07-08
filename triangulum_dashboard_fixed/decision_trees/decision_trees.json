@@ -1,0 +1,293 @@
+{
+  "bb428373-949d-42b4-ad9b-7af5875eb190": {
+    "tree_id": "bb428373-949d-42b4-ad9b-7af5875eb190",
+    "agent_id": "orchestrator",
+    "name": "Orchestrator's Decision Process",
+    "description": "Decision process for orchestrator when analyzing and fixing issues.",
+    "created_at": "2025-07-08T02:09:42.387541",
+    "last_updated": "2025-07-08T03:29:02.398845",
+    "status": "Active",
+    "node_count": 8,
+    "depth": 3,
+    "root": {
+      "name": "Root",
+      "type": "root",
+      "content": "Decision tree root",
+      "children": [
+        {
+          "id": "65f4cb4f-ecc0-4932-9ffd-2fbea271d3c4",
+          "name": "Initial Analysis",
+          "type": "analysis",
+          "content": "Analyzing system state and determining appropriate action",
+          "confidence": 95,
+          "alternatives": [],
+          "metadata": {},
+          "children": [
+            {
+              "id": "e960f98d-414b-4ada-a102-61c22a7be88e",
+              "name": "Bug Detection",
+              "type": "decision",
+              "content": "Determine if there are bugs in the code",
+              "confidence": 75,
+              "alternatives": [
+                {
+                  "name": "Alternative approach for Bug Detection",
+                  "content": "An alternative way to handle bug detection",
+                  "confidence": 57,
+                  "metadata": {}
+                }
+              ],
+              "metadata": {},
+              "children": [
+                {
+                  "id": "8cb5c029-32ec-401f-a4d6-d92165074f55",
+                  "name": "Fix Critical Bugs",
+                  "type": "action",
+                  "content": "Apply patches for critical bugs first",
+                  "confidence": 81,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "810dd974-667e-4815-89d8-6cca40226e6a",
+                  "name": "Document Issues",
+                  "type": "action",
+                  "content": "Create documentation for known issues",
+                  "confidence": 75,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "432502a6-4b56-4933-9923-083e255da96a",
+                  "name": "Regression Testing",
+                  "type": "action",
+                  "content": "Run tests to verify fixes",
+                  "confidence": 88,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "e42f1b36-5392-453b-8b6d-d82ce3a1b763",
+              "name": "Performance Analysis",
+              "type": "analysis",
+              "content": "Evaluate system performance metrics",
+              "confidence": 83,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            },
+            {
+              "id": "a319baf5-8720-4d71-a938-35e28814f51b",
+              "name": "Code Quality Review",
+              "type": "analysis",
+              "content": "Review code structure and patterns",
+              "confidence": 72,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "24d3c495-67f9-42d8-97fb-1f2bff7c95bb": {
+    "tree_id": "24d3c495-67f9-42d8-97fb-1f2bff7c95bb",
+    "agent_id": "bug_detector",
+    "name": "Bug_detector's Decision Process",
+    "description": "Decision process for bug_detector when analyzing and fixing issues.",
+    "created_at": "2025-07-08T02:09:42.388523",
+    "last_updated": "2025-07-08T03:29:02.398845",
+    "status": "Active",
+    "node_count": 8,
+    "depth": 3,
+    "root": {
+      "name": "Root",
+      "type": "root",
+      "content": "Decision tree root",
+      "children": [
+        {
+          "id": "da645fad-dcb2-4080-84d8-32c6fbef8e82",
+          "name": "Initial Analysis",
+          "type": "analysis",
+          "content": "Analyzing system state and determining appropriate action",
+          "confidence": 95,
+          "alternatives": [],
+          "metadata": {},
+          "children": [
+            {
+              "id": "8dd1348a-6094-4761-a76c-3fbd58bc1fd1",
+              "name": "Bug Detection",
+              "type": "decision",
+              "content": "Determine if there are bugs in the code",
+              "confidence": 87,
+              "alternatives": [
+                {
+                  "name": "Alternative approach for Bug Detection",
+                  "content": "An alternative way to handle bug detection",
+                  "confidence": 50,
+                  "metadata": {}
+                }
+              ],
+              "metadata": {},
+              "children": [
+                {
+                  "id": "119973e6-b5c9-4b54-a9c6-8efd2b16bfe1",
+                  "name": "Fix Critical Bugs",
+                  "type": "action",
+                  "content": "Apply patches for critical bugs first",
+                  "confidence": 83,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "fa8b1e04-2f1f-48ff-bf4c-7b7337a69914",
+                  "name": "Document Issues",
+                  "type": "action",
+                  "content": "Create documentation for known issues",
+                  "confidence": 87,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "d16ca3f7-00b3-43cf-9bb5-52f69af4d396",
+                  "name": "Regression Testing",
+                  "type": "action",
+                  "content": "Run tests to verify fixes",
+                  "confidence": 88,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "de8a818b-2489-4cfb-ab9f-6023b2483206",
+              "name": "Performance Analysis",
+              "type": "analysis",
+              "content": "Evaluate system performance metrics",
+              "confidence": 79,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            },
+            {
+              "id": "d0f83345-b264-4be7-89c3-a655bbfcffcd",
+              "name": "Code Quality Review",
+              "type": "analysis",
+              "content": "Review code structure and patterns",
+              "confidence": 85,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "c9873e55-d283-46ed-a971-8260eaa47b6c": {
+    "tree_id": "c9873e55-d283-46ed-a971-8260eaa47b6c",
+    "agent_id": "relationship_analyst",
+    "name": "Relationship_analyst's Decision Process",
+    "description": "Decision process for relationship_analyst when analyzing and fixing issues.",
+    "created_at": "2025-07-08T02:09:42.389532",
+    "last_updated": "2025-07-08T03:29:02.398845",
+    "status": "Active",
+    "node_count": 8,
+    "depth": 3,
+    "root": {
+      "name": "Root",
+      "type": "root",
+      "content": "Decision tree root",
+      "children": [
+        {
+          "id": "8ff4cc0b-a2df-478a-8fa5-f72d3acb5159",
+          "name": "Initial Analysis",
+          "type": "analysis",
+          "content": "Analyzing system state and determining appropriate action",
+          "confidence": 95,
+          "alternatives": [],
+          "metadata": {},
+          "children": [
+            {
+              "id": "cdac298f-3793-43a8-9dbd-5869c79f73c7",
+              "name": "Bug Detection",
+              "type": "decision",
+              "content": "Determine if there are bugs in the code",
+              "confidence": 71,
+              "alternatives": [
+                {
+                  "name": "Alternative approach for Bug Detection",
+                  "content": "An alternative way to handle bug detection",
+                  "confidence": 57,
+                  "metadata": {}
+                }
+              ],
+              "metadata": {},
+              "children": [
+                {
+                  "id": "e9e99d90-1111-4c39-8040-ddf86516ac96",
+                  "name": "Fix Critical Bugs",
+                  "type": "action",
+                  "content": "Apply patches for critical bugs first",
+                  "confidence": 79,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "eebeb52b-24fa-43eb-9ebd-622e83830b44",
+                  "name": "Document Issues",
+                  "type": "action",
+                  "content": "Create documentation for known issues",
+                  "confidence": 76,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                },
+                {
+                  "id": "f0f1e349-5cd4-46e5-bd1d-3d5aa0cd522d",
+                  "name": "Regression Testing",
+                  "type": "action",
+                  "content": "Run tests to verify fixes",
+                  "confidence": 78,
+                  "alternatives": [],
+                  "metadata": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "a5d224f0-50ba-443e-9cc1-7fbd0350406c",
+              "name": "Performance Analysis",
+              "type": "analysis",
+              "content": "Evaluate system performance metrics",
+              "confidence": 74,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            },
+            {
+              "id": "ac9bf60c-9edf-415c-b53f-d7a5a204bdb8",
+              "name": "Code Quality Review",
+              "type": "analysis",
+              "content": "Review code structure and patterns",
+              "confidence": 85,
+              "alternatives": [],
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

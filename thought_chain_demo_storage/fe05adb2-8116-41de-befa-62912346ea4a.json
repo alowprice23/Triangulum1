@@ -1,0 +1,55 @@
+{
+  "chain_id": "fe05adb2-8116-41de-befa-62912346ea4a",
+  "name": "Persistent Chain",
+  "description": "A chain that will be saved to disk",
+  "metadata": {},
+  "created_at": 1751426593.2917967,
+  "updated_at": 1751426593.2927935,
+  "nodes": {
+    "05535d53-dff2-4032-8094-f2020e1d7cc9": {
+      "thought_type": "observation",
+      "content": {
+        "observation": "This chain will be saved to disk"
+      },
+      "author_agent_id": "persistence_agent",
+      "node_id": "05535d53-dff2-4032-8094-f2020e1d7cc9",
+      "timestamp": 1751426593.2927935,
+      "confidence": 0.9,
+      "metadata": {},
+      "parent_ids": [],
+      "child_ids": [
+        "d383827d-8c5a-4dae-b5e3-f02b44ce85d4"
+      ],
+      "relationships": {
+        "d383827d-8c5a-4dae-b5e3-f02b44ce85d4": "derives_from"
+      },
+      "schema_version": "1.0"
+    },
+    "d383827d-8c5a-4dae-b5e3-f02b44ce85d4": {
+      "thought_type": "action",
+      "content": {
+        "action": "Load the chain from disk"
+      },
+      "author_agent_id": "persistence_agent",
+      "node_id": "d383827d-8c5a-4dae-b5e3-f02b44ce85d4",
+      "timestamp": 1751426593.2927935,
+      "confidence": 0.9,
+      "metadata": {},
+      "parent_ids": [
+        "05535d53-dff2-4032-8094-f2020e1d7cc9"
+      ],
+      "child_ids": [],
+      "relationships": {
+        "05535d53-dff2-4032-8094-f2020e1d7cc9": "derives_from"
+      },
+      "schema_version": "1.0"
+    }
+  },
+  "root_node_ids": [
+    "05535d53-dff2-4032-8094-f2020e1d7cc9"
+  ],
+  "leaf_node_ids": [
+    "d383827d-8c5a-4dae-b5e3-f02b44ce85d4"
+  ],
+  "schema_version": "1.0"
+}

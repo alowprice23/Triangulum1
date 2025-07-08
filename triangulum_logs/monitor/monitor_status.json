@@ -1,0 +1,38 @@
+{
+  "last_updated": 1751335763.6082582,
+  "files_processed": 10,
+  "files_fixed": 0,
+  "files_failed": 10,
+  "file_status": {
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_imports.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\start_triangulum.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py": {
+      "status": "failed"
+    },
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py": {
+      "status": "failed"
+    }
+  }
+}

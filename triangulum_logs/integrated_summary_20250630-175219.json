@@ -1,0 +1,12 @@
+{
+  "run_id": 1751320340,
+  "start_time": 1751320340.521162,
+  "end_time": 1751320360.419658,
+  "total_time_seconds": 19.89849591255188,
+  "total_ticks": 30,
+  "bugs_total": 0,
+  "bugs_resolved": 0,
+  "bugs_escalated": 1,
+  "success_rate": 0,
+  "agent_summaries": {}
+}

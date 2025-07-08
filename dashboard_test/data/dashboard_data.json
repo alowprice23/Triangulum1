@@ -1,0 +1,57 @@
+{
+  "global_progress": {
+    "percent_complete": 50.0,
+    "status": "Testing",
+    "start_time": "2025-07-08T01:23:49.166382",
+    "estimated_completion": "2025-07-08T01:23:49.180380",
+    "steps_completed": 5,
+    "total_steps": 10
+  },
+  "agent_progress": {
+    "orchestrator": {
+      "percent_complete": 30,
+      "status": "Active",
+      "current_activity": "Testing dashboard 1",
+      "last_update": "2025-07-08T01:23:49.173381",
+      "tasks_completed": 0,
+      "total_tasks": 10,
+      "thought_count": 1
+    },
+    "bug_detector": {
+      "percent_complete": 60,
+      "status": "Idle",
+      "current_activity": "Testing dashboard 2",
+      "last_update": "2025-07-08T01:23:49.173381",
+      "tasks_completed": 1,
+      "total_tasks": 10,
+      "thought_count": 5
+    },
+    "code_fixer": {
+      "percent_complete": 90,
+      "status": "Active",
+      "current_activity": "Testing dashboard 3",
+      "last_update": "2025-07-08T01:23:49.173381",
+      "tasks_completed": 2,
+      "total_tasks": 10,
+      "thought_count": 10
+    }
+  },
+  "agent_activity": {
+    "orchestrator": {
+      "timestamp": "2025-07-08T01:23:49.173381",
+      "description": "Testing dashboard 1",
+      "percent_complete": 30
+    },
+    "bug_detector": {
+      "timestamp": "2025-07-08T01:23:49.173381",
+      "description": "Testing dashboard 2",
+      "percent_complete": 60
+    },
+    "code_fixer": {
+      "timestamp": "2025-07-08T01:23:49.173381",
+      "description": "Testing dashboard 3",
+      "percent_complete": 90
+    }
+  },
+  "last_updated": "2025-07-08T01:23:59.268789"
+}

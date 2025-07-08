@@ -1,0 +1,310 @@
+{
+  "agents": [
+    "orchestrator",
+    "code_fixer",
+    "verification",
+    "relationship_analyst",
+    "bug_detector",
+    "priority_analyzer"
+  ],
+  "messages": [
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "bug_detector",
+      "message_type": "analysis",
+      "content": "Impact analysis for module_a.py: changes may affect 1 other modules",
+      "timestamp": "2025-07-07T20:56:14.665069",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "code_fixer",
+      "message_type": "analysis",
+      "content": "Impact analysis for module_a.py: changes may affect 4 other modules",
+      "timestamp": "2025-07-07T20:56:14.853141",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "orchestrator",
+      "message_type": "analysis",
+      "content": "Impact analysis for module_a.py: changes may affect 1 other modules",
+      "timestamp": "2025-07-07T20:56:15.230147",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "code_fixer",
+      "message_type": "verification",
+      "content": "Fix for Null pointer exception in module_a.py has been verified",
+      "timestamp": "2025-07-07T20:56:15.673925",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "relationship_analyst",
+      "message_type": "notification",
+      "content": "Bug detected in module_b.py at line 17: Memory leak",
+      "timestamp": "2025-07-07T20:56:15.869915",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "orchestrator",
+      "message_type": "verification",
+      "content": "Fix for Memory leak in module_b.py has been verified",
+      "timestamp": "2025-07-07T20:56:16.261219",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "verification",
+      "message_type": "notification",
+      "content": "Bug detected in module_c.py at line 123: Inefficient algorithm",
+      "timestamp": "2025-07-07T20:56:16.266077",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "code_fixer",
+      "message_type": "analysis",
+      "content": "Impact analysis for module_c.py: changes may affect 3 other modules",
+      "timestamp": "2025-07-07T20:56:16.402842",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "priority_analyzer",
+      "message_type": "verification",
+      "content": "Fix for Memory leak in module_b.py has been verified",
+      "timestamp": "2025-07-07T20:56:16.525631",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "orchestrator",
+      "message_type": "notification",
+      "content": "Bug detected in module_c.py at line 123: Inefficient algorithm",
+      "timestamp": "2025-07-07T20:56:16.688490",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "verification",
+      "message_type": "command",
+      "content": "Please prioritize fixing Inefficient algorithm in module_c.py",
+      "timestamp": "2025-07-07T20:56:16.739860",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "relationship_analyst",
+      "message_type": "command",
+      "content": "Please prioritize fixing Inefficient algorithm in module_c.py",
+      "timestamp": "2025-07-07T20:56:16.835051",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "code_fixer",
+      "message_type": "notification",
+      "content": "Bug detected in module_c.py at line 123: Inefficient algorithm",
+      "timestamp": "2025-07-07T20:56:16.899746",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "relationship_analyst",
+      "message_type": "command",
+      "content": "Please prioritize fixing Race condition in utils.py",
+      "timestamp": "2025-07-07T20:56:17.219772",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "priority_analyzer",
+      "message_type": "notification",
+      "content": "Bug detected in utils.py at line 56: Race condition",
+      "timestamp": "2025-07-07T20:56:17.410891",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "verification",
+      "message_type": "notification",
+      "content": "Bug detected in utils.py at line 56: Race condition",
+      "timestamp": "2025-07-07T20:56:17.505483",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "relationship_analyst",
+      "message_type": "notification",
+      "content": "Bug detected in utils.py at line 56: Race condition",
+      "timestamp": "2025-07-07T20:56:17.597696",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "orchestrator",
+      "message_type": "analysis",
+      "content": "Impact analysis for utils.py: changes may affect 2 other modules",
+      "timestamp": "2025-07-07T20:56:18.014687",
+      "metadata": {}
+    },
+    {
+      "source_agent": "bug_detector",
+      "target_agent": "verification",
+      "message_type": "notification",
+      "content": "Bug detected in config.py at line 29: Hardcoded credentials",
+      "timestamp": "2025-07-07T20:56:18.065275",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "bug_detector",
+      "message_type": "analysis",
+      "content": "Impact analysis for utils.py: changes may affect 2 other modules",
+      "timestamp": "2025-07-07T20:56:18.296339",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "verification",
+      "message_type": "analysis",
+      "content": "Impact analysis for utils.py: changes may affect 2 other modules",
+      "timestamp": "2025-07-07T20:56:18.577416",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "orchestrator",
+      "message_type": "verification",
+      "content": "Fix for Inefficient algorithm in module_c.py has been verified",
+      "timestamp": "2025-07-07T20:56:18.784801",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "priority_analyzer",
+      "message_type": "command",
+      "content": "Please prioritize fixing Hardcoded credentials in config.py",
+      "timestamp": "2025-07-07T20:56:18.832318",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "relationship_analyst",
+      "message_type": "command",
+      "content": "Please prioritize fixing Hardcoded credentials in config.py",
+      "timestamp": "2025-07-07T20:56:18.992883",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "verification",
+      "message_type": "command",
+      "content": "Please prioritize fixing Hardcoded credentials in config.py",
+      "timestamp": "2025-07-07T20:56:19.314349",
+      "metadata": {}
+    },
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "code_fixer",
+      "message_type": "command",
+      "content": "Please prioritize fixing Hardcoded credentials in config.py",
+      "timestamp": "2025-07-07T20:56:19.474736",
+      "metadata": {}
+    },
+    {
+      "source_agent": "relationship_analyst",
+      "target_agent": "priority_analyzer",
+      "message_type": "analysis",
+      "content": "Impact analysis for config.py: changes may affect 5 other modules",
+      "timestamp": "2025-07-07T20:56:19.898908",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "code_fixer",
+      "message_type": "verification",
+      "content": "Fix for Race condition in utils.py has been verified",
+      "timestamp": "2025-07-07T20:56:20.328282",
+      "metadata": {}
+    },
+    {
+      "source_agent": "verification",
+      "target_agent": "orchestrator",
+      "message_type": "verification",
+      "content": "Fix for Race condition in utils.py has been verified",
+      "timestamp": "2025-07-07T20:56:20.652735",
+      "metadata": {}
+    }
+  ],
+  "connections": {
+    "relationship_analyst": {
+      "bug_detector": 2,
+      "code_fixer": 2,
+      "orchestrator": 2,
+      "verification": 1,
+      "priority_analyzer": 1
+    },
+    "verification": {
+      "code_fixer": 2,
+      "orchestrator": 3,
+      "priority_analyzer": 1
+    },
+    "bug_detector": {
+      "relationship_analyst": 2,
+      "verification": 3,
+      "orchestrator": 1,
+      "code_fixer": 1,
+      "priority_analyzer": 1
+    },
+    "orchestrator": {
+      "verification": 2,
+      "relationship_analyst": 3,
+      "priority_analyzer": 1,
+      "code_fixer": 1
+    }
+  },
+  "agent_stats": {
+    "relationship_analyst": {
+      "messages_sent": 8,
+      "messages_received": 5,
+      "last_active": "2025-07-07T20:56:19.898908",
+      "response_times": []
+    },
+    "bug_detector": {
+      "messages_sent": 8,
+      "messages_received": 2,
+      "last_active": "2025-07-07T20:56:18.296339",
+      "response_times": []
+    },
+    "code_fixer": {
+      "messages_sent": 0,
+      "messages_received": 6,
+      "last_active": "2025-07-07T20:56:20.328282",
+      "response_times": []
+    },
+    "orchestrator": {
+      "messages_sent": 7,
+      "messages_received": 6,
+      "last_active": "2025-07-07T20:56:20.652735",
+      "response_times": []
+    },
+    "verification": {
+      "messages_sent": 6,
+      "messages_received": 6,
+      "last_active": "2025-07-07T20:56:20.652735",
+      "response_times": []
+    },
+    "priority_analyzer": {
+      "messages_sent": 0,
+      "messages_received": 4,
+      "last_active": "2025-07-07T20:56:19.898908",
+      "response_times": []
+    }
+  },
+  "timestamp": "2025-07-07T20:56:37.180671"
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "file_path": "example_math.py",
+    "timestamp": "2025-07-02T23:34:06.846754",
+    "original_length": 56,
+    "fixed_length": 99,
+    "changed": true,
+    "lines_added": 3,
+    "lines_removed": 1,
+    "net_change": 2,
+    "diff_summary": "--- \n+++ \n@@ -1,2 +1,4 @@\n def divide(a, b):\n-    return a / b  # Bug: no zero check\n+    if b == 0:\n+        return float('inf')  # Fixed: handle zero\n+    return a / b"
+  },
+  {
+    "file_path": "example_file.py",
+    "timestamp": "2025-07-02T23:34:06.847753",
+    "original_length": 112,
+    "fixed_length": 131,
+    "changed": true,
+    "lines_added": 2,
+    "lines_removed": 2,
+    "net_change": 0,
+    "diff_summary": "--- \n+++ \n@@ -1,4 +1,4 @@\n def read_data(filename):\n-    f = open(filename, 'r')\n-    data = f.read()  # Bug: file not closed\n+    with open(filename, 'r') as f:  # Fixed: using context manager\n+        data = f.read()\n     return data"
+  },
+  {
+    "file_path": "example_math.py",
+    "timestamp": "2025-07-02T23:36:31.634926",
+    "original_length": 56,
+    "fixed_length": 99,
+    "changed": true,
+    "lines_added": 3,
+    "lines_removed": 1,
+    "net_change": 2,
+    "diff_summary": "--- \n+++ \n@@ -1,2 +1,4 @@\n def divide(a, b):\n-    return a / b  # Bug: no zero check\n+    if b == 0:\n+        return float('inf')  # Fixed: handle zero\n+    return a / b"
+  },
+  {
+    "file_path": "example_file.py",
+    "timestamp": "2025-07-02T23:36:34.842724",
+    "original_length": 112,
+    "fixed_length": 131,
+    "changed": true,
+    "lines_added": 2,
+    "lines_removed": 2,
+    "net_change": 0,
+    "diff_summary": "--- \n+++ \n@@ -1,4 +1,4 @@\n def read_data(filename):\n-    f = open(filename, 'r')\n-    data = f.read()  # Bug: file not closed\n+    with open(filename, 'r') as f:  # Fixed: using context manager\n+        data = f.read()\n     return data"
+  }
+]

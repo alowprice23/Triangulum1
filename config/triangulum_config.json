@@ -1,0 +1,36 @@
+{
+  "system": {
+    "log_level": "INFO",
+    "data_directory": "triangulum_data",
+    "relationship_path": "triangulum_relationships.json"
+  },
+  "monitoring": {
+    "enabled": true,
+    "interval": 30
+  },
+  "feedback": {
+    "enabled": true,
+    "db_path": "triangulum_data/feedback.db"
+  },
+  "engine": {
+    "workers": 4,
+    "timeout": 600,
+    "retry_attempts": 3
+  },
+  "repair": {
+    "auto_fix": true,
+    "max_attempts": 3,
+    "safe_mode": true
+  },
+  "analysis": {
+    "max_files": 1000,
+    "ignored_patterns": [
+      "__pycache__",
+      ".git",
+      ".venv",
+      "*.pyc",
+      "*.pyo",
+      "*.pyd"
+    ]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "session_id": "20250701_022816",
+  "total_cycles": 6,
+  "session_duration": 2.101060628890991,
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "timestamp": 1751351296.5380218,
+      "issues_found": 11,
+      "fixes_applied": 5,
+      "health_score": 0.767,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 2.866572856903076,
+        "agents_count": 29,
+        "issues_density": 0.3793103448275862,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 2,
+      "timestamp": 1751351301.4055583,
+      "issues_found": 9,
+      "fixes_applied": 5,
+      "health_score": 0.773,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.10481405258178711,
+        "agents_count": 29,
+        "issues_density": 0.3103448275862069,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 3,
+      "timestamp": 1751351303.5119383,
+      "issues_found": 8,
+      "fixes_applied": 5,
+      "health_score": 0.776,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.09920024871826172,
+        "agents_count": 29,
+        "issues_density": 0.27586206896551724,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 1,
+      "timestamp": 1751351305.7217474,
+      "issues_found": 7,
+      "fixes_applied": 5,
+      "health_score": 0.7789999999999999,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.1148838996887207,
+        "agents_count": 29,
+        "issues_density": 0.2413793103448276,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 1,
+      "timestamp": 1751351307.9491265,
+      "issues_found": 6,
+      "fixes_applied": 5,
+      "health_score": 0.782,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.10100078582763672,
+        "agents_count": 29,
+        "issues_density": 0.20689655172413793,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    },
+    {
+      "cycle_number": 1,
+      "timestamp": 1751351310.1528113,
+      "issues_found": 5,
+      "fixes_applied": 5,
+      "health_score": 0.7849999999999999,
+      "mathematical_confidence": 0.0,
+      "domino_effect_strength": 0.0,
+      "new_capabilities_discovered": [],
+      "performance_metrics": {
+        "cycle_duration": 0.10077333450317383,
+        "agents_count": 29,
+        "issues_density": 0.1724137931034483,
+        "fix_efficiency": 1.0,
+        "mathematical_accuracy": 0.0
+      }
+    }
+  ],
+  "improvement_trends": {
+    "health_score_trend": 0.0034285714285714128,
+    "fixes_applied_trend": 0.0,
+    "domino_effect_trend": 0.0,
+    "mathematical_confidence_trend": 0.0,
+    "cycle_efficiency_trend": -0.39499296460832867,
+    "overall_improvement_direction": "declining"
+  },
+  "final_health_score": 0.7849999999999999,
+  "target_achieved": false,
+  "total_fixes_applied": 30,
+  "average_domino_effect": 0.0
+}

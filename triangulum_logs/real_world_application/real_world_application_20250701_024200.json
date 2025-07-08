@@ -1,0 +1,793 @@
+{
+  "session_id": "20250701_024200",
+  "real_world_analysis": {
+    "total_files_analyzed": 19,
+    "python_files_found": 137,
+    "real_issues_detected": [
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_imports.py",
+        "function": "test_imports",
+        "line": 13,
+        "complexity": 152,
+        "severity": "high",
+        "description": "Function 'test_imports' has high complexity (152 nodes)"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "function": "__init__",
+        "line": 44,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "function": "__init__",
+        "line": 44,
+        "complexity": 82,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (82 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "function": "log_engine_state",
+        "line": 170,
+        "complexity": 191,
+        "severity": "high",
+        "description": "Function 'log_engine_state' has high complexity (191 nodes)"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 43,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__str__",
+        "line": 67,
+        "severity": "medium",
+        "description": "Function '__str__' lacks documentation"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 73,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 243,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "main",
+        "line": 517,
+        "complexity": 999,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (999 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 43,
+        "complexity": 74,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (74 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "update_state",
+        "line": 53,
+        "complexity": 60,
+        "severity": "high",
+        "description": "Function 'update_state' has high complexity (60 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 73,
+        "complexity": 70,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (70 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "execute",
+        "line": 84,
+        "complexity": 250,
+        "severity": "high",
+        "description": "Function 'execute' has high complexity (250 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "_build_messages",
+        "line": 136,
+        "complexity": 269,
+        "severity": "high",
+        "description": "Function '_build_messages' has high complexity (269 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "_get_role_instruction",
+        "line": 225,
+        "complexity": 59,
+        "severity": "high",
+        "description": "Function '_get_role_instruction' has high complexity (59 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "__init__",
+        "line": 243,
+        "complexity": 70,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (70 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "add_bug",
+        "line": 251,
+        "complexity": 59,
+        "severity": "high",
+        "description": "Function 'add_bug' has high complexity (59 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "run_debug_cycle",
+        "line": 265,
+        "complexity": 731,
+        "severity": "high",
+        "description": "Function 'run_debug_cycle' has high complexity (731 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "_extract_next_agent",
+        "line": 406,
+        "complexity": 169,
+        "severity": "high",
+        "description": "Function '_extract_next_agent' has high complexity (169 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "_extract_fixed_code",
+        "line": 456,
+        "complexity": 77,
+        "severity": "high",
+        "description": "Function '_extract_fixed_code' has high complexity (77 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py",
+        "function": "_extract_new_state",
+        "line": 475,
+        "complexity": 183,
+        "severity": "high",
+        "description": "Function '_extract_new_state' has high complexity (183 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+        "function": "main",
+        "line": 131,
+        "complexity": 85,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (85 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+        "function": "__init__",
+        "line": 22,
+        "complexity": 51,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (51 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+        "function": "start_dispatcher",
+        "line": 40,
+        "complexity": 53,
+        "severity": "high",
+        "description": "Function 'start_dispatcher' has high complexity (53 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+        "function": "stop_dispatcher",
+        "line": 49,
+        "complexity": 72,
+        "severity": "high",
+        "description": "Function 'stop_dispatcher' has high complexity (72 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug.py",
+        "function": "_dispatcher_thread",
+        "line": 62,
+        "complexity": 235,
+        "severity": "high",
+        "description": "Function '_dispatcher_thread' has high complexity (235 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "main",
+        "line": 147,
+        "complexity": 85,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (85 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "__init__",
+        "line": 23,
+        "complexity": 64,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (64 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "publish",
+        "line": 35,
+        "complexity": 70,
+        "severity": "high",
+        "description": "Function 'publish' has high complexity (70 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "start_dispatcher",
+        "line": 47,
+        "complexity": 53,
+        "severity": "high",
+        "description": "Function 'start_dispatcher' has high complexity (53 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "stop_dispatcher",
+        "line": 56,
+        "complexity": 100,
+        "severity": "high",
+        "description": "Function 'stop_dispatcher' has high complexity (100 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\event_loop_bug_fixed.py",
+        "function": "_dispatcher_thread",
+        "line": 74,
+        "complexity": 246,
+        "severity": "high",
+        "description": "Function '_dispatcher_thread' has high complexity (246 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug.py",
+        "function": "read_file_stats",
+        "line": 17,
+        "complexity": 100,
+        "severity": "high",
+        "description": "Function 'read_file_stats' has high complexity (100 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug.py",
+        "function": "process_directory",
+        "line": 43,
+        "complexity": 128,
+        "severity": "high",
+        "description": "Function 'process_directory' has high complexity (128 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug.py",
+        "function": "print_summary",
+        "line": 65,
+        "complexity": 237,
+        "severity": "high",
+        "description": "Function 'print_summary' has high complexity (237 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug.py",
+        "function": "main",
+        "line": 89,
+        "complexity": 134,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (134 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug_fixed.py",
+        "function": "read_file_stats",
+        "line": 17,
+        "complexity": 100,
+        "severity": "high",
+        "description": "Function 'read_file_stats' has high complexity (100 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug_fixed.py",
+        "function": "process_directory",
+        "line": 43,
+        "complexity": 128,
+        "severity": "high",
+        "description": "Function 'process_directory' has high complexity (128 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug_fixed.py",
+        "function": "print_summary",
+        "line": 65,
+        "complexity": 237,
+        "severity": "high",
+        "description": "Function 'print_summary' has high complexity (237 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\file_resource_bug_fixed.py",
+        "function": "main",
+        "line": 89,
+        "complexity": 134,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (134 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py",
+        "function": "fix_bug",
+        "line": 22,
+        "complexity": 88,
+        "severity": "high",
+        "description": "Function 'fix_bug' has high complexity (88 nodes)"
+      },
+      {
+        "type": "missing_error_handling",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\fix_test_bug.py",
+        "line": 1,
+        "severity": "medium",
+        "description": "File lacks error handling mechanisms"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "__init__",
+        "line": 56,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "__init__",
+        "line": 126,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "__init__",
+        "line": 56,
+        "complexity": 72,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (72 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "__init__",
+        "line": 126,
+        "complexity": 108,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (108 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "build_relationships",
+        "line": 170,
+        "complexity": 127,
+        "severity": "high",
+        "description": "Function 'build_relationships' has high complexity (127 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\integrated_triangulum_debug.py",
+        "function": "log_engine_state",
+        "line": 306,
+        "complexity": 183,
+        "severity": "high",
+        "description": "Function 'log_engine_state' has high complexity (183 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "main",
+        "line": 386,
+        "complexity": 141,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (141 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "__init__",
+        "line": 39,
+        "complexity": 113,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (113 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "log",
+        "line": 60,
+        "complexity": 96,
+        "severity": "high",
+        "description": "Function 'log' has high complexity (96 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "run_autonomous_debugging",
+        "line": 80,
+        "complexity": 237,
+        "severity": "high",
+        "description": "Function 'run_autonomous_debugging' has high complexity (237 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "_apply_enhancements",
+        "line": 128,
+        "complexity": 202,
+        "severity": "high",
+        "description": "Function '_apply_enhancements' has high complexity (202 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "_run_targeted_healing",
+        "line": 178,
+        "complexity": 300,
+        "severity": "high",
+        "description": "Function '_run_targeted_healing' has high complexity (300 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "_run_monitoring",
+        "line": 240,
+        "complexity": 239,
+        "severity": "high",
+        "description": "Function '_run_monitoring' has high complexity (239 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_autonomous.py",
+        "function": "_generate_final_report",
+        "line": 292,
+        "complexity": 583,
+        "severity": "high",
+        "description": "Function '_generate_final_report' has high complexity (583 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\run_triangulum_demo.py",
+        "function": "main",
+        "line": 139,
+        "complexity": 55,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (55 nodes)"
+      },
+      {
+        "type": "missing_error_handling",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\setup.py",
+        "line": 1,
+        "severity": "medium",
+        "description": "File lacks error handling mechanisms"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\start_triangulum.py",
+        "function": "test_openai_connection",
+        "line": 17,
+        "complexity": 171,
+        "severity": "high",
+        "description": "Function 'test_openai_connection' has high complexity (171 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\start_triangulum.py",
+        "function": "run_simple_demo",
+        "line": 53,
+        "complexity": 197,
+        "severity": "high",
+        "description": "Function 'run_simple_demo' has high complexity (197 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\start_triangulum.py",
+        "function": "show_system_status",
+        "line": 120,
+        "complexity": 142,
+        "severity": "high",
+        "description": "Function 'show_system_status' has high complexity (142 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\start_triangulum.py",
+        "function": "main",
+        "line": 148,
+        "complexity": 123,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (123 nodes)"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_bug_fixed.py",
+        "function": "divide",
+        "line": 2,
+        "severity": "medium",
+        "description": "Function 'divide' lacks documentation"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_bug_fixed.py",
+        "function": "main",
+        "line": 8,
+        "severity": "medium",
+        "description": "Function 'main' lacks documentation"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_improvements.py",
+        "function": "test_tooling_system",
+        "line": 10,
+        "complexity": 175,
+        "severity": "high",
+        "description": "Function 'test_tooling_system' has high complexity (175 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_improvements.py",
+        "function": "check_test_structure",
+        "line": 40,
+        "complexity": 97,
+        "severity": "high",
+        "description": "Function 'check_test_structure' has high complexity (97 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_improvements.py",
+        "function": "run_comprehensive_assessment",
+        "line": 68,
+        "complexity": 146,
+        "severity": "high",
+        "description": "Function 'run_comprehensive_assessment' has high complexity (146 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_improvements.py",
+        "function": "main",
+        "line": 93,
+        "complexity": 96,
+        "severity": "high",
+        "description": "Function 'main' has high complexity (96 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_basic_triangulum_gpt",
+        "line": 17,
+        "complexity": 74,
+        "severity": "high",
+        "description": "Function 'test_basic_triangulum_gpt' has high complexity (74 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_self_healing_system",
+        "line": 45,
+        "complexity": 85,
+        "severity": "high",
+        "description": "Function 'test_self_healing_system' has high complexity (85 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_code_relationship_analysis",
+        "line": 66,
+        "complexity": 92,
+        "severity": "high",
+        "description": "Function 'test_code_relationship_analysis' has high complexity (92 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_triangulum_core_engine",
+        "line": 88,
+        "complexity": 83,
+        "severity": "high",
+        "description": "Function 'test_triangulum_core_engine' has high complexity (83 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_provider_system",
+        "line": 116,
+        "complexity": 69,
+        "severity": "high",
+        "description": "Function 'test_provider_system' has high complexity (69 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_monitoring_system",
+        "line": 139,
+        "complexity": 52,
+        "severity": "high",
+        "description": "Function 'test_monitoring_system' has high complexity (52 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_goal_system",
+        "line": 159,
+        "complexity": 75,
+        "severity": "high",
+        "description": "Function 'test_goal_system' has high complexity (75 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_agent_system",
+        "line": 183,
+        "complexity": 64,
+        "severity": "high",
+        "description": "Function 'test_agent_system' has high complexity (64 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_file_integration",
+        "line": 203,
+        "complexity": 139,
+        "severity": "high",
+        "description": "Function 'test_file_integration' has high complexity (139 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "test_end_to_end_workflow",
+        "line": 235,
+        "complexity": 106,
+        "severity": "high",
+        "description": "Function 'test_end_to_end_workflow' has high complexity (106 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_comprehensive.py",
+        "function": "run_comprehensive_test",
+        "line": 277,
+        "complexity": 376,
+        "severity": "high",
+        "description": "Function 'run_comprehensive_test' has high complexity (376 nodes)"
+      },
+      {
+        "type": "missing_docstring",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_integration.py",
+        "function": "__init__",
+        "line": 37,
+        "severity": "medium",
+        "description": "Function '__init__' lacks documentation"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_integration.py",
+        "function": "__init__",
+        "line": 37,
+        "complexity": 75,
+        "severity": "high",
+        "description": "Function '__init__' has high complexity (75 nodes)"
+      },
+      {
+        "type": "high_complexity",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\test_triangulum_integration.py",
+        "function": "generate_report",
+        "line": 249,
+        "complexity": 324,
+        "severity": "high",
+        "description": "Function 'generate_report' has high complexity (324 nodes)"
+      },
+      {
+        "type": "missing_error_handling",
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum.py",
+        "line": 1,
+        "severity": "medium",
+        "description": "File lacks error handling mechanisms"
+      }
+    ],
+    "code_quality_metrics": {
+      "health_score": 0.0,
+      "issue_density": 4.368421052631579,
+      "quality_index": 0.06315789473684214,
+      "critical_issues": 0,
+      "high_issues": 70,
+      "medium_issues": 13,
+      "low_issues": 0
+    },
+    "improvement_opportunities": [
+      {
+        "type": "fix_high_complexity",
+        "priority": "high",
+        "description": "Reduce complexity in 70 functions",
+        "expected_health_gain": 0.2
+      },
+      {
+        "type": "add_documentation",
+        "priority": "medium",
+        "description": "Add documentation to 13 functions",
+        "expected_health_gain": 0.15
+      }
+    ]
+  },
+  "real_world_fixes": {
+    "fixes_attempted": 10,
+    "fixes_successful": 5,
+    "files_modified": [
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+      "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py"
+    ],
+    "health_improvement": 0.1,
+    "real_changes_made": [
+      "Fixed missing_docstring in debug_triangulum_workflow.py",
+      "Fixed missing_docstring in debug_with_relationships.py",
+      "Fixed missing_docstring in debug_with_relationships.py",
+      "Fixed missing_docstring in debug_with_relationships.py",
+      "Fixed missing_docstring in debug_with_relationships.py"
+    ]
+  },
+  "before_health": 0.0,
+  "after_health": 0.1,
+  "real_improvement": 0.1,
+  "files_actually_modified": [
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+    "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_with_relationships.py"
+  ],
+  "real_changes_demonstrated": [
+    "Fixed missing_docstring in debug_triangulum_workflow.py",
+    "Fixed missing_docstring in debug_with_relationships.py",
+    "Fixed missing_docstring in debug_with_relationships.py",
+    "Fixed missing_docstring in debug_with_relationships.py",
+    "Fixed missing_docstring in debug_with_relationships.py"
+  ]
+}

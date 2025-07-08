@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LLM Token Processing Visualization</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background-color: #001529; color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .title { font-size: 24px; font-weight: bold; }
+        .timestamp { font-size: 14px; color: #d9d9d9; }
+        .session-container { background-color: white; border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .session-title { font-size: 18px; font-weight: bold; color: #333; }
+        .session-meta { font-size: 14px; color: #666; }
+        .token-text { font-family: 'Courier New', monospace; margin-bottom: 15px; padding: 15px; background-color: #f9f9f9; border-radius: 4px; line-height: 1.5; white-space: pre-wrap; }
+        .token { display: inline-block; padding: 2px 4px; margin: 2px; border-radius: 3px; }
+        .confidence-high { background-color: rgba(82, 196, 26, 0.2); }
+        .confidence-medium { background-color: rgba(250, 173, 20, 0.2); }
+        .confidence-low { background-color: rgba(245, 34, 45, 0.2); }
+        .chart-container { margin-top: 20px; margin-bottom: 20px; }
+        .chart-container img { max-width: 100%; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .chart-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-item { padding: 8px 16px; background-color: white; border-radius: 4px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .nav-item:hover { background-color: #e6f7ff; }
+        .session-list { margin-bottom: 20px; }
+        .session-item { padding: 10px 15px; background-color: white; margin-bottom: 10px; border-radius: 4px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .session-item:hover { background-color: #e6f7ff; }
+        .session-item-header { display: flex; justify-content: space-between; align-items: center; }
+        .session-item-title { font-weight: bold; color: #333; }
+        .session-item-timestamp { font-size: 12px; color: #999; }
+        .session-item-description { margin-top: 5px; font-size: 14px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">LLM Token Processing Visualization</div>
+            <div class="timestamp">Last updated: <span id="update-time">2025-07-07 23:49:07</span></div>
+        </div>
+        <div class="nav">
+            <div class="nav-item" onclick="location.reload()">Refresh</div>
+            <div class="nav-item" onclick="window.open('data/all_sessions.json', '_blank')">View Raw Data</div>
+        </div>
+        <div class="session-list">
+            <h2>Processing Sessions</h2>
+            <div id="session-list-content">
+                <div class="session-item" onclick="location.href='session_83a8ab8a-f17c-4c44-84dc-7aba49778ff7.html'">
+                    <div class="session-item-header">
+                        <div class="session-item-title">agent_5</div>
+                        <div class="session-item-timestamp">23:47:46 - completed</div>
+                    </div>
+                    <div class="session-item-description">Simulated processing by agent_5</div>
+                </div>
+                
+                <div class="session-item" onclick="location.href='session_f999d353-ea7e-49a7-bc99-84f8c045d1fe.html'">
+                    <div class="session-item-header">
+                        <div class="session-item-title">agent_4</div>
+                        <div class="session-item-timestamp">23:47:46 - completed</div>
+                    </div>
+                    <div class="session-item-description">Simulated processing by agent_4</div>
+                </div>
+                
+                <div class="session-item" onclick="location.href='session_83d42090-db7e-4d84-b8f7-00c7281c045a.html'">
+                    <div class="session-item-header">
+                        <div class="session-item-title">agent_3</div>
+                        <div class="session-item-timestamp">23:47:46 - completed</div>
+                    </div>
+                    <div class="session-item-description">Simulated processing by agent_3</div>
+                </div>
+                
+                <div class="session-item" onclick="location.href='session_3de0ee2f-ac97-4e9f-b087-8b109f1aa4a1.html'">
+                    <div class="session-item-header">
+                        <div class="session-item-title">agent_2</div>
+                        <div class="session-item-timestamp">23:47:46 - completed</div>
+                    </div>
+                    <div class="session-item-description">Simulated processing by agent_2</div>
+                </div>
+                
+                <div class="session-item" onclick="location.href='session_db530511-e38d-408b-999d-ff985c5190fb.html'">
+                    <div class="session-item-header">
+                        <div class="session-item-title">agent_1</div>
+                        <div class="session-item-timestamp">23:47:46 - completed</div>
+                    </div>
+                    <div class="session-item-description">Simulated processing by agent_1</div>
+                </div>
+                </div>
+        </div>
+        <div id="session-visualizations">
+            <div class="session-container">
+                <div class="session-header">
+                    <div class="session-title">agent_5 - Completed</div>
+                    <div class="session-meta">Started: 2025-07-07 23:47:46 | Ended: 2025-07-07 23:49:07</div>
+                </div>
+                <div class="session-meta">
+                    <p>Description: Simulated processing by agent_5</p>
+                    <p>Tokens: 0 | Avg. Confidence: 0.0% | Avg. Processing Time: 0.0ms</p>
+                </div>
+                <div class="token-text"></div>
+                
+                
+                <p><a href="session_83a8ab8a-f17c-4c44-84dc-7aba49778ff7.html">View full session details</a></p>
+            </div>
+            
+            <div class="session-container">
+                <div class="session-header">
+                    <div class="session-title">agent_4 - Completed</div>
+                    <div class="session-meta">Started: 2025-07-07 23:47:46 | Ended: 2025-07-07 23:49:05</div>
+                </div>
+                <div class="session-meta">
+                    <p>Description: Simulated processing by agent_4</p>
+                    <p>Tokens: 9 | Avg. Confidence: 73.9% | Avg. Processing Time: 79.6ms</p>
+                </div>
+                <div class="token-text"><span class="token confidence-medium" title="Confidence: 61.0%, Time: 77.9ms">Real-time</span><span class="token confidence-medium" title="Confidence: 63.4%, Time: 69.5ms">feedback</span><span class="token confidence-medium" title="Confidence: 66.4%, Time: 81.5ms">mechanisms</span><span class="token confidence-medium" title="Confidence: 66.1%, Time: 74.5ms">allow</span><span class="token confidence-medium" title="Confidence: 68.7%, Time: 68.2ms">for</span><span class="token confidence-medium" title="Confidence: 78.7%, Time: 78.5ms">interactive</span><span class="token confidence-high" title="Confidence: 80.7%, Time: 87.6ms">adjustments</span><span class="token confidence-high" title="Confidence: 88.3%, Time: 80.4ms">during</span><span class="token confidence-high" title="Confidence: 91.6%, Time: 98.3ms">processing.</span></div>
+                <div class="chart-container"><div class="chart-title">Token Confidence</div><img src="charts\confidence_f999d353-ea7e-49a7-bc99-84f8c045d1fe.png?t=1751946547" alt="Confidence chart"></div>
+                <div class="chart-container"><div class="chart-title">Processing Time (ms)</div><img src="charts\processing_f999d353-ea7e-49a7-bc99-84f8c045d1fe.png?t=1751946547" alt="Processing time chart"></div>
+                <p><a href="session_f999d353-ea7e-49a7-bc99-84f8c045d1fe.html">View full session details</a></p>
+            </div>
+            
+            <div class="session-container">
+                <div class="session-header">
+                    <div class="session-title">agent_3 - Completed</div>
+                    <div class="session-meta">Started: 2025-07-07 23:47:46 | Ended: 2025-07-07 23:49:03</div>
+                </div>
+                <div class="session-meta">
+                    <p>Description: Simulated processing by agent_3</p>
+                    <p>Tokens: 11 | Avg. Confidence: 73.9% | Avg. Processing Time: 71.9ms</p>
+                </div>
+                <div class="token-text"><span class="token confidence-high" title="Confidence: 87.7%, Time: 77.2ms">transparency</span><span class="token confidence-high" title="Confidence: 95.0%, Time: 68.5ms">helps</span><span class="token confidence-high" title="Confidence: 87.7%, Time: 62.3ms">users</span><span class="token confidence-medium" title="Confidence: 70.0%, Time: 78.9ms">understand</span><span class="token confidence-medium" title="Confidence: 52.3%, Time: 64.8ms">why</span><span class="token confidence-low" title="Confidence: 45.0%, Time: 74.6ms">the</span><span class="token confidence-medium" title="Confidence: 52.3%, Time: 66.8ms">model</span><span class="token confidence-medium" title="Confidence: 70.0%, Time: 72.3ms">makes</span><span class="token confidence-high" title="Confidence: 87.7%, Time: 71.2ms">certain</span><span class="token confidence-high" title="Confidence: 95.0%, Time: 92.8ms">decisions.</span></div>
+                <div class="chart-container"><div class="chart-title">Token Confidence</div><img src="charts\confidence_83d42090-db7e-4d84-b8f7-00c7281c045a.png?t=1751946547" alt="Confidence chart"></div>
+                <div class="chart-container"><div class="chart-title">Processing Time (ms)</div><img src="charts\processing_83d42090-db7e-4d84-b8f7-00c7281c045a.png?t=1751946547" alt="Processing time chart"></div>
+                <p><a href="session_83d42090-db7e-4d84-b8f7-00c7281c045a.html">View full session details</a></p>
+            </div>
+            </div>
+    </div>
+    <script>
+        setInterval(() => { location.reload(); }, 2000);
+    </script>
+</body>
+</html>

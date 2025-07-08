@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "triangulum-lx"
+version = "1.0.0"
+description = "An agentic debugging system using the triangle paradigm"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Triangulum Team", email = "info@triangulum-debug.ai"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Debuggers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "autogen>=0.2.0",
+    "numpy>=1.20.0",
+    "networkx>=2.6.0",
+    "matplotlib>=3.4.0",
+    "PyYAML>=6.0",
+    "scikit-learn>=1.0.0",
+    "joblib>=1.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/triangulum/triangulum-lx"
+"Bug Tracker" = "https://github.com/triangulum/triangulum-lx/issues"
+
+[project.scripts]
+triangulum = "triangulum_lx.scripts.cli:main"

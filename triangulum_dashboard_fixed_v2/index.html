@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Triangulum Agentic Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0; background-color: #f0f2f5; }
+        .header { background-color: #001529; color: white; padding: 16px 24px; font-size: 24px; font-weight: 600; }
+        .tab-bar { display: flex; background-color: white; border-bottom: 1px solid #d9d9d9; padding: 0 24px; }
+        .tab { padding: 14px 16px; cursor: pointer; color: #595959; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+        .tab.active { color: #1890ff; border-bottom-color: #1890ff; }
+        .content { padding: 24px; display: none; }
+        .content.active { display: block; }
+        iframe { border: none; width: 100%; height: 85vh; background-color: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="header">Triangulum Agentic Dashboard</div>
+    <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('overview')">Overview</div>
+        <div class="tab" onclick="switchTab('thought_chains')">Thought Chains</div>
+        <div class="tab" onclick="switchTab('agent_network')">Agent Network</div>
+        <div class="tab" onclick="switchTab('decision_trees')">Decision Trees</div>
+        <div class="tab" onclick="switchTab('timeline')">Timeline</div>
+    </div>
+    <div id="overview-content" class="content active"><iframe src="progress/progress.html"></iframe></div>
+    <div id="thought_chains-content" class="content"><iframe src="thought_chains/thought_chains.html"></iframe></div>
+    <div id="agent_network-content" class="content"><iframe src="agent_network/agent_network.html"></iframe></div>
+    <div id="decision_trees-content" class="content"><iframe src="decision_trees/decision_trees.html"></iframe></div>
+    <div id="timeline-content" class="content"><iframe src="timeline/timeline.html"></iframe></div>
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        }
+    </script>
+</body>
+</html>

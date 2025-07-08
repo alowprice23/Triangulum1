@@ -1,0 +1,14 @@
+{
+  "self_awareness": {
+    "name": "self_awareness",
+    "description": "How well I understand my own state",
+    "weight": 0.5846151300000003,
+    "threshold": 0.7,
+    "trend": "higher_better",
+    "confidence": 0.5,
+    "learned_from": [
+      "bootstrap"
+    ],
+    "last_updated": 1751343123.6512647
+  }
+}

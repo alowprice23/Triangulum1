@@ -1,0 +1,61 @@
+{
+  "session_id": "20250701_021623",
+  "timestamp": 1751350583.6134088,
+  "agents_discovered": 29,
+  "issues_found": 15,
+  "fix_plans_created": 15,
+  "fixes_applied": {
+    "fixes_attempted": 10,
+    "fixes_successful": 0,
+    "fixes_failed": 10,
+    "total_time": 5.153399467468262,
+    "mathematical_predictions": [
+      {
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "predicted_fixes": 1136,
+        "predicted_time": 1.3333333333333333,
+        "fan_out_factors": [
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5
+        ]
+      },
+      {
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_ultimate_self_test.py",
+        "predicted_fixes": 162,
+        "predicted_time": 0.3333333333333333,
+        "fan_out_factors": [
+          2.5
+        ]
+      }
+    ],
+    "actual_results": [
+      {
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\debug_triangulum_workflow.py",
+        "success": false,
+        "actual_time": 2.6145870685577393,
+        "issues_count": 9
+      },
+      {
+        "file": "C:\\Users\\Yusuf\\Downloads\\Triangulum\\triangulum_ultimate_self_test.py",
+        "success": false,
+        "actual_time": 2.537813425064087,
+        "issues_count": 1
+      }
+    ]
+  },
+  "mathematical_validation": {
+    "time_prediction_accuracy": 0,
+    "fix_count_accuracy": 0.0,
+    "overall_model_confidence": 0.2,
+    "domino_effect_observed": false
+  },
+  "overall_success": false,
+  "triangulum_health_score": 0.495
+}

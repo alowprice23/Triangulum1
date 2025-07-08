@@ -1,0 +1,14 @@
+{
+  "session_id": "self_heal_1751338174",
+  "duration": 4.146291017532349,
+  "initial_success_rate": 0,
+  "final_success_rate": 0,
+  "improvement": 0,
+  "issues_identified": 0,
+  "goals_created": 0,
+  "verification_results": {
+    "LocalProvider": false,
+    "TriangulationEngine": false
+  },
+  "healing_log": []
+}

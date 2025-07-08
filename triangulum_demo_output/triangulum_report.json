@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-07-08 05:10:31",
+  "test_folder": "./example_files",
+  "quantum_acceleration": true,
+  "statistics": {
+    "total_issues": 8,
+    "attempted_repairs": 0,
+    "successful_repairs": 0,
+    "success_rate": 0
+  },
+  "issues_summary": [],
+  "repairs_summary": []
+}

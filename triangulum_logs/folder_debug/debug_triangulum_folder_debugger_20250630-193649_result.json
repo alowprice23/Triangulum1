@@ -1,0 +1,9 @@
+{
+  "file_path": "triangulum_folder_debugger.py",
+  "description": "Potential bugs in triangulum_folder_debugger.py",
+  "timestamp": "20250630-193649",
+  "returncode": 1,
+  "output": "Error reading file: 'charmap' codec can't decode byte 0x9d in position 25220: character maps to <undefined>\n",
+  "error": "",
+  "success": false
+}

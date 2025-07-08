@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "files_analyzed": 30,
+    "dependencies_found": 0,
+    "cycles_detected": 0,
+    "languages_detected": {
+      "PYTHON": 30
+    },
+    "analysis_timestamp": "20250706_205657",
+    "temporal_snapshots": 0,
+    "runtime_traces_incorporated": false,
+    "static_analysis_performed": true
+  },
+  "cycles": [],
+  "central_files": [
+    [
+      "agent_coordinator.py",
+      0.033333333333333326
+    ],
+    [
+      "agent_memory.py",
+      0.033333333333333326
+    ],
+    [
+      "canary_runner.py",
+      0.033333333333333326
+    ],
+    [
+      "cli.py",
+      0.033333333333333326
+    ],
+    [
+      "compress.py",
+      0.033333333333333326
+    ],
+    [
+      "dashboard_stub.py",
+      0.033333333333333326
+    ],
+    [
+      "Data Structures.py",
+      0.033333333333333326
+    ],
+    [
+      "entropy_explainer.py",
+      0.033333333333333326
+    ],
+    [
+      "hub.py",
+      0.033333333333333326
+    ],
+    [
+      "llm_integrations.py",
+      0.033333333333333326
+    ],
+    [
+      "main.py",
+      0.033333333333333326
+    ],
+    [
+      "meta_agent.py",
+      0.033333333333333326
+    ],
+    [
+      "optimizer.py",
+      0.033333333333333326
+    ],
+    [
+      "parallel_executor.py",
+      0.033333333333333326
+    ],
+    [
+      "patch_bundle.py",
+      0.033333333333333326
+    ],
+    [
+      "prioritiser.py",
+      0.033333333333333326
+    ],
+    [
+      "repair.py",
+      0.033333333333333326
+    ],
+    [
+      "replay_buffer.py",
+      0.033333333333333326
+    ],
+    [
+      "resource_manager.py",
+      0.033333333333333326
+    ],
+    [
+      "rollback_manager.py",
+      0.033333333333333326
+    ]
+  ],
+  "metadata": {
+    "timestamp": "2025-07-06T20:56:57.491984",
+    "agent_id": "relationship_analyst",
+    "agent_name": "Relationship Analyst"
+  }
+}
