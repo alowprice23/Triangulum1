@@ -1,12 +1,8 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -24,29 +20,11 @@ wheels/
 .installed.cfg
 *.egg
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Jupyter Notebook
-.ipynb_checkpoints
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # Environments
 .env
@@ -57,23 +35,8 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDE specific files
-.idea/
-.vscode/
-*.swp
-*.swo
-
 # Project specific
-metrics/
-feedback/
-*.log
-*.png
-*.joblib
-performance_history.json
-verification_results.json
-
-# Refactoring artifacts
-legacy/
-*_legacy.*
-docs/design/
-test_failures_*.log
+**/oPEN AI API KEY.txt
+fixwurx_eval/fixwurx_repair/fixwurx_backup/oPEN AI API KEY.txt
+fixwurx_eval/fixwurx_snapshot/oPEN AI API KEY.txt
+*.api_key
