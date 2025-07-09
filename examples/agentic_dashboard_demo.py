@@ -368,7 +368,7 @@ class SimulatedAgent:
         )
 
 
-def run_demo(dashboard_dir: str = "./triangulum_dashboard_demo", duration: int = 60):
+def run_demo(dashboard_dir: str = "./triangulum_dashboard_final_consolidated", duration: int = 60):
     """
     Run the agentic dashboard demo using TriangulumEngine.
     
@@ -525,7 +525,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dashboard-dir",
         type=str,
-        default="./triangulum_dashboard_demo",
+        default="./triangulum_dashboard_final_consolidated",
         help="Directory to store dashboard outputs"
     )
     parser.add_argument(
