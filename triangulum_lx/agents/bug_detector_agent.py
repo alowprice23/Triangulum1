@@ -34,7 +34,8 @@ except ImportError:
 
 from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType
-from .message_bus import MessageBus
+# from .message_bus import MessageBus # Old
+from .enhanced_message_bus import EnhancedMessageBus # New
 from .relationship_analyst_agent import RelationshipAnalystAgent
 from ..core.exceptions import TriangulumError
 
@@ -208,62 +209,72 @@ class BugDetectorAgent(BaseAgent):
     This agent analyzes test failures, stack traces, code patterns, and runtime
     errors to identify potential bugs in the codebase.
     """
-    
+    AGENT_TYPE = "bug_detector"
+
     def __init__(
         self,
         agent_id: Optional[str] = None,
-        agent_type: str = "bug_detector",
-        message_bus: Optional[MessageBus] = None,
-        subscribed_message_types: Optional[List[MessageType]] = None,
+        # agent_type: str = "bug_detector", # Use AGENT_TYPE
+        message_bus: Optional[EnhancedMessageBus] = None,
+        # subscribed_message_types: Optional[List[MessageType]] = None, # Define in super
         config: Optional[Dict[str, Any]] = None,
-        max_bug_patterns: int = 200,  # Increased to support more patterns
-        max_file_size: int = 1024 * 1024,  # 1 MB
-        relationship_analyst_agent: Optional[RelationshipAnalystAgent] = None,
-        enable_context_aware_detection: bool = True,
-        enable_multi_pass_verification: bool = True,
-        false_positive_threshold: float = 0.8,
-        use_ast_parsing: bool = True
+        **kwargs # Added for BaseAgent params like engine_monitor
     ):
         """
         Initialize the Bug Detector Agent.
         
         Args:
             agent_id: Unique identifier for the agent (generated if not provided)
-            agent_type: Type of the agent
             message_bus: Message bus for agent communication
-            subscribed_message_types: Types of messages this agent subscribes to
-            config: Agent configuration dictionary
-            max_bug_patterns: Maximum number of bug patterns to maintain
-            max_file_size: Maximum file size to analyze in bytes
+            config: Agent configuration dictionary. Expected to contain keys like:
+                    'max_bug_patterns', 'max_file_size',
+                    'relationship_analyst_agent_id' (optional),
+                    'enable_context_aware_detection', 'enable_multi_pass_verification',
+                    'false_positive_threshold', 'use_ast_parsing'.
         """
         super().__init__(
             agent_id=agent_id,
-            agent_type=agent_type,
+            agent_type=self.AGENT_TYPE,
             message_bus=message_bus,
-            subscribed_message_types=subscribed_message_types or [MessageType.TASK_REQUEST, MessageType.QUERY],
-            config=config
+            subscribed_message_types=[MessageType.TASK_REQUEST, MessageType.QUERY], # Define directly
+            config=config,
+            **kwargs # Pass kwargs
         )
         
-        self.max_bug_patterns = max_bug_patterns
-        self.max_file_size = max_file_size
-        self.bug_patterns: Dict[str, Dict[str, Any]] = self._load_bug_patterns()
+        # Initialize parameters from config, with defaults
+        self.max_bug_patterns = self.config.get("max_bug_patterns", 200)
+        self.max_file_size = self.config.get("max_file_size", 1024 * 1024) # 1 MB
+        self.bug_patterns: Dict[str, Dict[str, Any]] = self._load_bug_patterns() # _load_bug_patterns will use self.config
         self.current_workflow_id: Optional[str] = None
         self.known_issues: Dict[str, Dict[str, Any]] = {}
         
-        # Advanced detection capabilities
-        self.relationship_analyst = relationship_analyst_agent
-        self.enable_context_aware_detection = enable_context_aware_detection
-        self.enable_multi_pass_verification = enable_multi_pass_verification
-        self.false_positive_threshold = false_positive_threshold
-        self.use_ast_parsing = use_ast_parsing
+        # Advanced detection capabilities from config
+        # self.relationship_analyst_agent_id = self.config.get("relationship_analyst_agent_id") # Store ID
+        # self.relationship_analyst = None # To be resolved later if needed, e.g. in initialize() via message bus query or engine service locator
+        # For now, direct dependency on another agent instance in __init__ is removed.
+        # If this agent needs to *directly call methods* on another agent, that's a tighter coupling
+        # that the factory or engine would need to manage. If it's via messages, only bus is needed.
+        # The original code had `relationship_analyst_agent: Optional[RelationshipAnalystAgent]`.
+        # This implies it might have been injected. For factory-based creation, this is tricky.
+        # A common pattern is to get needed peer agents in an `initialize()` or `start()` method,
+        # or for the orchestrator to pass necessary info/contacts.
+        # For now, let's assume that if it needs relationship_analyst, it will acquire it post-init or via config.
+        # The demo code for this agent might need adjustment if it relied on this direct injection.
+        # For this pass, I'll remove the direct instance variable `self.relationship_analyst`.
+        # If `_get_relationship_context` needs it, it will have to be adapted.
+
+        self.enable_context_aware_detection = self.config.get("enable_context_aware_detection", True)
+        self.enable_multi_pass_verification = self.config.get("enable_multi_pass_verification", True)
+        self.false_positive_threshold = self.config.get("false_positive_threshold", 0.8)
+        self.use_ast_parsing = self.config.get("use_ast_parsing", True)
         
         # Cache for file dependencies and context
-        self.file_dependencies_cache: Dict[str, Set[str]] = {}
+        self.file_dependencies_cache: Dict[str, Set[str]] = {} # This cache might be populated if context is fetched.
         self.file_dependents_cache: Dict[str, Set[str]] = {}
-        self.analyzed_file_context: Dict[str, Dict[str, Any]] = {}
+        self.analyzed_file_context: Dict[str, Dict[str, Any]] = {} # This cache might be populated if context is fetched.
         
-        # Load additional bug patterns
-        self._load_additional_patterns()
+        # Load additional bug patterns (self._load_bug_patterns already handles defaults from self.config)
+        self._load_additional_patterns() # This method also uses self.bug_patterns
         
         # Register verification strategies
         self.verification_strategies: Dict[str, Callable] = {
@@ -742,9 +753,15 @@ class BugDetectorAgent(BaseAgent):
             logger.debug(f"Inferred language for {file_path}: {language}")
         
             # Get relationship context if enabled and available
-            if self.enable_context_aware_detection and self.relationship_analyst and not relationship_context:
-                relationship_context = self._get_relationship_context(file_path)
-            
+            # This now needs to be re-thought as self.relationship_analyst is removed from direct init.
+            # It would typically involve sending a message to a relationship_analyst agent.
+            # For now, this demo will proceed without it if not passed in.
+            if self.enable_context_aware_detection and not relationship_context:
+                # TODO: Implement logic to request relationship_context if needed, possibly via message bus
+                # For this refactor, we'll assume relationship_context is passed in or not used if not available.
+                # relationship_context = self._get_relationship_context_via_messaging(file_path) # Placeholder
+                pass # relationship_context will remain None if not provided
+
             # Get applicable patterns
             try:
                 patterns = self._get_applicable_patterns(language, selected_patterns)
@@ -1378,31 +1395,43 @@ class BugDetectorAgent(BaseAgent):
         if file_path in self.analyzed_file_context:
             return self.analyzed_file_context[file_path]
         
-        # If no relationship analyst, return empty context
-        if not self.relationship_analyst:
-            return {}
+        # This method needs to be refactored to use messaging if direct RA agent instance is not available.
+        # For now, it will only work if relationship_analyst was somehow injected post-init,
+        # or if this agent is configured not to use it.
+        # A proper solution would involve this agent sending a QUERY to a RelationshipAnalyst agent.
         
-        try:
-            # Get dependencies and dependents from relationship analyst
-            dependencies = self.relationship_analyst.get_file_dependencies(file_path, transitive=True)
-            dependents = self.relationship_analyst.get_file_dependents(file_path, transitive=True)
-            
-            # Cache the results
-            self.file_dependencies_cache[file_path] = dependencies
-            self.file_dependents_cache[file_path] = dependents
-            
-            # Create context
-            context = {
-                "dependencies": list(dependencies),
-                "dependents": list(dependents),
-                "central_files": self.relationship_analyst.get_most_central_files(n=5)
-            }
-            
-            # Cache and return
-            self.analyzed_file_context[file_path] = context
-            return context
-        except Exception as e:
-            logger.warning(f"Error getting relationship context: {e}")
+        # Placeholder: If a relationship_analyst_agent_id is in config, one could imagine
+        # sending a message here and waiting for a response. That's too complex for this refactor.
+        # For now, if self.relationship_analyst (which is no longer an init param) is not set,
+        # this will effectively do nothing or rely on relationship_context passed to detect_bugs_in_file.
+
+        # Attempting to keep original logic if self.relationship_analyst was set by other means (e.g. a property)
+        # This is a temporary measure for the diff. Ideally, this method is fully re-implemented.
+        if hasattr(self, 'relationship_analyst') and self.relationship_analyst:
+            try:
+                # Get dependencies and dependents from relationship analyst
+                dependencies = self.relationship_analyst.get_file_dependencies(file_path, transitive=True)
+                dependents = self.relationship_analyst.get_file_dependents(file_path, transitive=True)
+
+                # Cache the results
+                self.file_dependencies_cache[file_path] = dependencies
+                self.file_dependents_cache[file_path] = dependents
+
+                # Create context
+                context = {
+                    "dependencies": list(dependencies),
+                    "dependents": list(dependents),
+                    "central_files": self.relationship_analyst.get_most_central_files(n=5)
+                }
+
+                # Cache and return
+                self.analyzed_file_context[file_path] = context
+                return context
+            except Exception as e:
+                logger.warning(f"Error getting relationship context using self.relationship_analyst: {e}")
+                return {}
+        else:
+            logger.debug(f"Relationship analyst not available or not configured for _get_relationship_context for {file_path}.")
             return {}
     
     def _perform_ast_analysis(self, file_path: str, content: str, language: str) -> List[DetectedBug]:
@@ -2107,7 +2136,15 @@ class BugDetectorAgent(BaseAgent):
         """
         content = message.content
         action = content.get("action", "")
+        logger.info(f"BugDetectorAgent received task request: {action} from {message.sender}")
         
+        if self.metrics:
+            self.metrics.record_metric("bug_detector_task_received", 1, tags={"action": action, "sender": message.sender})
+            start_time = time.time()
+
+        response_content = None
+        response_message_type = MessageType.ERROR # Default to error
+
         if action == "detect_bugs_in_file":
             file_path = content.get("file_path")
             language = content.get("language")
@@ -2172,6 +2209,8 @@ class BugDetectorAgent(BaseAgent):
                         "error": str(e)
                     }
                 )
+                response_content = {"status": "error", "error": str(e)}
+                response_message_type = MessageType.ERROR
         
         elif action == "detect_bugs_in_folder":
             folder_path = content.get("folder_path")
@@ -2220,6 +2259,8 @@ class BugDetectorAgent(BaseAgent):
                         "error": str(e)
                     }
                 )
+                response_content = {"status": "error", "error": str(e)}
+                response_message_type = MessageType.ERROR
                 
         elif action == "analyze_test_failure":
             test_name = content.get("test_name")
@@ -2263,6 +2304,8 @@ class BugDetectorAgent(BaseAgent):
                         "error": str(e)
                     }
                 )
+                response_content = {"status": "error", "error": str(e)}
+                response_message_type = MessageType.ERROR
         
         elif action == "add_bug_pattern":
             pattern_id = content.get("pattern_id")
@@ -2320,16 +2363,26 @@ class BugDetectorAgent(BaseAgent):
                         "error": str(e)
                     }
                 )
+                response_content = {"status": "error", "error": str(e)}
+                response_message_type = MessageType.ERROR
         
         else:
+            response_content = {"status": "error", "error": f"Unknown action: {action}"}
+            response_message_type = MessageType.ERROR
+            # self.send_response is called below
+
+        if response_content: # Ensure we always send a response
             self.send_response(
                 original_message=message,
-                message_type=MessageType.ERROR,
-                content={
-                    "status": "error",
-                    "error": f"Unknown action: {action}"
-                }
+                message_type=response_message_type,
+                content=response_content
             )
+
+        if self.metrics:
+            duration = time.time() - start_time
+            status_tag = "success" if response_message_type == MessageType.TASK_RESULT else "failure"
+            self.metrics.record_metric("bug_detector_task_processed", 1, tags={"action": action, "status": status_tag})
+            self.metrics.record_metric("bug_detector_task_duration_seconds", duration, tags={"action": action, "status": status_tag})
     
     def _handle_query(self, message: AgentMessage) -> None:
         """

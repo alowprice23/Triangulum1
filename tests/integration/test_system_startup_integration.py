@@ -212,12 +212,12 @@ class TestSystemStartupIntegration(unittest.TestCase):
         try:
             import sys
             sys.path.insert(0, os.path.abspath('.'))
-            from triangulum_self_heal import SystemStartupManager
+            from triangulum_lx.self_heal import SystemStartupManager
         except ImportError:
             self.skipTest("triangulum_self_heal module not available")
         
         # Use direct mocking for the SystemStartupManager
-        with patch('triangulum_self_heal.SystemStartupManager._load_config', return_value=self.test_config):
+        with patch('triangulum_lx.self_heal.SystemStartupManager._load_config', return_value=self.test_config):
             # Create a mock for SystemStartupManager._initialize_with_recovery method
             with patch.object(SystemStartupManager, '_initialize_with_recovery') as mock_initialize_with_recovery:
                 # Configure the mock to return True (successful initialization)

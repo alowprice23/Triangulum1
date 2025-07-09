@@ -17,9 +17,10 @@ from pathlib import Path
 # Add parent directory to path to allow imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from triangulum_lx.core.engine import TriangulumEngine # Added
 from triangulum_lx.quantum.code_analyzer import QuantumCodeAnalyzer
-from triangulum_lx.monitoring.progress_tracker import ProgressTracker
-from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard
+from triangulum_lx.monitoring.progress_tracker import ProgressTracker # ProgressTracker might use the dashboard from engine
+from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard # For type hint
 
 # Configure logging
 logging.basicConfig(
@@ -144,17 +145,62 @@ def main():
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
     
-    # Setup dashboard and tracker
-    dashboard = setup_dashboard(args.output_dir)
-    tracker = ProgressTracker(
-        dashboard=dashboard,
-        agent_id="quantum_analyzer_demo",
-        log_dir=os.path.join(args.output_dir, "logs")
-    )
+    # --- Setup Triangulum Engine with Dashboard Enabled ---
+    engine_config = {
+        "llm": { # Minimal LLM config
+            "default_provider": "mock_llm",
+            "providers": {"mock_llm": {"api_key_env_var": "MOCK_LLM_KEY", "default_model":"mock"}},
+            "agent_model_mapping_defaults": {},
+            "generation_params": {}, "resilience": {}, "routing_rules": {}
+        },
+        "agents": {},
+        "dashboard": {
+            "output_dir": os.path.join(args.output_dir, "dashboard_data"), # Specific subdir for dashboard output
+            "enable_server": True,
+            "server_port": 8082, # Ensure this port is different if other demos run simultaneously
+            "auto_open_browser": False, # Usually false for tool demos unless explicitly desired
+            "update_interval": 0.5
+        },
+        "logging": {"metrics_dir": os.path.join(args.output_dir, "metrics_data")}
+    }
+
+    original_getenv = os.getenv
+    def mock_getenv_for_engine(var_name, default=None):
+        if var_name == "MOCK_LLM_KEY": return "dummy_key_for_q_analyzer_demo"
+        return original_getenv(var_name, default)
+    os.getenv = mock_getenv_for_engine
+
+    engine: Optional[TriangulumEngine] = None
+    dashboard_instance: Optional[AgenticDashboard] = None
     
     try:
+        engine = TriangulumEngine(config=engine_config)
+        logger.info("Initializing Engine for Quantum Code Analyzer Demo...")
+        if not engine.initialize():
+            logger.error("Failed to initialize Triangulum Engine.")
+            return
+
+        dashboard_instance = engine.get_dashboard()
+        if not dashboard_instance:
+            logger.error("Failed to get dashboard instance from engine.")
+            # Not strictly fatal for this demo if dashboard isn't the primary focus, but good to note.
+            # The ProgressTracker will fail if dashboard_instance is None.
+            # For a robust demo, we might want the tracker to handle a None dashboard gracefully or error out.
+            # For now, let's assume tracker needs a valid dashboard.
+            if engine: engine.shutdown()
+            return
+
+        os.getenv = original_getenv # Restore after engine init
+
+        # Setup tracker with engine-managed dashboard
+        tracker = ProgressTracker(
+            dashboard=dashboard_instance, # Use dashboard from engine
+            agent_id="quantum_analyzer_demo",
+            log_dir=os.path.join(args.output_dir, "logs")
+        )
+
         # Create demo project
-        demo_project_dir = create_demo_project(args.output_dir)
+        demo_project_dir = create_demo_project(args.output_dir) # This creates it inside output_dir
         
         # Initialize analyzer
         analyzer = QuantumCodeAnalyzer(use_quantum=args.use_quantum)
@@ -220,10 +266,17 @@ def main():
         logger.info("Demo interrupted by user.")
     except Exception as e:
         logger.exception(f"An error occurred during the demo: {e}")
-        tracker.update_progress(100, "Error", f"Demo failed: {e}")
+        if 'tracker' in locals() and tracker: # Check if tracker was initialized
+            tracker.update_progress(100, "Error", f"Demo failed: {e}")
     finally:
-        dashboard.stop()
-        logger.info("Dashboard stopped.")
+        if engine: # Ensure engine was initialized before trying to shut down
+            logger.info("Shutting down Triangulum Engine (which stops the dashboard)...")
+            engine.shutdown()
+        else: # If engine init failed but dashboard was somehow started independently (not the case here anymore)
+            if 'dashboard_instance' in locals() and dashboard_instance and hasattr(dashboard_instance, 'stop'):
+                 dashboard_instance.stop() # Fallback, though engine should handle it.
+        logger.info("Quantum Code Analyzer Demo finished.")
+
 
 if __name__ == "__main__":
     main()

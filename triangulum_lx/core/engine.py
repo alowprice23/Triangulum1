@@ -19,7 +19,8 @@ from triangulum_lx.core.exceptions import (
 )
 from triangulum_lx.providers.factory import ProviderFactory
 from triangulum_lx.agents.agent_factory import AgentFactory
-from triangulum_lx.agents.message_bus import MessageBus
+# from triangulum_lx.agents.message_bus import MessageBus # To be replaced
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus
 
 
 # Configure logging
@@ -48,31 +49,53 @@ class TriangulumEngine:
     and provides system monitoring and diagnostics.
     """
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any]): # config is expected to be loaded from config/triangulum_config.json
         """
         Initialize the engine.
         
         Args:
-            config: Configuration dictionary
+            config: Main configuration dictionary (typically from triangulum_config.json)
         """
         self.config = config
         self.running = False
         self._initialized = False
-        self._components = {}
-        self._component_status = {}
-        self._startup_errors = []
+
+        # Initialize LLM configuration system early.
+        # This populates the global LLM_CONFIG in llm_config module.
+        from ..agents import llm_config
+        try:
+            llm_config.load_llm_config(self.config.get("llm", {}))
+            logger.info("LLM configuration loaded successfully via llm_config.load_llm_config().")
+        except Exception as e:
+            logger.error(f"CRITICAL: Failed to load LLM configuration: {e}", exc_info=True)
+            pass
+
+        self._components: Dict[str, Any] = {} # Added type hint for clarity
+        self._component_status: Dict[str, ComponentStatus] = {} # Added type hint
+        self._startup_errors: List[str] = [] # Added type hint
         self._startup_time = None
         
+        # Operation Monitor (used by BaseAgent for progress tracking)
+        # Needs to be initialized before agents that might use it.
+        # Assuming OperationProgress is a class that can be instantiated.
+        from triangulum_lx.core.monitor import OperationProgress # Import it
+        self.operation_monitor = OperationProgress() # Instantiate it
+        logger.info("OperationProgress monitor initialized in Engine.")
+
         # Define component dependencies
         # Each component lists the components it depends on
         self._dependencies = {
             # Core components
             'metrics': set(),                  # No dependencies
             'message_bus': set(),              # No dependencies
-            'provider_factory': {'metrics'},   # Depends on metrics
-            'agent_factory': {'provider_factory', 'message_bus'},  # Depends on provider_factory and message_bus
+            # ProviderFactory might use metrics, AgentFactory needs provider_factory and message_bus.
+            # The operation_monitor is not a standard "component" in this _dependencies list,
+            # but is passed directly to AgentFactory.
+            'provider_factory': {'metrics'},
+            'agent_factory': {'provider_factory', 'message_bus', 'metrics'}, # AgentFactory also needs metrics
             
             # Agents depend on agent_factory
+            # (and implicitly on metrics_collector & operation_monitor via factory)
             'meta_agent': {'agent_factory'},
             'router': {'agent_factory', 'message_bus'},
             'relationship_analyst': {'agent_factory'},
@@ -81,7 +104,8 @@ class TriangulumEngine:
             'implementation_agent': {'agent_factory'},
             'verification_agent': {'agent_factory'},
             'priority_analyzer': {'agent_factory'},
-            'orchestrator': {'agent_factory', 'message_bus'}
+            'orchestrator': {'agent_factory', 'message_bus'},
+            'dashboard': {'metrics'} # Dashboard might depend on metrics or other components later
         }
         
         # Define initialization methods for components
@@ -90,7 +114,7 @@ class TriangulumEngine:
             'message_bus': self._init_message_bus,
             'provider_factory': self._init_provider_factory,
             'agent_factory': self._init_agent_factory,
-            'meta_agent': self._init_meta_agent,
+            'meta_agent': self._init_meta_agent, # This will be removed if meta_agent is deleted
             'router': self._init_router,
             'relationship_analyst': self._init_relationship_analyst,
             'bug_detector': self._init_bug_detector,
@@ -98,7 +122,8 @@ class TriangulumEngine:
             'implementation_agent': self._init_implementation_agent,
             'verification_agent': self._init_verification_agent,
             'priority_analyzer': self._init_priority_analyzer,
-            'orchestrator': self._init_orchestrator
+            'orchestrator': self._init_orchestrator,
+            'dashboard': self._init_dashboard
         }
         
         # Define shutdown methods for components
@@ -106,7 +131,8 @@ class TriangulumEngine:
             'metrics': self._shutdown_metrics,
             'message_bus': self._shutdown_message_bus,
             'provider_factory': self._shutdown_provider_factory,
-            'agent_factory': self._shutdown_agent_factory
+            'agent_factory': self._shutdown_agent_factory,
+            'dashboard': self._shutdown_dashboard # Add dashboard shutdown handler
         }
         
         # Initialize component status
@@ -176,34 +202,37 @@ class TriangulumEngine:
         Returns:
             True if configuration is valid, False otherwise
         """
-        logger.info("Validating configuration")
-        
-        # Check required sections
-        required_sections = ['providers', 'agents']
-        missing_sections = [section for section in required_sections if section not in self.config]
-        
-        if missing_sections:
-            error_msg = f"Configuration validation failed: Missing required config section(s): {missing_sections}"
+        logger.info("Validating main application configuration")
+
+        # Check for 'llm' section, as it's now crucial for LLM providers
+        if 'llm' not in self.config:
+            error_msg = "Configuration validation failed: Missing 'llm' section in main config."
+            logger.error(error_msg)
+            self._startup_errors.append(error_msg)
+            return False
+
+        # Validate llm_config related settings (e.g., default provider)
+        # This relies on llm_config being loaded.
+        from ..agents import llm_config
+        try:
+            current_llm_config = llm_config.get_llm_config() # Check if it's loaded and accessible
+            if not current_llm_config.get("default_provider"):
+                 error_msg = "LLM configuration validation failed: No default_provider found after loading."
+                 logger.error(error_msg)
+                 self._startup_errors.append(error_msg)
+                 return False
+            if not current_llm_config.get("providers"):
+                error_msg = "LLM configuration validation failed: No providers found after loading."
+                logger.error(error_msg)
+                self._startup_errors.append(error_msg)
+                return False
+        except RuntimeError as e:
+            error_msg = f"LLM configuration not loaded, cannot validate: {e}"
             logger.error(error_msg)
             self._startup_errors.append(error_msg)
             return False
         
-        # Validate provider configuration
-        providers_config = self.config.get('providers', {})
-        if not providers_config:
-            error_msg = "Configuration validation failed: Empty providers configuration"
-            logger.error(error_msg)
-            self._startup_errors.append(error_msg)
-            return False
-        
-        # Check for default provider
-        if 'default_provider' not in providers_config:
-            error_msg = "Configuration validation failed: No default provider specified"
-            logger.error(error_msg)
-            self._startup_errors.append(error_msg)
-            return False
-        
-        # Validate agent configuration
+        # Check for 'agents' section for agent definitions
         agents_config = self.config.get('agents', {})
         if not agents_config:
             error_msg = "Configuration validation failed: Empty agents configuration"
@@ -221,7 +250,7 @@ class TriangulumEngine:
             List of component names to initialize
         """
         # Core components are always initialized
-        components = ['metrics', 'message_bus', 'provider_factory', 'agent_factory']
+        components = ['metrics', 'message_bus', 'provider_factory', 'agent_factory', 'dashboard']
         
         # Add agents from configuration
         agents_config = self.config.get('agents', {})
@@ -612,6 +641,20 @@ class TriangulumEngine:
         finally:
             # Update running flag
             self.running = False
+
+    def get_dashboard(self) -> Optional[Any]:
+        """
+        Returns the initialized AgenticDashboard instance, if available.
+        Returns None if the dashboard component is not initialized or failed.
+        """
+        if self._initialized and 'dashboard' in self._components:
+            if self._component_status.get('dashboard') == ComponentStatus.READY:
+                return self._components['dashboard']
+            else:
+                logger.warning("Dashboard component is present but not in READY state.")
+                return None
+        logger.warning("Dashboard component not available or engine not initialized.")
+        return None
     
     def get_status(self) -> Dict[str, Any]:
         """
@@ -784,15 +827,19 @@ class TriangulumEngine:
         
         return collector
     
-    def _init_message_bus(self) -> MessageBus:
+    def _init_message_bus(self) -> EnhancedMessageBus:
         """
         Initialize the message bus component.
         
         Returns:
-            MessageBus instance
+            EnhancedMessageBus instance
         """
         logger.info("Initializing message bus")
-        message_bus = MessageBus()
+        # message_bus = MessageBus() # Old
+        message_bus = EnhancedMessageBus() # New
+        # TODO: Consider if thought_chain_manager needs to be passed here
+        # If Orchestrator or another central place creates ThoughtChainManager,
+        # it could be set on the bus after initialization: message_bus.set_thought_chain_manager(tcm)
         return message_bus
     
     def _init_provider_factory(self) -> ProviderFactory:
@@ -803,24 +850,46 @@ class TriangulumEngine:
             ProviderFactory instance
         """
         logger.info("Initializing provider factory")
-        providers_config = self.config.get('providers', {})
-        default_provider = providers_config.get('default_provider')
-        
-        if not default_provider:
-            raise ProviderInitError(
-                "No default provider specified in configuration", 
-                "provider_factory"
-            )
-            
-        provider_factory = ProviderFactory(providers_config)
-        
-        # Initialize default provider
+        # ProviderFactory now gets its detailed provider configs (with API keys etc.)
+        # from the llm_config module.
+        # The 'config' passed to ProviderFactory constructor is for general factory settings,
+        # not the main 'providers' dictionary from triangulum_config.json anymore.
+        # That 'providers' structure is used by llm_config.load_llm_config().
+
+        factory_general_settings = self.config.get('provider_factory_settings', {}) # Optional section for factory itself
+        provider_factory = ProviderFactory(config=factory_general_settings)
+
+        # Attempt to initialize configured providers to check their status early.
+        # ProviderFactory's initialize_providers will use llm_config.
         try:
-            provider_factory.get_or_create_provider(default_provider)
-        except Exception as e:
+            # This will try to initialize all providers found in the llm_config's 'providers' section.
+            init_results = provider_factory.initialize_providers(parallel=True)
+            for provider_name, success in init_results.items():
+                if not success:
+                    logger.warning(f"Failed to initialize provider '{provider_name}' during engine setup.")
+                    # Depending on strictness, could raise ProviderInitError here
+
+            # Check if the default provider (as per llm_config) is available
+            from ..agents import llm_config
+            loaded_llm_cfg = llm_config.get_llm_config()
+            default_provider_name = loaded_llm_cfg.get('default_provider')
+            if default_provider_name:
+                if not provider_factory.get_provider_info(default_provider_name).get('is_active') or \
+                   provider_factory.provider_status.get(default_provider_name) != ComponentStatus.READY:
+                     logger.warning(f"Default provider '{default_provider_name}' not ready after initialization attempt.")
+                     # This could be a critical error depending on requirements.
+            else:
+                logger.error("No default LLM provider configured after loading llm_config.")
+                raise ProviderInitError("Default LLM provider name is missing in loaded LLM config.", "provider_factory")
+
+        except RuntimeError as e: # e.g. LLM_CONFIG not loaded
+            raise ProviderInitError(f"Failed during provider factory initialization: {e}", "provider_factory", cause=e)
+        except ProviderInitError as e: # Catch specific errors from initialize_providers
+            raise e # Re-raise
+        except Exception as e: # Catch any other unexpected errors
             raise ProviderInitError(
-                f"Failed to initialize default provider {default_provider}", 
-                default_provider,
+                f"Unexpected error initializing provider factory or its providers: {e}",
+                "provider_factory",
                 cause=e
             )
             
@@ -851,9 +920,20 @@ class TriangulumEngine:
             
         agents_config = self.config.get('agents', {})
         
+        metrics_collector = self._components.get('metrics')
+        if not metrics_collector:
+            # This case should ideally not happen if 'metrics' is a dependency of 'agent_factory'
+            # and initialization order is correct.
+            logger.error("MetricsCollector not initialized before AgentFactory. Agent metrics may not be available.")
+            # Fallback or raise error, for now, pass None.
+            # raise ComponentInitError("MetricsCollector not ready for AgentFactory", "agent_factory")
+
+
         agent_factory = AgentFactory(
             message_bus=message_bus,
-            config=agents_config
+            config=agents_config,
+            metrics_collector=metrics_collector, # Pass metrics_collector
+            engine_monitor=self.operation_monitor # Pass engine's operation_monitor
         )
         
         # Register agent types - this is required for test_startup_sequence.py to pass
@@ -1233,3 +1313,49 @@ class TriangulumEngine:
             except Exception as e:
                 logger.error(f"Error shutting down agents: {str(e)}", exc_info=True)
                 raise ShutdownError("Failed to shut down agents", "agent_factory", cause=e)
+
+    def _init_dashboard(self) -> Any:
+        """Initialize the AgenticDashboard component."""
+        logger.info("Initializing Agentic Dashboard")
+        from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard
+
+        dashboard_config = self.config.get("dashboard", {}) # Get dashboard specific config
+        output_dir = dashboard_config.get("output_dir", "triangulum_dashboard_final_consolidated")
+        enable_server = dashboard_config.get("enable_server", True)
+        server_port = dashboard_config.get("server_port", 8080)
+        auto_open_browser = dashboard_config.get("auto_open_browser", True)
+        update_interval = dashboard_config.get("update_interval", 2.0) # Increased default for less frequent updates
+
+        # Ensure output directory exists and is writable, or handle appropriately.
+        # For now, AgenticDashboard handles os.makedirs(output_dir, exist_ok=True)
+
+        try:
+            dashboard = AgenticDashboard(
+                output_dir=output_dir,
+                update_interval=update_interval,
+                enable_server=enable_server,
+                server_port=server_port,
+                auto_open_browser=auto_open_browser
+            )
+            logger.info(f"AgenticDashboard initialized. Outputting to: {output_dir}")
+            return dashboard
+        except Exception as e:
+            logger.error(f"Failed to initialize AgenticDashboard: {e}", exc_info=True)
+            # Decide if this is a critical failure. For now, allow engine to start without dashboard.
+            # Could raise ComponentInitError("Failed to initialize dashboard", "dashboard", cause=e)
+            return None # Or handle more gracefully
+
+    def _shutdown_dashboard(self) -> None:
+        """Shutdown the AgenticDashboard component."""
+        logger.info("Shutting down Agentic Dashboard")
+        dashboard = self._components.get('dashboard')
+        if dashboard and hasattr(dashboard, 'stop'):
+            try:
+                dashboard.stop()
+                logger.info("AgenticDashboard stopped successfully.")
+            except Exception as e:
+                logger.error(f"Error stopping AgenticDashboard: {e}", exc_info=True)
+        elif dashboard:
+            logger.warning("Dashboard component found but has no 'stop' method.")
+        else:
+            logger.info("No active dashboard component to shut down.")

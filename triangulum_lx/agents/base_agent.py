@@ -13,7 +13,8 @@ import time
 from typing import Dict, List, Any, Optional, Set, Callable, Tuple, Generator, Union
 
 from triangulum_lx.agents.message import AgentMessage, MessageType, ConfidenceLevel
-from triangulum_lx.agents.message_bus import MessageBus
+# from triangulum_lx.agents.message_bus import MessageBus # Old
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus # New
 from triangulum_lx.core.monitor import OperationProgress
 from triangulum_lx.agents.response_handling import (
     LargeResponseHandler,
@@ -38,10 +39,11 @@ class BaseAgent(abc.ABC):
         self,
         agent_id: Optional[str] = None,
         agent_type: str = "base",
-        message_bus: Optional[MessageBus] = None,
+        message_bus: Optional[EnhancedMessageBus] = None, # Changed MessageBus to EnhancedMessageBus
         subscribed_message_types: Optional[List[MessageType]] = None,
         config: Optional[Dict[str, Any]] = None,
-        engine_monitor=None
+        engine_monitor=None, # Monitor for OperationProgress
+        metrics_collector=None # Added for metrics collection
     ):
         """
         Initialize the base agent.
@@ -49,10 +51,11 @@ class BaseAgent(abc.ABC):
         Args:
             agent_id: Unique identifier for the agent (generated if not provided)
             agent_type: Type of the agent (e.g., "relationship_analyst", "bug_identifier")
-            message_bus: Message bus for agent communication
+            message_bus: Enhanced message bus for agent communication
             subscribed_message_types: Types of messages this agent subscribes to
             config: Agent configuration dictionary
             engine_monitor: Optional monitor for tracking operations
+            metrics_collector: Optional MetricsCollector instance
         """
         self.agent_id = agent_id or f"{agent_type}_{str(uuid.uuid4())[:8]}"
         self.agent_type = agent_type
@@ -61,6 +64,7 @@ class BaseAgent(abc.ABC):
         self._is_initialized = False
         self._subscribed_message_types = subscribed_message_types or []
         self._engine_monitor = engine_monitor
+        self.metrics = metrics_collector # Store metrics collector
         self._active_operations = {}  # operation_id -> (start_time, timeout_seconds)
         self._operation_details = {}  # operation_id -> additional details
         

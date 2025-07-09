@@ -409,12 +409,12 @@ class TestStartupRecovery(unittest.TestCase):
         try:
             import sys
             sys.path.insert(0, os.path.abspath('.'))
-            from triangulum_self_heal import SystemStartupManager
+            from triangulum_lx.self_heal import SystemStartupManager
         except ImportError:
             self.skipTest("triangulum_self_heal module not available")
         
         # Create a system startup manager with direct mocking
-        with patch('triangulum_self_heal.SystemStartupManager._load_config', return_value=self.test_config):
+        with patch('triangulum_lx.self_heal.SystemStartupManager._load_config', return_value=self.test_config):
             # Create the manager first
             manager = SystemStartupManager("dummy_config.json")
             
@@ -444,12 +444,12 @@ class TestStartupRecovery(unittest.TestCase):
         try:
             import sys
             sys.path.insert(0, os.path.abspath('.'))
-            from triangulum_self_heal import SystemStartupManager
+            from triangulum_lx.self_heal import SystemStartupManager
         except ImportError:
             self.skipTest("triangulum_self_heal module not available")
         
         # Create a system startup manager with direct mocking
-        with patch('triangulum_self_heal.SystemStartupManager._load_config', return_value=self.test_config):
+        with patch('triangulum_lx.self_heal.SystemStartupManager._load_config', return_value=self.test_config):
             # Create the manager first
             manager = SystemStartupManager("dummy_config.json")
             
@@ -485,12 +485,12 @@ class TestStartupRecovery(unittest.TestCase):
         try:
             import sys
             sys.path.insert(0, os.path.abspath('.'))
-            from triangulum_self_heal import SystemStartupManager
+            from triangulum_lx.self_heal import SystemStartupManager
         except ImportError:
             self.skipTest("triangulum_self_heal module not available")
         
         # Create a system startup manager with direct mocking
-        with patch('triangulum_self_heal.SystemStartupManager._load_config', return_value=self.test_config):
+        with patch('triangulum_lx.self_heal.SystemStartupManager._load_config', return_value=self.test_config):
             # Create the manager first
             manager = SystemStartupManager("dummy_config.json")
             
@@ -530,12 +530,12 @@ class TestStartupRecovery(unittest.TestCase):
         try:
             import sys
             sys.path.insert(0, os.path.abspath('.'))
-            from triangulum_self_heal import SystemStartupManager
+            from triangulum_lx.self_heal import SystemStartupManager
         except ImportError:
             self.skipTest("triangulum_self_heal module not available")
         
         # Create a system startup manager with direct mocking
-        with patch('triangulum_self_heal.SystemStartupManager._load_config', return_value=self.test_config):
+        with patch('triangulum_lx.self_heal.SystemStartupManager._load_config', return_value=self.test_config):
             # Create the manager first
             manager = SystemStartupManager("dummy_config.json")
             

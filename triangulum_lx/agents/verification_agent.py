@@ -27,7 +27,8 @@ from typing import Dict, List, Set, Tuple, Any, Optional, Union, Callable, Conte
 
 from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType, ConfidenceLevel
-from .message_bus import MessageBus
+# from .message_bus import MessageBus # Old
+from .enhanced_message_bus import EnhancedMessageBus # New
 from ..core.exceptions import TriangulumError, VerificationError
 from ..verification.core import VerificationEnvironment, TestGenerator
 from ..verification.code_fixer import CodeFixer
@@ -177,35 +178,36 @@ class VerificationAgent(BaseAgent):
     discovery and detailed reporting capabilities. It supports custom verification
     environments and can be configured for different types of projects.
     """
-    
+    AGENT_TYPE = "verification"
+
     def __init__(
         self,
         agent_id: Optional[str] = None,
-        agent_type: str = "verification",
-        message_bus: Optional[MessageBus] = None,
-        subscribed_message_types: Optional[List[MessageType]] = None,
-        config: Optional[Dict[str, Any]] = None
+        # agent_type: str = "verification", # Use AGENT_TYPE
+        message_bus: Optional[EnhancedMessageBus] = None,
+        # subscribed_message_types: Optional[List[MessageType]] = None, # Define in super()
+        config: Optional[Dict[str, Any]] = None,
+        **kwargs # To catch other BaseAgent params
     ):
         """
         Initialize the Verification Agent.
         
         Args:
             agent_id: Unique identifier for the agent (generated if not provided)
-            agent_type: Type of the agent
-            message_bus: Message bus for agent communication
-            subscribed_message_types: Types of messages this agent subscribes to
+            message_bus: Enhanced message bus for agent communication
             config: Agent configuration dictionary
         """
         super().__init__(
             agent_id=agent_id,
-            agent_type=agent_type,
+            agent_type=self.AGENT_TYPE, # Use class variable
             message_bus=message_bus,
-            subscribed_message_types=subscribed_message_types or [
+            subscribed_message_types=[ # Define directly
                 MessageType.TASK_REQUEST,
                 MessageType.QUERY,
                 MessageType.STATUS_UPDATE
             ],
-            config=config
+            config=config,
+            **kwargs # Pass through
         )
         
         # Default configurations

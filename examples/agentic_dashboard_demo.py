@@ -21,8 +21,9 @@ from typing import Dict, List, Any, Optional
 # Add parent directory to path to allow imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard
-from triangulum_lx.monitoring.progress_tracker import ProgressTracker
+# Updated imports
+from triangulum_lx.core.engine import TriangulumEngine # ComponentStatus not directly used here
+from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard # Used for type hint for dashboard instance
 
 # Configure logging
 logging.basicConfig(
@@ -369,147 +370,152 @@ class SimulatedAgent:
 
 def run_demo(dashboard_dir: str = "./triangulum_dashboard_demo", duration: int = 60):
     """
-    Run the agentic dashboard demo.
+    Run the agentic dashboard demo using TriangulumEngine.
     
     Args:
         dashboard_dir: Directory to store dashboard outputs
         duration: Duration of the demo in seconds
     """
-    # Create the dashboard
-    dashboard = AgenticDashboard(
-        output_dir=dashboard_dir,
-        update_interval=0.5,
-        enable_server=True,
-        server_port=8081,
-        auto_open_browser=True
-    )
+    logger.info(f"Starting Agentic Dashboard Demo. Output will be in: {dashboard_dir}")
+    logger.info(f"Demo will run for approximately {duration} seconds.")
+
+    # --- Setup Triangulum Engine with Dashboard Enabled ---
+    # This configuration would typically come from a file like config/triangulum_config.json
+    engine_config = {
+        "llm": {
+            "default_provider": "mock_provider",
+            "providers": {
+                "mock_provider": {
+                    "api_key_env_var": "MOCK_API_KEY", # llm_config expects this structure
+                    "default_model": "mock_model"
+                }
+            },
+            "agent_model_mapping_defaults": {}, # Empty is fine if no agents use LLMs
+            "generation_params": {},
+            "resilience": {},
+            "routing_rules": {}
+        },
+        "agents": {}, # No actual agents being initialized by the engine itself for this demo
+        "dashboard": { # Configuration for the AgenticDashboard component
+            "output_dir": dashboard_dir,
+            "enable_server": True,
+            "server_port": 8081,
+            "auto_open_browser": True,
+            "update_interval": 0.5 # seconds
+        },
+        "logging": {"metrics_dir": os.path.join(dashboard_dir, "metrics_data")} # Example if metrics are needed
+    }
+
+    # Mock os.getenv for the dummy provider if llm_config tries to read it during engine init
+    original_getenv = os.getenv
+    def mock_getenv_for_engine(var_name, default=None):
+        if var_name == "MOCK_API_KEY": # Corresponds to api_key_env_var in engine_config
+            return "dummy_key_for_mock_provider"
+        # Allow other env vars to pass through for potential system settings
+        return original_getenv(var_name, default)
+    os.getenv = mock_getenv_for_engine
     
-    # Create templates directory if needed
-    templates_dir = os.path.join(os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__))), 
-        "triangulum_lx", "monitoring", "templates"
-    )
-    os.makedirs(templates_dir, exist_ok=True)
-    
-    # Create simulated agents
-    agents = []
-    
-    # Distribute bugs among agents
+    engine: Optional[TriangulumEngine] = None
+    try:
+        engine = TriangulumEngine(config=engine_config)
+        logger.info("Initializing Triangulum Engine...")
+        if not engine.initialize():
+            logger.error("Failed to initialize Triangulum Engine. Aborting demo.")
+            return
+        logger.info("Triangulum Engine initialized.")
+
+        dashboard: Optional[AgenticDashboard] = engine.get_dashboard()
+        if not dashboard:
+            logger.error("Failed to get dashboard instance from engine. Aborting demo.")
+            return
+        logger.info(f"Dashboard instance obtained from engine. Type: {type(dashboard)}")
+
+    except Exception as e:
+        logger.exception(f"Error during engine setup: {e}")
+        return
+    finally:
+        os.getenv = original_getenv # Crucial to restore original os.getenv
+
+    # --- Original Demo Logic (now using engine-provided dashboard) ---
+    simulated_agents: List[SimulatedAgent] = []
     bugs = REPAIR_TASK["bugs"]
     
-    # Create orchestrator
-    orchestrator = SimulatedAgent(
-        agent_id="orchestrator",
-        dashboard=dashboard,
-        role="orchestrator",
-        work_items=bugs  # Orchestrator oversees all bugs
-    )
-    agents.append(orchestrator)
+    orchestrator = SimulatedAgent("orchestrator", dashboard, "orchestrator", bugs)
+    bugs = REPAIR_TASK["bugs"] # Defined globally in the script
     
-    # Create bug detector
-    bug_detector = SimulatedAgent(
-        agent_id="bug_detector",
-        dashboard=dashboard,
-        role="bug_detector",
-        work_items=bugs  # Bug detector analyzes all bugs
-    )
-    agents.append(bug_detector)
+    # Create simulated agents, passing the engine-managed dashboard instance
+    orchestrator = SimulatedAgent("orchestrator", dashboard, "orchestrator", bugs)
+    simulated_agents.append(orchestrator)
+    bug_detector = SimulatedAgent("bug_detector", dashboard, "bug_detector", bugs)
+    simulated_agents.append(bug_detector)
+    relationship_analyst = SimulatedAgent("relationship_analyst", dashboard, "relationship_analyst", bugs)
+    simulated_agents.append(relationship_analyst)
+    verification = SimulatedAgent("verification", dashboard, "verification", bugs)
+    simulated_agents.append(verification)
     
-    # Create relationship analyst
-    relationship_analyst = SimulatedAgent(
-        agent_id="relationship_analyst",
-        dashboard=dashboard,
-        role="relationship_analyst",
-        work_items=bugs  # Relationship analyst assesses impact of all bugs
-    )
-    agents.append(relationship_analyst)
-    
-    # Create verification agent
-    verification = SimulatedAgent(
-        agent_id="verification",
-        dashboard=dashboard,
-        role="verification",
-        work_items=bugs  # Verification checks all fixes
-    )
-    agents.append(verification)
-    
-    # Initialize global progress
-    dashboard.update_global_progress(
-        percent_complete=0.0,
-        status="Initializing",
-        steps_completed=0,
-        total_steps=len(bugs)
-    )
+    # Initialize global progress on the dashboard
+    dashboard.update_global_progress(0.0, "Initializing", 0, len(bugs)) # Assuming len(bugs) is total steps
     
     try:
-        # Start all agents
         logger.info("Starting simulated agents...")
-        for agent in agents:
-            agent.start()
-            time.sleep(0.5)  # Stagger start times
+        for sa in simulated_agents: # Use a different variable name
+            sa.start()
+            time.sleep(0.5) # Stagger agent starts
         
-        # Monitor progress and update global status
-        start_time = time.time()
-        while time.time() - start_time < duration and any(agent.active for agent in agents):
-            # Calculate overall progress from the perspective of the orchestrator
-            orchestrator_progress = orchestrator.completed_items
-            total_tasks = orchestrator.total_items
-            if total_tasks > 0:
-                percent_complete = (orchestrator_progress * 100.0) / total_tasks
-            else:
-                percent_complete = 0.0
+        demo_start_time = time.time()
+        while time.time() - demo_start_time < duration and any(sa.active for sa in simulated_agents):
+            # Global progress calculation based on orchestrator's view
+            orch_progress = orchestrator.completed_items
+            orch_total_tasks = orchestrator.total_items
+
+            current_global_percent = (orch_progress * 100.0) / orch_total_tasks if orch_total_tasks > 0 else 0.0
+            current_global_status = "Processing"
             
-            # Determine overall status
-            if all(not agent.active for agent in agents):
-                status = "Completed"
-                percent_complete = 100.0
-                orchestrator_progress = total_tasks
-            else:
-                status = "Processing"
+            if all(not sa.active for sa in simulated_agents): # If all simulated agents are done
+                current_global_status = "Completed"
+                current_global_percent = 100.0
+                orch_progress = orch_total_tasks # Ensure steps completed matches total
             
-            # Update global progress
             dashboard.update_global_progress(
-                percent_complete=percent_complete,
-                status=status,
-                steps_completed=orchestrator_progress,
-                total_steps=total_tasks
+                percent_complete=current_global_percent,
+                status=current_global_status,
+                steps_completed=orch_progress,
+                total_steps=orch_total_tasks
             )
-            
-            # Wait a bit
-            time.sleep(1.0)
+            time.sleep(1.0) # Update global progress every second
         
-        # Final update
-        total_tasks = sum(agent.total_items for agent in agents)
-        completed_tasks = sum(agent.completed_items for agent in agents)
-        if total_tasks > 0:
-            percent_complete = (completed_tasks * 100.0) / total_tasks
-        else:
-            percent_complete = 100.0
+        # Final global progress update
+        final_orch_progress = orchestrator.completed_items
+        final_orch_total_tasks = orchestrator.total_items
+        final_global_percent = (final_orch_progress * 100.0) / final_orch_total_tasks if final_orch_total_tasks > 0 else 100.0
         
         dashboard.update_global_progress(
-            percent_complete=percent_complete,
-            status="Completed",
-            steps_completed=completed_tasks,
-            total_steps=total_tasks
+            percent_complete=final_global_percent,
+            status="Completed" if final_global_percent >= 100.0 else "Timed Out",
+            steps_completed=final_orch_progress,
+            total_steps=final_orch_total_tasks
         )
+        logger.info(f"Demo run loop finished. Orchestrator processed {final_orch_progress}/{final_orch_total_tasks} tasks.")
         
-        logger.info(f"Demo completed. {completed_tasks}/{total_tasks} tasks processed.")
-        
-        # Keep the dashboard running until interrupted
-        logger.info("Dashboard running. Press Ctrl+C to exit...")
-        while True:
-            time.sleep(1)
-    
+        if engine_config.get("dashboard", {}).get("enable_server"):
+            logger.info("Dashboard server is running. Press Ctrl+C to exit and shutdown engine.")
+            while True: # Keep the main thread alive so server thread can run
+                time.sleep(1)
+        else:
+            logger.info("Demo finished (dashboard server was not enabled).")
+
     except KeyboardInterrupt:
-        logger.info("\nStopping demo...")
+        logger.info("\nUser interrupted. Stopping demo...")
     
     finally:
-        # Stop all agents
-        for agent in agents:
-            agent.stop()
+        logger.info("Shutting down simulated agents...")
+        for sa in simulated_agents:
+            sa.stop()
         
-        # Stop the dashboard
-        dashboard.stop()
+        if engine: # Ensure engine was successfully initialized
+            logger.info("Shutting down Triangulum Engine...")
+            engine.shutdown()
+        logger.info("Demo has concluded.")
 
 
 if __name__ == "__main__":

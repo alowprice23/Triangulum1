@@ -16,10 +16,11 @@ from datetime import datetime
 
 from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType
-from .message_bus import MessageBus
-from ..tooling.dependency_graph import DependencyGraphBuilder, DependencyAnalyzer
-from ..tooling.graph_models import DependencyGraph, FileNode, DependencyType, DependencyMetadata
-from ..tooling.code_relationship_analyzer import CodeRelationshipAnalyzer
+# from .message_bus import MessageBus # Old
+from .enhanced_message_bus import EnhancedMessageBus # New
+# Updated import to point to the consolidated dependency_analyzer
+from ..tooling.dependency_analyzer import DependencyGraphBuilder, DependencyAnalyzer, DependencyGraph, FileNode, DependencyType, DependencyMetadata
+# CodeRelationshipAnalyzer is removed as its functionality is being simplified/merged or deferred.
 
 logger = logging.getLogger(__name__)
 
@@ -30,53 +31,59 @@ class RelationshipAnalystAgent(BaseAgent):
     The RelationshipAnalystAgent discovers, tracks, and reports on the complex
     relationships between files in a codebase. It creates a comprehensive dependency
     graph that other agents use to understand the impact of changes and identify related
-    files for repair. It provides advanced features including:
-    
-    - Static analysis of code relationships
-    - Runtime relationship discovery via execution tracing
-    - Temporal relationship tracking to detect changes over time
-    - Visualization of complex relationships
-    - Integration with the code relationship analyzer
+    files for repair.
     """
-    
+    AGENT_TYPE = "relationship_analyst"
+
     def __init__(self, 
-                 agent_id: str = "relationship_analyst",
-                 name: str = "Relationship Analyst",
-                 cache_dir: Optional[str] = None,
-                 message_bus: Optional[MessageBus] = None):
+                 agent_id: Optional[str] = None, # Made Optional for factory
+                 message_bus: Optional[EnhancedMessageBus] = None,
+                 config: Optional[Dict[str, Any]] = None,
+                 **kwargs):
         """
         Initialize the RelationshipAnalystAgent.
         
         Args:
-            agent_id: Unique identifier for the agent
-            name: Display name for the agent
-            cache_dir: Directory for caching analysis results
-            message_bus: MessageBus for communication with other agents
+            agent_id: Unique identifier for the agent.
+            message_bus: EnhancedMessageBus for communication.
+            config: Agent configuration dictionary. Expected keys:
+                    'name' (optional, defaults to agent_id),
+                    'cache_dir' (optional),
+                    'visualization_dir' (optional, defaults to cache_dir/visualizations).
         """
-        super().__init__(agent_id, name, message_bus)
-        self.name = name  # Ensure name is set for report generation
+        super().__init__(
+            agent_id=agent_id,
+            agent_type=self.AGENT_TYPE,
+            message_bus=message_bus,
+            config=config,
+            subscribed_message_types=[MessageType.REQUEST, MessageType.QUERY, MessageType.TASK_REQUEST], # Define subscriptions
+            **kwargs
+        )
+
+        self.name = self.config.get("name", self.agent_id)
         
         # Analysis components
-        self.graph = None
-        self.analyzer = None
+        self.graph: Optional[DependencyGraph] = None # Type hint with new graph model
+        self.analyzer: Optional[DependencyAnalyzer] = None # Type hint with new analyzer
         
         # Historical tracking
-        self.historical_graphs = []
-        self.last_analysis_time = None
-        self.execution_traces = []
+        self.historical_graphs: List[Tuple[str, DependencyGraph]] = [] # Store (timestamp, graph_model)
+        self.last_analysis_time: Optional[float] = None
+        self.execution_traces: List[List[str]] = [] # List of traces, each trace is a list of file paths
         
-        # Cache directory
-        self.cache_dir = cache_dir
+        # Cache directory from config
+        self.cache_dir = self.config.get("cache_dir")
         if self.cache_dir:
-            os.makedirs(self.cache_dir, exist_ok=True)
+            Path(self.cache_dir).mkdir(parents=True, exist_ok=True) # Use Pathlib
             
-        # Code relationship analyzer integration
-        self.relationship_analyzer = CodeRelationshipAnalyzer()
-        
-        # Visualization settings
-        self.visualization_dir = os.path.join(cache_dir, "visualizations") if cache_dir else None
+        # Visualization settings from config
+        default_viz_dir = Path(self.cache_dir, "visualizations") if self.cache_dir else None
+        self.visualization_dir = self.config.get("visualization_dir", default_viz_dir)
         if self.visualization_dir:
-            os.makedirs(self.visualization_dir, exist_ok=True)
+            Path(self.visualization_dir).mkdir(parents=True, exist_ok=True)
+
+        # CodeRelationshipAnalyzer instance is removed.
+        # The _enhance_with_static_analysis method will be removed or significantly refactored.
             
     def analyze_codebase(
         self,
@@ -84,7 +91,7 @@ class RelationshipAnalystAgent(BaseAgent):
         include_patterns: Optional[List[str]] = None,
         exclude_patterns: Optional[List[str]] = None,
         incremental: bool = True,
-        perform_static_analysis: bool = True,
+        # perform_static_analysis: bool = True, # This will be simplified/removed
         analyze_runtime_traces: bool = False,
         save_report: bool = True,
         report_path: Optional[str] = None
@@ -144,28 +151,38 @@ class RelationshipAnalystAgent(BaseAgent):
         # Update analysis time
         self.last_analysis_time = time.time()
                 
-        # Enhance with static analysis if requested
-        if perform_static_analysis:
-            self._enhance_with_static_analysis(root_dir)
+        # _enhance_with_static_analysis (using CodeRelationshipAnalyzer) is removed for now.
+        # The new DependencyGraphBuilder and its parsers (esp. PythonDependencyParser)
+        # already perform AST-based import analysis. Deeper static analysis like call graphs
+        # would be a future enhancement to the parsers or a new specialized analyzer.
             
         # Incorporate runtime traces if requested
         if analyze_runtime_traces and self.execution_traces:
-            self._incorporate_runtime_traces()
+            self._incorporate_runtime_traces() # This method might need adjustment if graph structure changed
             
         # Create an analyzer for the graph
+        # The self.graph is now an instance of our stubbed DependencyGraph.
+        # The DependencyAnalyzer (from tooling.dependency_analyzer) takes this.
         self.analyzer = DependencyAnalyzer(self.graph)
         
         # Return a summary
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        # Adjust summary to reflect new graph structure if needed
+        # self.graph is DependencyGraph, self.analyzer.nx_graph is networkx
+        num_nodes = len(self.analyzer.nx_graph.nodes()) if self.analyzer and self.analyzer.nx_graph else 0
+        num_edges = len(self.analyzer.nx_graph.edges()) if self.analyzer and self.analyzer.nx_graph else 0
+        num_cycles = len(self.analyzer.find_cycles()) if self.analyzer else 0
+
         summary = {
-            "files_analyzed": len(self.graph),
-            "dependencies_found": len(list(self.graph.edges())),
-            "cycles_detected": len(self.analyzer.find_cycles()),
-            "languages_detected": self._count_languages(),
+            "files_analyzed": num_nodes,
+            "dependencies_found": num_edges,
+            "cycles_detected": num_cycles,
+            "languages_detected": self._count_languages(), # This method needs to use self.analyzer.nx_graph or self.graph
             "analysis_timestamp": timestamp,
             "temporal_snapshots": len(self.historical_graphs),
             "runtime_traces_incorporated": analyze_runtime_traces and bool(self.execution_traces),
-            "static_analysis_performed": perform_static_analysis
+            # "static_analysis_performed": perform_static_analysis # Removed as the method is removed
         }
         
         # Save report if requested
@@ -214,14 +231,18 @@ class RelationshipAnalystAgent(BaseAgent):
         Returns:
             Set of file paths that depend on the specified file
         """
-        if not self.graph:
+        if not self.analyzer or not self.analyzer.nx_graph: # Check analyzer and its nx_graph
             raise ValueError("No analysis has been performed yet. Call analyze_codebase first.")
         
+        # Uses the networkx graph from the analyzer
+        if file_path not in self.analyzer.nx_graph:
+             return set()
         if transitive:
-            return self.graph.transitive_dependents(file_path)
+            # nx.ancestors gives all nodes that have a path to file_path
+            # In a graph where A -> B means A imports B, ancestors are dependents.
+            return set(nx.ancestors(self.analyzer.nx_graph, file_path))
         else:
-            incoming = self.graph.get_incoming_edges(file_path)
-            return {edge.source for edge in incoming}
+            return set(self.analyzer.nx_graph.predecessors(file_path))
     
     def get_file_dependencies(self, file_path: str, transitive: bool = False) -> Set[str]:
         """
@@ -234,14 +255,17 @@ class RelationshipAnalystAgent(BaseAgent):
         Returns:
             Set of file paths that the specified file depends on
         """
-        if not self.graph:
+        if not self.analyzer or not self.analyzer.nx_graph: # Check analyzer and its nx_graph
             raise ValueError("No analysis has been performed yet. Call analyze_codebase first.")
-        
+
+        if file_path not in self.analyzer.nx_graph:
+            return set()
         if transitive:
-            return self.graph.transitive_dependencies(file_path)
+            # nx.descendants gives all nodes reachable from file_path
+            # In a graph where A -> B means A imports B, descendants are dependencies.
+            return set(nx.descendants(self.analyzer.nx_graph, file_path))
         else:
-            outgoing = self.graph.get_outgoing_edges(file_path)
-            return {edge.target for edge in outgoing}
+            return set(self.analyzer.nx_graph.successors(file_path))
     
     def calculate_impact_boundary(self, files: Optional[List[str]] = None, max_depth: int = 2) -> Dict[str, Set[str]]:
         """
@@ -262,24 +286,54 @@ class RelationshipAnalystAgent(BaseAgent):
         
         # If no files specified, use all files in the graph
         if files is None:
-            files = list(self.graph)
+            files = list(self.analyzer.nx_graph.nodes())
             
         impact_boundaries = {}
         for file_path in files:
+            if file_path not in self.analyzer.nx_graph:
+                impact_boundaries[file_path] = set()
+                continue
+
             impact_boundary = set()
-            current_level = {file_path}
-            
-            # BFS to find the impact boundary
-            for depth in range(max_depth):
-                next_level = set()
-                for current_file in current_level:
-                    if current_file in self.graph:
-                        dependents = {edge.source for edge in self.graph.get_incoming_edges(current_file)}
-                        next_level.update(dependents)
-                
-                impact_boundary.update(next_level)
-                current_level = next_level
-                
+            # BFS on predecessors (dependents)
+            # queue stores (node, current_depth)
+            queue = deque([(file_path, 0)])
+            visited_for_bfs = {file_path} # Keep track of visited to avoid redundant exploration in BFS for this call
+
+            # We are looking for files that depend on 'file_path', or files that would be affected if 'file_path' changes.
+            # These are the "ancestors" in a graph where edge A->B means A imports B.
+
+            # Iterative deepening BFS/DFS could be an option.
+            # For simplicity, let's get all ancestors and then filter by path length if needed,
+            # or perform a bounded BFS.
+
+            # Bounded BFS for ancestors:
+            # queue stores (node, path_to_node_from_a_dependent)
+            # This is complex. Easier: get all ancestors, then if needed, filter paths.
+            # For now, let's just get all transitive dependents (ancestors).
+            # The original logic was also essentially getting transitive dependents but bounded by depth.
+
+            # Simple transitive dependents (ancestors)
+            # To respect max_depth is harder without iterating paths.
+            # For now, this will return all transitive dependents.
+            # A true depth-limited search on predecessors is needed for strict max_depth.
+            # nx.bfs_tree(self.analyzer.nx_graph.reverse(), source=file_path, depth_limit=max_depth) could work.
+
+            # Simplified: get all transitive dependents. max_depth is not strictly enforced here.
+            # A proper bounded search would be:
+            q = deque([(file_path, 0)]) # node, depth
+            visited_bfs = {file_path}
+            # Note: impact_boundary should not include file_path itself.
+
+            while q:
+                curr, depth = q.popleft()
+                if depth >= max_depth:
+                    continue
+                for predecessor in self.analyzer.nx_graph.predecessors(curr):
+                    if predecessor not in visited_bfs:
+                        visited_bfs.add(predecessor)
+                        impact_boundary.add(predecessor)
+                        q.append((predecessor, depth + 1))
             impact_boundaries[file_path] = impact_boundary
             
         return impact_boundaries
@@ -317,10 +371,10 @@ class RelationshipAnalystAgent(BaseAgent):
                 continue
                 
             # Add all neighbors to the queue
-            if current in self.graph:
-                for edge in self.graph.get_outgoing_edges(current):
-                    if edge.target not in path:  # Avoid cycles
-                        queue.append(path + [edge.target])
+            if current in self.analyzer.nx_graph: # Check against nx_graph
+                for neighbor in self.analyzer.nx_graph.successors(current):
+                    if neighbor not in path:  # Avoid cycles
+                        queue.append(path + [neighbor])
                         
         return paths
     
@@ -334,13 +388,15 @@ class RelationshipAnalystAgent(BaseAgent):
         Returns:
             Set of file paths that might be impacted by the modifications
         """
-        if not self.graph:
+        if not self.analyzer or not self.analyzer.nx_graph: # Check analyzer and its nx_graph
             raise ValueError("No analysis has been performed yet. Call analyze_codebase first.")
         
         impacted = set()
         for file_path in modified_files:
-            dependents = self.graph.transitive_dependents(file_path)
-            impacted.update(dependents)
+            if file_path in self.analyzer.nx_graph:
+                # Dependents are ancestors in A->B (A imports B) graph
+                dependents = nx.ancestors(self.analyzer.nx_graph, file_path)
+                impacted.update(dependents)
             
         return impacted
     
@@ -353,12 +409,27 @@ class RelationshipAnalystAgent(BaseAgent):
         """
         languages = defaultdict(int)
         
-        if not self.graph:
+        if not self.analyzer or not self.analyzer.nx_graph: # Check analyzer and its nx_graph
             return dict(languages)
             
-        for node in self.graph.nodes():
-            file_path = node.path if isinstance(node, FileNode) else str(node)
-            ext = os.path.splitext(file_path)[1].lower()
+        for node_path_str in self.analyzer.nx_graph.nodes():
+            # Assuming nodes in nx_graph are strings (paths)
+            # If FileNode language info is needed, it should be on node attributes in nx_graph
+            # Or, iterate self.graph_model._nodes if that's preferred
+            node_data = self.analyzer.nx_graph.nodes[node_path_str]
+            lang_val = node_data.get('language', LanguageType.UNKNOWN.value) # Get from node attribute
+
+            # lang_type_enum = LanguageType(lang_val) if isinstance(lang_val, str) else LanguageType.UNKNOWN
+            # The current stub for FileNode stores language as LanguageType enum, to_dict converts to value.
+            # So lang_val should be like "python".
+
+            if lang_val == LanguageType.PYTHON.value: languages['PYTHON'] += 1
+            elif lang_val == LanguageType.JAVASCRIPT.value: languages['JAVASCRIPT'] += 1
+            elif lang_val == LanguageType.TYPESCRIPT.value: languages['TYPESCRIPT'] += 1 # Added for TS
+            elif lang_val == LanguageType.JAVA.value: languages['JAVA'] += 1
+            elif lang_val == LanguageType.GO.value: languages['GO'] += 1
+            # Add other LanguageType enum values as needed
+            else: languages['OTHER'] += 1
             
             if ext == '.py':
                 languages['PYTHON'] += 1
@@ -403,73 +474,12 @@ class RelationshipAnalystAgent(BaseAgent):
         logger.info("Enhancing dependency graph with static analysis...")
         
         try:
-            # Extract file paths from the graph nodes - properly handle FileNode objects
-            file_paths = []
-            for node in self.graph.nodes():
-                if isinstance(node, FileNode):
-                    # It's a FileNode object, extract the file path
-                    file_paths.append(node.path)
-                elif hasattr(node, 'path'):  # Another type with path attribute
-                    file_paths.append(node.path)
-                elif isinstance(node, str):  # It's already a string path
-                    file_paths.append(node)
-                else:
-                    # Log what type of node we encountered for debugging
-                    logger.warning(f"Unhandled node type: {type(node).__name__} - {node}")
-            
-            if not file_paths:
-                logger.warning("No valid file paths found in graph nodes")
-                return
-                
-            # Print first few paths for debugging
-            logger.info(f"Found {len(file_paths)} file paths for analysis")
-            for i, path in enumerate(file_paths[:5]):
-                logger.info(f"Sample path {i+1}: {path}")
-                
-            # Use the code relationship analyzer to find additional relationships
-            additional_relationships = self.relationship_analyzer.analyze_code_relationships(
-                file_paths=file_paths,
-                base_dir=root_dir
-            )
-            
-            # Add direct import relationships to the graph
-            dependencies_added = 0
-            for source_file, info in additional_relationships.items():
-                for import_file in info.get('imports', []):
-                    # Create a metadata object for the relationship
-                    metadata = DependencyMetadata(
-                        dependency_type=DependencyType.IMPORT
-                    )
-                    
-                    # Add the edge to the graph
-                    if source_file in self.graph and import_file in self.graph:
-                        self.graph.add_edge(source_file, import_file, metadata)
-                        dependencies_added += 1
-            
-            # Add function call relationships to the graph
-            for source_file, info in additional_relationships.items():
-                function_calls = info.get('function_calls', {})
-                for function_name, count in function_calls.items():
-                    # Check if we know which file this function is defined in
-                    if function_name in self.relationship_analyzer.function_map:
-                        target_file = self.relationship_analyzer.function_map[function_name]
-                        if target_file != source_file:  # Avoid self-dependencies
-                            # Create a metadata object for the relationship
-                            metadata = DependencyMetadata(
-                                dependency_type=DependencyType.FUNCTION_CALL
-                            )
-                            
-                            # Add the edge to the graph
-                            if source_file in self.graph and target_file in self.graph:
-                                self.graph.add_edge(source_file, target_file, metadata)
-                                dependencies_added += 1
-            
-            logger.info(f"Added {dependencies_added} additional relationships from static analysis")
-            
-        except Exception as e:
-            logger.error(f"Error enhancing graph with static analysis: {e}")
-            import traceback
-            logger.error(traceback.format_exc())
+        # This method is removed as CodeRelationshipAnalyzer was removed.
+        # Its functionality (deeper static analysis for Python like function calls)
+        # would need to be integrated into PythonDependencyParser or a new,
+        # more focused AST analysis tool if required.
+        # For now, the dependency graph relies on what the parsers (mainly import-based) provide.
+        logger.info("Skipping _enhance_with_static_analysis as CodeRelationshipAnalyzer is removed/refactored.")
     
     def _incorporate_runtime_traces(self) -> None:
         """

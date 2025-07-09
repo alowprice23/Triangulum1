@@ -43,36 +43,35 @@ class PriorityAnalyzerAgent(BaseAgent):
     - Business value consideration
     - Context-aware priority adjustment
     """
+    AGENT_TYPE = "priority_analyzer"
 
     def __init__(
         self,
         agent_id: Optional[str] = None,
-        agent_type: str = "priority_analyzer",
-        message_bus: Optional[Any] = None,
-        subscribed_message_types: Optional[list] = None,
+        # agent_type: str = "priority_analyzer", # AGENT_TYPE class var will be used
+        message_bus: Optional["EnhancedMessageBus"] = None, # Forward reference for type hint
+        # subscribed_message_types: Optional[List[MessageType]] = None, # Can be defined in super()
         config: Optional[Dict[str, Any]] = None,
+        **kwargs # To catch other base agent params like engine_monitor
     ):
         """
         Initialize the Priority Analyzer Agent.
         
         Args:
             agent_id: Unique identifier for the agent
-            agent_type: Type of the agent
             message_bus: Message bus for agent communication
-            subscribed_message_types: Types of messages this agent subscribes to
             config: Agent configuration dictionary
         """
         super().__init__(
             agent_id=agent_id,
-            agent_type=agent_type,
+            agent_type=self.AGENT_TYPE, # Use class variable
             message_bus=message_bus,
-            subscribed_message_types=subscribed_message_types
-            or [MessageType.TASK_REQUEST, MessageType.QUERY],
+            subscribed_message_types=[MessageType.TASK_REQUEST, MessageType.QUERY], # Define here
             config=config,
+            **kwargs
         )
         
-        # Load configuration
-        self.config = config or {}
+        # self.config is already set by super().__init__
         
         # Priority weights
         self.weights = self.config.get("weights", {

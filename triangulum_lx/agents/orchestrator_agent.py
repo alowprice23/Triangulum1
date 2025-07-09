@@ -19,7 +19,8 @@ from datetime import datetime
 
 from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType, ConfidenceLevel
-from .message_bus import MessageBus
+# from .message_bus import MessageBus # Will be replaced by EnhancedMessageBus
+from .enhanced_message_bus import EnhancedMessageBus # Added
 from ..core.exceptions import TriangulumError
 
 logger = logging.getLogger(__name__)
@@ -163,7 +164,9 @@ class AgentRegistry:
                 "agent_id": agent_id,
                 "agent_type": agent_type,
                 "capabilities": capabilities,
-                "registered_at": datetime.now()
+                "registered_at": datetime.now(),
+                "effectiveness_score": 1.0, # Initialize effectiveness score
+                "last_used_timestamp": 0.0   # Initialize last used timestamp
             }
             
             for capability in capabilities:
@@ -171,6 +174,7 @@ class AgentRegistry:
                     self.capabilities[capability] = []
                 self.capabilities[capability].append(agent_id)
             
+            # agent_health remains separate for operational status vs inherent properties
             self.agent_health[agent_id] = {
                 "status": "available",
                 "last_heartbeat": datetime.now(),
@@ -244,6 +248,8 @@ class AgentRegistry:
         """
         with self.lock:
             if agent_id not in self.agent_health:
+                # Agent might have been unregistered, or this is an old task result
+                logger.warning(f"Attempted to update health for unknown or unregistered agent: {agent_id}")
                 return
             
             health = self.agent_health[agent_id]
@@ -254,7 +260,7 @@ class AgentRegistry:
                 # If agent was marked as unavailable, mark it as available again
                 if health["status"] == "unavailable":
                     health["status"] = "available"
-                    health["error_count"] = 0
+                    health["error_count"] = 0 # Reset error count on success after being unavailable
             else:
                 health["error_count"] += 1
                 # If error count reaches threshold, mark agent as unavailable
@@ -264,6 +270,27 @@ class AgentRegistry:
                     if error_message:
                         logger.warning(f"Last error from {agent_id}: {error_message}")
     
+    def update_agent_effectiveness(self, agent_id: str, success: bool):
+        """
+        Update the effectiveness score of an agent.
+        Inspired by EnhancedCoordinator.
+        """
+        with self.lock:
+            if agent_id not in self.agents: # Check self.agents instead of self.agent_health for main agent record
+                logger.warning(f"Attempted to update effectiveness for unknown agent: {agent_id}")
+                return
+
+            agent_info = self.agents[agent_id]
+            current_score = agent_info.get("effectiveness_score", 1.0)
+
+            if success:
+                new_score = min(2.0, current_score * 1.1) # Increase by 10%, max 2.0
+            else:
+                new_score = max(0.1, current_score * 0.9) # Decrease by 10%, min 0.1
+
+            agent_info["effectiveness_score"] = new_score
+            logger.debug(f"Updated effectiveness for agent {agent_id}: {current_score:.2f} -> {new_score:.2f} (success: {success})")
+
     def is_agent_available(self, agent_id: str) -> bool:
         """
         Check if an agent is available.
@@ -443,24 +470,26 @@ class OrchestratorAgent(BaseAgent):
         self,
         agent_id: Optional[str] = None,
         agent_type: str = "orchestrator",
-        message_bus: Optional[MessageBus] = None,
+        message_bus: Optional[EnhancedMessageBus] = None, # Changed to EnhancedMessageBus
         subscribed_message_types: Optional[List[MessageType]] = None,
         config: Optional[Dict[str, Any]] = None,
-        engine_monitor=None
+        # engine_monitor is now handled by **kwargs
+        **kwargs
     ):
         """
         Initialize the Orchestrator Agent.
         
         Args:
             agent_id: Unique identifier for the agent (generated if not provided)
-            agent_type: Type of the agent
-            message_bus: Message bus for agent communication
+            agent_type: Type of the agent (typically "orchestrator")
+            message_bus: Enhanced message bus for agent communication
             subscribed_message_types: Types of messages this agent subscribes to
             config: Agent configuration dictionary
+            **kwargs: Additional arguments for BaseAgent (like engine_monitor, metrics_collector)
         """
         super().__init__(
             agent_id=agent_id,
-            agent_type=agent_type,
+            agent_type=agent_type, # Orchestrator might keep this param if it can be other than "orchestrator"
             message_bus=message_bus,
             subscribed_message_types=subscribed_message_types or [
                 MessageType.TASK_REQUEST,
@@ -472,7 +501,7 @@ class OrchestratorAgent(BaseAgent):
                 MessageType.LOG
             ],
             config=config,
-            engine_monitor=engine_monitor
+            **kwargs # Pass through engine_monitor and metrics_collector
         )
         
         # Default configurations
@@ -508,6 +537,11 @@ class OrchestratorAgent(BaseAgent):
         # Locks for thread safety
         self.task_lock = threading.RLock()
         self.result_lock = threading.RLock()
+
+        # For EnhancedCoordinator-inspired logic
+        self.agent_selection_history: List[Tuple[str, str]] = [] # Stores (task_id, agent_id)
+        self.MAX_SELECTION_HISTORY = 20
+        self.STUCK_DETECTION_THRESHOLD = 3
         
         # Timeout and progress tracking
         self.progress_thread = None
@@ -785,15 +819,92 @@ class OrchestratorAgent(BaseAgent):
             logger.warning(f"No available agent with capabilities {task.required_capabilities} found for task {task.id}")
             return None
         
-        # If no specific requirements, just find any available agent
-        for agent_id in self.agent_registry.agents.keys():
-            if self.agent_registry.is_agent_available(agent_id):
-                return agent_id
+        # If no specific requirements, find any available agent using scoring
+        candidate_agents = [
+            agent_id for agent_id in self.agent_registry.agents.keys()
+            if self.agent_registry.is_agent_available(agent_id)
+        ]
+        if not candidate_agents:
+            logger.warning(f"No available agent found for task {task.id}")
+            return None
         
-        # No available agent found
-        logger.warning(f"No available agent found for task {task.id}")
-        return None
-    
+        # Score available agents
+        # For generic tasks, current_state_for_scoring might be task.type or a general "idle"
+        current_state_for_scoring = task.type
+        scored_agents = [
+            (agent_id, self._calculate_agent_score(agent_id, current_state_for_scoring, task.id))
+            for agent_id in candidate_agents
+        ]
+        scored_agents.sort(key=lambda x: x[1], reverse=True) # Highest score first
+
+        selected_agent_id = scored_agents[0][0]
+
+        # Update selection history and last used timestamp
+        self._update_agent_selection_history(task.id, selected_agent_id)
+        if selected_agent_id in self.agent_registry.agents: # Ensure agent still exists
+            self.agent_registry.agents[selected_agent_id]["last_used_timestamp"] = time.time()
+
+        return selected_agent_id
+
+    def _is_agent_in_loop(self, agent_id: str, task_id: str) -> bool:
+        """Check if an agent appears to be in a loop for a specific task context."""
+        if len(self.agent_selection_history) < self.STUCK_DETECTION_THRESHOLD:
+            return False
+
+        # Consider history relevant to the current task or similar tasks
+        # This is a simplified check; a more robust one might look at task types or workflow patterns
+        relevant_history = [hist_agent_id for hist_task_id, hist_agent_id in self.agent_selection_history if hist_task_id == task_id or hist_agent_id == agent_id]
+
+        # Check if this agent has been selected repeatedly for this context
+        return (
+            relevant_history[-self.STUCK_DETECTION_THRESHOLD:].count(agent_id)
+            >= self.STUCK_DETECTION_THRESHOLD -1
+        )
+
+    def _update_agent_selection_history(self, task_id: str, agent_id: str):
+        """Update the agent selection history."""
+        self.agent_selection_history.append((task_id, agent_id))
+        if len(self.agent_selection_history) > self.MAX_SELECTION_HISTORY:
+            self.agent_selection_history.pop(0)
+
+    def _calculate_agent_score(self, agent_id: str, current_state: str, task_id: str) -> float:
+        """
+        Calculate score for an agent based on effectiveness, history, and state.
+        Inspired by EnhancedCoordinator.
+        """
+        agent_info = self.agent_registry.agents.get(agent_id)
+        if not agent_info:
+            return 0.0 # Should not happen if agent_id came from registry
+
+        score = agent_info.get("effectiveness_score", 1.0)
+
+        # Adjust based on agent history (recency)
+        # More sophisticated recency check: time-based decay or just count in recent history
+        recent_tasks_for_agent = [(tid, aid) for tid, aid in self.agent_selection_history[-5:] if aid == agent_id]
+        recent_count = len(recent_tasks_for_agent)
+        if recent_count > 0:
+            score *= (0.8 ** recent_count)
+
+        # Heavily penalize if the agent appears to be in a loop for this task context
+        if self._is_agent_in_loop(agent_id, task_id):
+            score *= 0.3
+
+        # Adjust based on current state (task type as proxy)
+        # This needs a more defined mapping of task_type to agent preference
+        # Example:
+        # state_preferences = {
+        #     "detect_bugs_in_file": {"bug_detector": 1.5},
+        #     "formulate_strategy": {"strategy": 1.5},
+        # }
+        # if current_state in state_preferences and agent_info["agent_type"] in state_preferences[current_state]:
+        #     score *= state_preferences[current_state][agent_info["agent_type"]]
+
+        # Add a small random factor to break ties (0.9-1.1)
+        import random
+        score *= (0.9 + 0.2 * random.random())
+
+        return score
+
     def _worker_loop(self):
         """Worker loop for processing tasks."""
         while not self.shutdown_event.is_set():
@@ -852,6 +963,16 @@ class OrchestratorAgent(BaseAgent):
                         # Remove from pending tasks
                         if task.workflow_id in self.pending_tasks:
                             del self.pending_tasks[task.workflow_id]
+
+                        # Update agent effectiveness
+                        if task.assigned_agent:
+                            self.agent_registry.update_agent_effectiveness(task.assigned_agent, True)
+
+                        if self.metrics:
+                            self.metrics.record_metric("orchestrator_task_completed", 1, tags={"task_type": task.type, "status": "success"})
+                            if task.task_start_time:
+                                duration = time.time() - task.task_start_time
+                                self.metrics.record_metric("orchestrator_task_duration_seconds", duration, tags={"task_type": task.type, "status": "success"})
                 
                 except Exception as e:
                     logger.error(f"Error processing task {task.id}: {str(e)}")
@@ -862,6 +983,12 @@ class OrchestratorAgent(BaseAgent):
                         task.mark_failed(str(e))
                         self.task_queue.update_task(task)
                         
+                        if self.metrics:
+                            self.metrics.record_metric("orchestrator_task_completed", 1, tags={"task_type": task.type, "status": "failed"})
+                            if task.task_start_time:
+                                duration = time.time() - task.task_start_time
+                                self.metrics.record_metric("orchestrator_task_duration_seconds", duration, tags={"task_type": task.type, "status": "failed"})
+
                         # Check if task can be retried
                         if task.can_retry(self.max_retries):
                             logger.info(f"Retrying task {task.id} (attempt {task.attempts}/{self.max_retries})")
@@ -887,6 +1014,10 @@ class OrchestratorAgent(BaseAgent):
                         # Remove from pending tasks
                         if task.workflow_id in self.pending_tasks:
                             del self.pending_tasks[task.workflow_id]
+
+                        # Update agent effectiveness (failure)
+                        if task.assigned_agent:
+                            self.agent_registry.update_agent_effectiveness(task.assigned_agent, False)
             
             except Exception as e:
                 logger.error(f"Error in worker loop: {str(e)}")
@@ -1013,6 +1144,13 @@ class OrchestratorAgent(BaseAgent):
         
         # Signal that a new task is available
         self.task_event.set()
+
+        if self.metrics: # Check if metrics_collector was provided
+            self.metrics.record_metric(
+                "orchestrator_task_enqueued",
+                1,
+                tags={"task_type": task_type, "priority": str(priority), "sender": sender or "unknown"}
+            )
         
         return task_id
     

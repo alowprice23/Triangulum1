@@ -24,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger("triangulum.test_driver")
 
 # Import Triangulum components
-from triangulum_self_heal import SystemStartupManager
+from triangulum_lx.self_heal import SystemStartupManager
 from triangulum_lx.core.engine import ComponentStatus
 from triangulum_lx.core.exceptions import ProviderInitError
 

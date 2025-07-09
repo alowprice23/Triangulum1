@@ -12,7 +12,8 @@ import concurrent.futures
 from typing import Dict, List, Any, Optional, Type, Set, Callable, Tuple
 
 from triangulum_lx.agents.base_agent import BaseAgent
-from triangulum_lx.agents.message_bus import MessageBus
+# from triangulum_lx.agents.message_bus import MessageBus # Old
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus # New
 from triangulum_lx.core.exceptions import AgentInitError, ConfigurationError
 
 logger = logging.getLogger(__name__)
@@ -36,16 +37,24 @@ class AgentFactory:
     for accessing different agent types.
     """
     
-    def __init__(self, message_bus: Optional[MessageBus] = None, config: Optional[Dict[str, Any]] = None):
+    def __init__(self,
+                 message_bus: Optional[EnhancedMessageBus] = None,
+                 config: Optional[Dict[str, Any]] = None,
+                 metrics_collector: Optional[Any] = None, # Added
+                 engine_monitor: Optional[Any] = None): # Added, as BaseAgent takes it
         """
         Initialize the agent factory.
         
         Args:
-            message_bus: Message bus for agent communication
-            config: Optional configuration dictionary
+            message_bus: Enhanced message bus for agent communication
+            config: Optional configuration dictionary for agents section
+            metrics_collector: Optional MetricsCollector instance
+            engine_monitor: Optional Engine monitor instance for OperationProgress
         """
         self.message_bus = message_bus
-        self.config = config or {}
+        self.config = config or {} # This is typically the 'agents' section of main config
+        self.metrics_collector = metrics_collector
+        self.engine_monitor = engine_monitor
         self._agent_registry: Dict[str, Type[BaseAgent]] = {}
         self._active_agents: Dict[str, BaseAgent] = {}
         self._agent_configs: Dict[str, Dict[str, Any]] = {}
@@ -185,9 +194,11 @@ class AgentFactory:
                     agent_class = self._agent_registry[agent_type]
                     agent = agent_class(
                         agent_id=agent_id,
-                        agent_type=agent_type,
+                        # agent_type=agent_type, # agent_class should define its AGENT_TYPE
                         message_bus=self.message_bus,
-                        config=agent_config
+                        config=agent_config,
+                        metrics_collector=self.metrics_collector, # Pass metrics collector
+                        engine_monitor=self.engine_monitor # Pass engine monitor
                     )
                     
                     # Initialize the agent

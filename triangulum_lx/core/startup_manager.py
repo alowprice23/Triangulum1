@@ -10,12 +10,13 @@ import os
 import json
 import logging
 import time
-from typing import Dict, List, Any, Optional, Set, Tuple, Union
+from typing import Dict, List, Any, Optional, Set, Tuple, Union # Removed unused Set, Tuple, Union for now
 from pathlib import Path
 
-from triangulum_lx.core.engine import TriangulumEngine, ComponentStatus
-from triangulum_lx.core.exceptions import TriangulumException, StartupError
-from triangulum_lx.monitoring.startup_dashboard import StartupDashboard
+# Adjusted imports for new location
+from .engine import TriangulumEngine, ComponentStatus
+from .exceptions import TriangulumException, StartupError
+from ..monitoring.startup_dashboard import StartupDashboard
 
 logger = logging.getLogger(__name__)
 
@@ -443,67 +444,67 @@ class SystemStartupManager:
         
         print("========================\n")
 
+# Main entry point for direct execution (optional)
+# def main() -> int:
+#     """
+#     Main entry point for system startup.
+    
+#     Returns:
+#         Exit code
+#     """
+#     import argparse
+#     import sys
+    
+#     # Parse command line arguments
+#     parser = argparse.ArgumentParser(description="Start the system")
+#     parser.add_argument("--config", "-c", default="config/triangulum_config.json",
+#                        help="Path to configuration file")
+#     parser.add_argument("--log-level", "-l", default="INFO",
+#                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+#                        help="Logging level")
+    
+#     args = parser.parse_args()
+    
+#     # Configure logging
+#     logging.basicConfig(
+#         level=getattr(logging, args.log_level),
+#         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+#     )
+    
+#     # Create startup manager
+#     manager = SystemStartupManager(args.config)
+    
+#     try:
+#         # Start system
+#         result = manager.start_system()
 
-def main() -> int:
-    """
-    Main entry point for system startup.
-    
-    Returns:
-        Exit code
-    """
-    import argparse
-    
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description="Start the system")
-    parser.add_argument("--config", "-c", default="config/triangulum_config.json",
-                       help="Path to configuration file")
-    parser.add_argument("--log-level", "-l", default="INFO",
-                       choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-                       help="Logging level")
-    
-    args = parser.parse_args()
-    
-    # Configure logging
-    logging.basicConfig(
-        level=getattr(logging, args.log_level),
-        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-    )
-    
-    # Create startup manager
-    manager = SystemStartupManager(args.config)
-    
-    try:
-        # Start system
-        result = manager.start_system()
-        
-        if not result:
-            logger.error("System failed to start")
-            return 1
-        
-        # Wait for keyboard interrupt
-        logger.info("System started successfully, press Ctrl+C to shut down")
-        while True:
-            try:
-                time.sleep(1)
-            except KeyboardInterrupt:
-                break
-        
-        # Shutdown system
-        manager.shutdown_system()
-        return 0
-        
-    except Exception as e:
-        logger.error(f"Error during startup: {e}")
-        
-        # Try to shut down the system
-        try:
-            manager.shutdown_system()
-        except:
-            pass
-        
-        return 1
+#         if not result:
+#             logger.error("System failed to start")
+#             return 1
 
+#         # Wait for keyboard interrupt
+#         logger.info("System started successfully, press Ctrl+C to shut down")
+#         while True:
+#             try:
+#                 time.sleep(1)
+#             except KeyboardInterrupt:
+#                 break
 
-if __name__ == "__main__":
-    import sys
-    sys.exit(main())
+#         # Shutdown system
+#         manager.shutdown_system()
+#         return 0
+
+#     except Exception as e:
+#         logger.error(f"Error during startup: {e}")
+
+#         # Try to shut down the system
+#         try:
+#             manager.shutdown_system()
+#         except:
+#             pass
+
+#         return 1
+
+# if __name__ == "__main__":
+#     import sys
+#     sys.exit(main())

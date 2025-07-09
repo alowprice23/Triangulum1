@@ -9,9 +9,12 @@ import unittest
 from unittest.mock import MagicMock, patch, call
 
 from triangulum_lx.agents.message import AgentMessage, MessageType, ConfidenceLevel
-from triangulum_lx.agents.message_bus import MessageBus
+# from triangulum_lx.agents.message_bus import MessageBus # Old
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus # New
 from triangulum_lx.agents.base_agent import BaseAgent
 from triangulum_lx.agents.agent_factory import AgentFactory
+from triangulum_lx.monitoring.metrics import MetricsCollector # For mocking
+# from triangulum_lx.core.monitor import OperationProgress # For mocking engine_monitor if needed
 
 
 # Concrete implementation of BaseAgent for testing
@@ -47,11 +50,16 @@ class TestBaseAgent(unittest.TestCase):
     
     def setUp(self):
         """Set up the test environment."""
-        self.message_bus = MagicMock(spec=MessageBus)
+        self.message_bus_mock = MagicMock(spec=EnhancedMessageBus)
+        self.metrics_collector_mock = MagicMock(spec=MetricsCollector)
+        self.engine_monitor_mock = MagicMock() # Generic mock for engine_monitor
+
         self.agent = TestAgent(
             agent_id="test_agent_1",
-            message_bus=self.message_bus,
-            config={"test_config": "value"}
+            message_bus=self.message_bus_mock,
+            config={"test_config": "value"},
+            metrics_collector=self.metrics_collector_mock,
+            engine_monitor=self.engine_monitor_mock
         )
     
     def test_initialization(self):
@@ -68,8 +76,8 @@ class TestBaseAgent(unittest.TestCase):
     
     def test_register_with_message_bus(self):
         """Test registration with message bus."""
-        self.message_bus.subscribe.assert_called_once()
-        call_args = self.message_bus.subscribe.call_args[1]
+        self.message_bus_mock.subscribe.assert_called_once()
+        call_args = self.message_bus_mock.subscribe.call_args[1]
         self.assertEqual(call_args["agent_id"], "test_agent_1")
         self.assertEqual(call_args["callback"], self.agent.handle_message)
     
@@ -83,7 +91,7 @@ class TestBaseAgent(unittest.TestCase):
     def test_shutdown(self):
         """Test agent shutdown."""
         self.agent.shutdown()
-        self.message_bus.unsubscribe.assert_called_once_with(self.agent.agent_id)
+        self.message_bus_mock.unsubscribe.assert_called_once_with(self.agent.agent_id)
     
     def test_handle_message_task_request(self):
         """Test handling task request messages."""
@@ -97,10 +105,10 @@ class TestBaseAgent(unittest.TestCase):
         
         self.assertEqual(len(self.agent.task_requests_handled), 1)
         self.assertEqual(self.agent.task_requests_handled[0], message)
-        self.message_bus.publish.assert_called_once()
+        self.message_bus_mock.publish.assert_called_once()
         
         # Check response message
-        response = self.message_bus.publish.call_args[0][0]
+        response = self.message_bus_mock.publish.call_args[0][0]
         self.assertEqual(response.message_type, MessageType.TASK_RESULT)
         self.assertEqual(response.sender, self.agent.agent_id)
         self.assertEqual(response.receiver, "sender_agent")
@@ -118,10 +126,10 @@ class TestBaseAgent(unittest.TestCase):
         
         self.assertEqual(len(self.agent.queries_handled), 1)
         self.assertEqual(self.agent.queries_handled[0], message)
-        self.message_bus.publish.assert_called_once()
+        self.message_bus_mock.publish.assert_called_once()
         
         # Check response message
-        response = self.message_bus.publish.call_args[0][0]
+        response = self.message_bus_mock.publish.call_args[0][0]
         self.assertEqual(response.message_type, MessageType.QUERY_RESPONSE)
         self.assertEqual(response.sender, self.agent.agent_id)
         self.assertEqual(response.receiver, "sender_agent")
@@ -173,10 +181,10 @@ class TestBaseAgent(unittest.TestCase):
         )
         
         self.assertIsNotNone(message_id)
-        self.message_bus.publish.assert_called_once()
+        self.message_bus_mock.publish.assert_called_once()
         
         # Check message details
-        message = self.message_bus.publish.call_args[0][0]
+        message = self.message_bus_mock.publish.call_args[0][0]
         self.assertEqual(message.message_type, MessageType.TASK_REQUEST)
         self.assertEqual(message.sender, self.agent.agent_id)
         self.assertEqual(message.receiver, "receiver_agent")
@@ -203,10 +211,10 @@ class TestBaseAgent(unittest.TestCase):
         )
         
         self.assertIsNotNone(message_id)
-        self.message_bus.publish.assert_called_once()
+        self.message_bus_mock.publish.assert_called_once()
         
         # Check response details
-        response = self.message_bus.publish.call_args[0][0]
+        response = self.message_bus_mock.publish.call_args[0][0]
         self.assertEqual(response.message_type, MessageType.TASK_RESULT)
         self.assertEqual(response.sender, self.agent.agent_id)
         self.assertEqual(response.receiver, "sender_agent")
@@ -224,10 +232,10 @@ class TestBaseAgent(unittest.TestCase):
         )
         
         self.assertIsNotNone(message_id)
-        self.message_bus.publish.assert_called_once()
+        self.message_bus_mock.publish.assert_called_once()
         
         # Check status message details
-        message = self.message_bus.publish.call_args[0][0]
+        message = self.message_bus_mock.publish.call_args[0][0]
         self.assertEqual(message.message_type, MessageType.STATUS)
         self.assertEqual(message.sender, self.agent.agent_id)
         self.assertIsNone(message.receiver)  # Broadcast has no specific receiver
@@ -263,8 +271,15 @@ class TestAgentFactory(unittest.TestCase):
     
     def setUp(self):
         """Set up the test environment."""
-        self.message_bus = MagicMock(spec=MessageBus)
-        self.factory = AgentFactory(message_bus=self.message_bus)
+        self.message_bus_mock = MagicMock(spec=EnhancedMessageBus)
+        self.metrics_collector_mock = MagicMock(spec=MetricsCollector)
+        self.engine_monitor_mock = MagicMock()
+
+        self.factory = AgentFactory(
+            message_bus=self.message_bus_mock,
+            metrics_collector=self.metrics_collector_mock,
+            engine_monitor=self.engine_monitor_mock
+        )
         
         # Register the test agent type
         self.factory.register_agent_type("test_agent", TestAgent)

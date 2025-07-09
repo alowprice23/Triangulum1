@@ -53,10 +53,12 @@ class ProviderFactory:
             config: Optional configuration dictionary for all providers
         """
         self.active_providers: Dict[str, BaseProvider] = {}
-        self.provider_configs: Dict[str, Dict[str, Any]] = {}
+        # self.provider_configs is effectively superseded by llm_config.py for provider-specific details.
+        # self.config (renamed to self.factory_settings) might store general factory settings,
+        # but not individual provider configs that include secrets or dynamic values from llm_config.
         self.provider_status: Dict[str, str] = {}
         self.startup_errors: Dict[str, str] = {}
-        self.config = config or {}
+        self.factory_settings = config or {} # General factory settings, not detailed provider configs from llm_config
         
         # Initialize status for all registered providers
         for provider_type in self.PROVIDER_REGISTRY:
@@ -109,14 +111,39 @@ class ProviderFactory:
         self.provider_status[provider_type] = ProviderStatus.INITIALIZING
         
         provider_class = self.PROVIDER_REGISTRY[provider_type]
-        
-        # Use provided config or stored config
-        provider_config = config or self.provider_configs.get(provider_type, {})
-        
-        # Set up default timeout if not provided
+
+        # Get provider configuration from the central llm_config module.
+        # Deferred import to avoid circular dependency at module load time if llm_config needs factory.
+        from ..agents import llm_config
+
+        # Config passed directly to create_provider (as 'config' argument) takes precedence.
+        # This allows for specific overrides during direct instantiation.
+        # Otherwise, fetch from the global llm_config.
+        actual_provider_config = config
+        if actual_provider_config is None:
+            try:
+                # This is the primary way to get configuration for a provider type
+                actual_provider_config = llm_config.get_provider_config(provider_type)
+                if actual_provider_config is None:
+                    # This case means the provider is known in PROVIDER_REGISTRY
+                    # but has no configuration defined in llm_config.
+                    raise ProviderInitError(
+                        f"No configuration found for provider type: {provider_type} in central LLM config. "
+                        "Ensure it is defined in the main config's 'llm.providers' section.",
+                        provider_type
+                    )
+            except RuntimeError as e: # Handles if llm_config itself is not initialized
+                 raise ProviderInitError(
+                    f"LLM configuration not initialized. Cannot create provider {provider_type}. "
+                    f"Ensure llm_config.load_llm_config() is called during system startup. Error: {e}",
+                    provider_type
+                )
+
+        # Set up default timeout if not provided, using factory_settings
         if timeout is None:
-            timeout = self.config.get("provider_timeout", 30)  # Default 30-second timeout
+            timeout = self.factory_settings.get("provider_timeout", 30) # Use factory_settings
         
+        provider_config = actual_provider_config # Use the resolved config
         start_time = time.time()
         max_retries = 3 if retry else 1
         last_error = None
@@ -215,23 +242,30 @@ class ProviderFactory:
             provider_type: Provider type
             config: Configuration dictionary
         """
-        # Validate the config
-        self._validate_provider_config(provider_type, config)
+        logger.warning(
+            f"ProviderFactory.configure_provider() called for {provider_type}. "
+            "Provider configurations are primarily managed via the central llm_config "
+            "and the main application configuration file. "
+            "This method should be used cautiously, e.g., for runtime updates if supported by the provider."
+        )
+        # The concept of self.provider_configs storing the SSoT for provider configs is deprecated.
+        # However, if a config is passed here, we can still try to validate it and update an active provider.
         
-        # Store the config
-        self.provider_configs[provider_type] = config
+        self._validate_provider_config(provider_type, config) # Validate the passed config
         
-        # If provider is already active, update its configuration
+        # If provider is already active, attempt to re-configure it.
         if provider_type in self.active_providers:
             try:
+                # The provider's .configure() method would need to handle this update.
                 self.active_providers[provider_type].configure(config)
-                logger.info(f"Updated configuration for active provider: {provider_type}")
+                logger.info(f"Attempted to dynamically update configuration for active provider: {provider_type}")
             except Exception as e:
-                logger.warning(f"Failed to update configuration for {provider_type}: {e}")
+                logger.warning(f"Failed to dynamically update configuration for {provider_type}: {e}")
+        # Note: self.provider_configs[provider_type] = config is removed as SSoT is elsewhere.
     
     def _validate_provider_config(self, provider_type: str, config: Dict[str, Any]) -> None:
         """
-        Validate provider configuration.
+        Validate provider configuration. (Retained for validating passed configs)
         
         Args:
             provider_type: Provider type
@@ -299,17 +333,34 @@ class ProviderFactory:
             'class': provider_class.__name__,
             'module': provider_class.__module__,
             'is_active': provider_type in self.active_providers,
-            'has_config': provider_type in self.provider_configs,
+            # 'has_config' used to refer to self.provider_configs. Now it should reflect llm_config.
+            # Deferred import for llm_config
+            # from ..agents import llm_config # This line will be added carefully
             'status': self.provider_status.get(provider_type, ProviderStatus.PENDING)
         }
         
-        # Add provider-specific info if available
-        if hasattr(provider_class, 'get_provider_info'):
-            try:
-                provider_info = provider_class.get_provider_info()
-                info.update(provider_info)
-            except Exception as e:
-                info['info_error'] = str(e)
+        # Check config status from llm_config
+        try:
+            from ..agents import llm_config # Import here
+            info['has_config'] = llm_config.get_provider_config(provider_type) is not None
+            info['config_source'] = 'llm_config' if info['has_config'] else 'N/A'
+        except RuntimeError: # llm_config not loaded
+            info['has_config'] = False
+            info['config_source'] = 'llm_config_not_loaded'
+        except ImportError:
+            info['has_config'] = False
+            info['config_source'] = 'import_error_llm_config'
+
+
+        # Add provider-specific info if available - this typically requires an instance.
+        # If an instance is active, we could try to get info from it.
+        # if provider_type in self.active_providers and hasattr(self.active_providers[provider_type], 'get_provider_info'):
+        #     try:
+        #         # instance_info = self.active_providers[provider_type].get_provider_info()
+        #         # info.update(instance_info)
+        #         pass # Example placeholder
+        #     except Exception as e:
+        #         info['instance_info_error'] = str(e)
         
         # Add error info if available
         if provider_type in self.startup_errors:
@@ -386,15 +437,38 @@ class ProviderFactory:
             provider = self.active_providers[provider_type]
             info['available'] = provider.is_available()
         else:
-            # Try to create a temporary instance to check availability
+            # Try to create a temporary instance to check availability,
+            # ensuring it gets its configuration from llm_config.
             try:
-                temp_provider = self.create_provider(provider_type, retry=False)
+                from ..agents import llm_config # Deferred import
+                provider_specific_config = None
+                try:
+                    provider_specific_config = llm_config.get_provider_config(provider_type)
+                except RuntimeError: # LLM config not loaded
+                    info['available'] = False
+                    info['status'] = ProviderStatus.FAILED
+                    info['discovery_error'] = "LLM config not loaded during discovery"
+                    return info # Cannot proceed with discovery for this provider
+
+                if provider_specific_config is None:
+                    # No config means we can't determine availability by instantiation
+                    info['available'] = False
+                    info['status'] = ProviderStatus.PENDING # Or FAILED, depending on strictness
+                    info['discovery_error'] = f"No configuration in llm_config for {provider_type}"
+                    return info
+
+                temp_provider = self.create_provider(provider_type, config=provider_specific_config, retry=False)
                 info['available'] = temp_provider.is_available()
                 # Don't keep the temporary provider
                 del temp_provider
-            except Exception:
+            except ProviderInitError as pie: # Catch specific init errors
                 info['available'] = False
                 info['status'] = ProviderStatus.FAILED
+                info['discovery_error'] = f"ProviderInitError: {str(pie)}"
+            except Exception as e: # Catch other general exceptions during discovery
+                info['available'] = False
+                info['status'] = ProviderStatus.FAILED
+                info['discovery_error'] = f"Exception during discovery: {str(e)}"
         
         return info
     
@@ -416,9 +490,20 @@ class ProviderFactory:
             Dictionary mapping provider types to initialization success status
         """
         # Determine which providers to initialize
+        from ..agents import llm_config # Ensure llm_config is accessible for default list
         if provider_types is None:
-            provider_types = list(self.provider_configs.keys())
-        
+            # Default to initializing providers that have configurations in llm_config
+            try:
+                # Call get_llm_config to ensure it's loaded or attempt to load.
+                # This might implicitly call load_llm_config if it's designed to do so,
+                # or raise RuntimeError if not initialized.
+                cfg = llm_config.get_llm_config()
+                provider_types = list(cfg.get("providers", {}).keys())
+                logger.info(f"Defaulting to initialize providers from llm_config: {provider_types}")
+            except RuntimeError as e:
+                logger.error(f"Cannot determine providers to initialize: LLM Config not loaded or error during load: {e}")
+                return {} # Cannot proceed if llm_config is not available
+
         results = {}
         
         if parallel:
@@ -479,11 +564,27 @@ class ProviderFactory:
                 if self.provider_status[provider_type] == ProviderStatus.FAILED:
                     self.shutdown_provider(provider_type)
             
-            # Get the configuration
-            config = self.provider_configs.get(provider_type, {})
+            # Get the configuration from llm_config
+            from ..agents import llm_config # Deferred import
+            provider_specific_config = None
+            try:
+                provider_specific_config = llm_config.get_provider_config(provider_type)
+            except RuntimeError as e: # LLM_CONFIG not loaded
+                error_msg = f"LLM Config not loaded. Cannot get config for {provider_type} to initialize. Error: {e}"
+                logger.error(error_msg)
+                self.startup_errors[provider_type] = error_msg
+                self.provider_status[provider_type] = ProviderStatus.FAILED
+                return False # Fail initialization for this provider
+
+            if provider_specific_config is None:
+                logger.warning(f"No configuration found for provider {provider_type} in llm_config. Skipping its initialization.")
+                # This provider cannot be initialized if it has no config. Mark as failed.
+                self.provider_status[provider_type] = ProviderStatus.FAILED
+                self.startup_errors[provider_type] = f"No config in llm_config for {provider_type}"
+                return False
             
-            # Create the provider
-            provider = self.create_provider(provider_type, config, timeout=timeout)
+            # Create the provider using the fetched configuration
+            provider = self.create_provider(provider_type, config=provider_specific_config, timeout=timeout)
             
             # Store the provider
             self.active_providers[provider_type] = provider
@@ -576,11 +677,19 @@ class ProviderFactory:
                 try:
                     is_available = False
                     
-                    # Skip providers with no configuration
-                    if provider_type not in self.provider_configs:
+                    # Check if config is available via llm_config to attempt creation
+                    from ..agents import llm_config # Deferred import
+                    provider_specific_config = None
+                    try:
+                        provider_specific_config = llm_config.get_provider_config(provider_type)
+                    except RuntimeError: # LLM config not loaded
+                        continue # Cannot determine availability if llm_config is down
+
+                    if provider_specific_config is None:
+                        # No config means we can't determine availability by instantiation
                         continue
                     
-                    temp_provider = self.create_provider(provider_type, retry=False)
+                    temp_provider = self.create_provider(provider_type, config=provider_specific_config, retry=False)
                     is_available = temp_provider.is_available()
                     
                     # Don't keep the temporary provider
@@ -624,56 +733,35 @@ class ProviderFactory:
         Returns:
             True if the config was loaded successfully, False otherwise
         """
-        config_file = Path(config_path)
+        config_file = Path(config_path) # Keep path for logging, but don't use
         
         if not config_file.exists():
             logger.warning(f"Config file not found: {config_path}")
-            return False
-        
-        try:
-            import json
-            with open(config_file, 'r') as f:
-                configs = json.load(f)
-            
-            success = True
-            for provider_type, config in configs.items():
-                if provider_type in self.PROVIDER_REGISTRY:
-                    try:
-                        self.configure_provider(provider_type, config)
-                        logger.info(f"Loaded config for provider: {provider_type}")
-                    except Exception as e:
-                        logger.error(f"Error configuring provider {provider_type}: {e}")
-                        success = False
-                else:
-                    logger.warning(f"Unknown provider in config: {provider_type}")
-                    
-            return success
-            
-        except Exception as e:
-            logger.error(f"Error loading config file {config_path}: {e}")
-            return False
+            # Still log deprecation even if file doesn't exist, as the method itself is deprecated.
+        logger.warning(
+            f"ProviderFactory.load_config_file({config_path}) is deprecated. "
+            "Configurations are centrally managed via the main application config (e.g., config/triangulum_config.json) "
+            "and loaded into llm_config.py. This method is now a no-op and will return False."
+        )
+        return False # Effectively a no-op
     
     def save_config_file(self, config_path: str) -> bool:
         """
-        Save current provider configurations to a file.
+        Save current provider configurations to a file. (Deprecated)
         
         Args:
             config_path: Path to save configuration file
             
         Returns:
-            True if the config was saved successfully, False otherwise
+            True if the config was saved successfully, False otherwise (always False now)
         """
-        try:
-            import json
-            with open(config_path, 'w') as f:
-                json.dump(self.provider_configs, f, indent=2)
-            
-            logger.info(f"Saved provider configs to: {config_path}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error saving config file {config_path}: {e}")
-            return False
+        logger.warning(
+            f"ProviderFactory.save_config_file({config_path}) is deprecated. "
+            "Provider configurations are managed centrally via llm_config.py. "
+            "This method will not save provider configurations and will return False."
+        )
+        # self.provider_configs is no longer the SSoT for configs that include secrets/dynamic values.
+        return False
     
     def health_check(self) -> Dict[str, Any]:
         """
@@ -738,8 +826,11 @@ def get_factory(config: Optional[Dict[str, Any]] = None) -> ProviderFactory:
     if _factory_instance is None:
         _factory_instance = ProviderFactory(config)
     elif config:
-        # Update the factory's configuration
-        _factory_instance.config.update(config)
+        # Update the factory's general settings (self.factory_settings) if config is provided
+        if hasattr(_factory_instance, 'factory_settings') and _factory_instance.factory_settings is not None:
+            _factory_instance.factory_settings.update(config)
+        else: # If factory_settings was None or didn't exist (e.g. factory initialized with config=None)
+            _factory_instance.factory_settings = config
     return _factory_instance
 
 def reset_factory() -> None:

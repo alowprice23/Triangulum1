@@ -126,7 +126,7 @@ each component's dependencies are initialized before the component itself.
 """)
     input("Press Enter to start the system...\n")
     
-    from triangulum_self_heal import SystemStartupManager
+    from triangulum_lx.core.startup_manager import SystemStartupManager # Updated import
     
     # Create system manager
     manager = SystemStartupManager(config_file)
@@ -199,7 +199,7 @@ detect the error and automatically attempt different recovery strategies.
     
     print(f"Created configuration with an invalid provider")
     
-    from triangulum_self_heal import SystemStartupManager
+    from triangulum_lx.core.startup_manager import SystemStartupManager # Updated import
     
     # Create system manager
     manager = SystemStartupManager(modified_config_file)
@@ -260,7 +260,12 @@ dependencies, initialization progress, and system health.
     print("NOTE: A web browser will open automatically to display the dashboard.")
     input("Press Enter to start the system with the dashboard...\n")
     
-    from triangulum_self_heal import SystemStartupManager
+    from triangulum_lx.core.startup_manager import SystemStartupManager # Updated import
+    # The StartupDashboard might be replaced by AgenticDashboard managed by the engine.
+    # For now, this demo specifically uses StartupDashboard. If it's to be replaced,
+    # this whole section needs a rethink to use an Engine-managed AgenticDashboard.
+    # Keeping StartupDashboard for now to minimize changes in this specific pass,
+    # but flagging it as potentially needing update to use the main AgenticDashboard.
     from triangulum_lx.monitoring.startup_dashboard import StartupDashboard
     
     # Create system manager
