@@ -15,6 +15,9 @@ from typing import Dict, Any, Optional, List, Tuple, Union
 from datetime import datetime
 import logging
 
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_rename
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 # Setup logging
 logger = logging.getLogger("triangulum.patch_bundle")
 
@@ -33,7 +36,8 @@ class PatchBundle:
                 bug_id: str, 
                 patch_diff: str, 
                 repo_root: Union[str, Path] = ".",
-                label: str = "patch"):
+                label: str = "patch",
+                fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize a new patch bundle.
         
@@ -42,6 +46,7 @@ class PatchBundle:
             patch_diff: The patch diff content
             repo_root: Root directory of the repository
             label: Label for the bundle (e.g., "cycle_1", "final")
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.bug_id = bug_id
         self.patch_diff = patch_diff
@@ -49,6 +54,7 @@ class PatchBundle:
         self.label = label
         self.created_at = datetime.now().isoformat()
         self.bundle_path = None
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Generate SHA-256 hash of the patch
         self.patch_hash = hashlib.sha256(patch_diff.encode()).hexdigest()
@@ -91,29 +97,34 @@ class PatchBundle:
             
             # Write patch diff to file
             patch_path = temp_path / "patch.diff"
-            with open(patch_path, 'w') as f:
-                f.write(self.patch_diff)
+            atomic_write(patch_path, self.patch_diff.encode('utf-8'))
+            # No fs_cache invalidation for temp files needed here.
             
             # Write manifest to file
             manifest_path = temp_path / "manifest.json"
-            with open(manifest_path, 'w') as f:
-                json.dump(self.get_manifest(), f, indent=2)
+            manifest_content = json.dumps(self.get_manifest(), indent=2)
+            atomic_write(manifest_path, manifest_content.encode('utf-8'))
             
-            # Create bundle filename
+            # Create bundle filename (final path)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             bundle_name = f"patch_{self.bug_id}_{self.label}_{timestamp}.tar.gz"
-            bundle_path = Path(f"patches/{bundle_name}")
-            bundle_path.parent.mkdir(exist_ok=True, parents=True)
-            
-            # Create tar archive
-            with tarfile.open(bundle_path, "w:gz") as tar:
+            final_bundle_path = self.repo_root / "patches" / bundle_name # Ensure it's within repo_root if "patches" is relative
+            final_bundle_path.parent.mkdir(exist_ok=True, parents=True) # Ensure target dir exists
+
+            # Create tar archive in a temporary location first
+            temp_tar_path = temp_path / bundle_name
+            with tarfile.open(temp_tar_path, "w:gz") as tar:
                 tar.add(patch_path, arcname=patch_path.name)
                 tar.add(manifest_path, arcname=manifest_path.name)
             
-            self.bundle_path = bundle_path
-            logger.info(f"Created patch bundle: {bundle_path}")
+            # Atomically move the temporary tarball to its final destination
+            atomic_rename(str(temp_tar_path), str(final_bundle_path))
+            self.fs_cache.invalidate(str(final_bundle_path))
             
-            return bundle_path
+            self.bundle_path = final_bundle_path
+            logger.info(f"Created patch bundle: {final_bundle_path}")
+
+            return final_bundle_path
     
     @classmethod
     def from_bundle(cls, bundle_path: Union[str, Path]) -> 'PatchBundle':
@@ -191,6 +202,7 @@ class PatchBundle:
                 return False
                 
             logger.info(f"Successfully applied patch for bug {self.bug_id}")
+            self._invalidate_cache_for_patch_files()
             return True
             
         except Exception as e:
@@ -219,11 +231,44 @@ class PatchBundle:
                 return False
                 
             logger.info(f"Successfully reverted patch for bug {self.bug_id}")
+            self._invalidate_cache_for_patch_files()
             return True
             
         except Exception as e:
             logger.error(f"Error reverting patch: {e}")
             return False
+
+    def _invalidate_cache_for_patch_files(self):
+        """Invalidates cache for files mentioned in the patch diff."""
+        # Basic diff parsing to find affected files
+        # This is a simplified parser. A more robust one would handle various diff formats.
+        affected_files_relative = set()
+        # current_file = None # Not needed with this simplified parsing
+        for line in self.patch_diff.splitlines():
+            if line.startswith('--- a/'):
+                path_str = line[len('--- a/'):].strip()
+                if path_str != 'dev/null': # Corrected: no leading slash
+                    affected_files_relative.add(path_str)
+            elif line.startswith('+++ b/'):
+                path_str = line[len('+++ b/'):].strip()
+                if path_str != 'dev/null': # Corrected: no leading slash
+                    affected_files_relative.add(path_str)
+
+        for rel_path in affected_files_relative:
+            # Ensure rel_path is not empty and is a valid relative path component
+            if not rel_path or rel_path.startswith('/'):
+                logger.warning(f"Skipping invalid relative path from diff: '{rel_path}'")
+                continue
+            try:
+                abs_path = self.repo_root.joinpath(rel_path).resolve()
+                 # Check if the resolved path is within the intended repo_root to avoid .. issues
+                if self.repo_root.resolve() in abs_path.parents or self.repo_root.resolve() == abs_path:
+                    logger.debug(f"Invalidating cache for patched file: {abs_path}")
+                    self.fs_cache.invalidate(str(abs_path))
+                else:
+                    logger.warning(f"Skipping cache invalidation for path outside repo_root: {abs_path} (derived from {rel_path})")
+            except Exception as e:
+                logger.error(f"Error resolving or invalidating path {rel_path} (abs: {abs_path if 'abs_path' in locals() else 'unresolved'}): {e}")
 
 
 def create_bundle(patch_diff: str, 

@@ -17,8 +17,12 @@ import os
 from .metrics import MetricsCollector, TickMetrics
 from ..core.state import Phase
 
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_rename
+from triangulum_lx.core.fs_state import FileSystemStateCache
+import tempfile # For saving plots
 
-def create_dashboard(engine, metrics, output_dir="dashboard"):
+
+def create_dashboard(engine, metrics, output_dir="dashboard", fs_cache: Optional[FileSystemStateCache] = None):
     """
     Create a dashboard visualization of the Triangulum system state.
     
@@ -31,19 +35,27 @@ def create_dashboard(engine, metrics, output_dir="dashboard"):
         str: Path to the dashboard index.html file
     """
     # Create output directory
-    output_path = Path(output_dir)
-    output_path.mkdir(exist_ok=True, parents=True)
-    
+    output_path_obj = Path(output_dir)
+    _fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache() # Use provided or new
+
+    if not _fs_cache.exists(str(output_path_obj)):
+        output_path_obj.mkdir(parents=True, exist_ok=True)
+        _fs_cache.invalidate(str(output_path_obj))
+    elif not _fs_cache.is_dir(str(output_path_obj)):
+        output_path_obj.mkdir(parents=True, exist_ok=True) # Attempt to fix if it's a file
+        _fs_cache.invalidate(str(output_path_obj))
+
     # Generate the visualizations
-    _generate_system_state_plot(engine, output_path / "system_state.png")
-    _generate_entropy_plot(metrics, output_path / "entropy.png")
-    _generate_bug_flow_plot(metrics, output_path / "bug_flow.png")
-    _generate_agent_performance_plot(metrics, output_path / "agent_performance.png")
+    _generate_system_state_plot(engine, output_path_obj / "system_state.png", _fs_cache)
+    _generate_entropy_plot(metrics, output_path_obj / "entropy.png", _fs_cache)
+    _generate_bug_flow_plot(metrics, output_path_obj / "bug_flow.png", _fs_cache)
+    _generate_agent_performance_plot(metrics, output_path_obj / "agent_performance.png", _fs_cache)
     
     # Generate the HTML dashboard
     html_path = _generate_html_dashboard(
-        engine, metrics, output_path, 
-        ["system_state.png", "entropy.png", "bug_flow.png", "agent_performance.png"]
+        engine, metrics, output_path_obj,
+        ["system_state.png", "entropy.png", "bug_flow.png", "agent_performance.png"],
+        _fs_cache
     )
     
     return html_path
@@ -104,11 +116,35 @@ def _generate_system_state_plot(engine, output_path):
     
     # Save the plot
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
-    plt.close()
+    plt.tight_layout()
+
+    # Save to a temporary file first, then atomic_rename
+    temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+    os.close(temp_file_descriptor)
+    temp_file_path = Path(temp_file_path_str)
+
+    try:
+        plt.savefig(temp_file_path, dpi=150)
+        # Ensure parent dir of final output_path exists
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fs_cache.invalidate(str(output_path.parent))
+
+        atomic_rename(str(temp_file_path), str(output_path))
+        fs_cache.invalidate(str(output_path))
+    except Exception as e:
+        logger.error(f"Error saving plot to {output_path}: {e}")
+        if temp_file_path.exists():
+            try: os.remove(temp_file_path)
+            except OSError: logger.error(f"Failed to remove temp plot file {temp_file_path}")
+        raise
+    finally:
+        plt.close() # Ensure plot is closed
+        if temp_file_path.exists(): # Final cleanup if still there
+            try: os.remove(temp_file_path)
+            except OSError: pass
 
 
-def _generate_entropy_plot(metrics, output_path):
+def _generate_entropy_plot(metrics, output_path, fs_cache: FileSystemStateCache):
     """Generate entropy consumption over time visualization."""
     if not metrics.tick_metrics:
         # No data, create empty plot
@@ -117,8 +153,27 @@ def _generate_entropy_plot(metrics, output_path):
         plt.xlabel('Tick')
         plt.ylabel('Entropy (bits)')
         plt.grid(True)
-        plt.savefig(output_path, dpi=150)
-        plt.close()
+        # Save to a temporary file first, then atomic_rename (even for empty plot)
+        temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+        os.close(temp_file_descriptor)
+        temp_file_path = Path(temp_file_path_str)
+        try:
+            plt.savefig(temp_file_path, dpi=150)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            fs_cache.invalidate(str(output_path.parent))
+            atomic_rename(str(temp_file_path), str(output_path))
+            fs_cache.invalidate(str(output_path))
+        except Exception as e:
+            logger.error(f"Error saving empty entropy plot to {output_path}: {e}")
+            if temp_file_path.exists():
+                try: os.remove(temp_file_path)
+                except OSError: logger.error(f"Failed to remove temp plot file {temp_file_path}")
+            # Not re-raising here as it's an empty plot, less critical
+        finally:
+            plt.close()
+            if temp_file_path.exists():
+                try: os.remove(temp_file_path)
+                except OSError: pass
         return
     
     # Extract data
@@ -195,11 +250,29 @@ def _generate_bug_flow_plot(metrics, output_path):
     
     # Save the plot
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
-    plt.close()
+    temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+    os.close(temp_file_descriptor)
+    temp_file_path = Path(temp_file_path_str)
+    try:
+        plt.savefig(temp_file_path, dpi=150)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fs_cache.invalidate(str(output_path.parent))
+        atomic_rename(str(temp_file_path), str(output_path))
+        fs_cache.invalidate(str(output_path))
+    except Exception as e:
+        logger.error(f"Error saving bug flow plot to {output_path}: {e}")
+        if temp_file_path.exists():
+            try: os.remove(temp_file_path)
+            except OSError: logger.error(f"Failed to remove temp plot file {temp_file_path}")
+        # Not re-raising for plotting error
+    finally:
+        plt.close()
+        if temp_file_path.exists():
+            try: os.remove(temp_file_path)
+            except OSError: pass
 
 
-def _generate_agent_performance_plot(metrics, output_path):
+def _generate_agent_performance_plot(metrics, output_path, fs_cache: FileSystemStateCache):
     """Generate visualization of agent performance."""
     # If no agent metrics, create empty plot
     if not metrics.agent_metrics:
@@ -208,8 +281,25 @@ def _generate_agent_performance_plot(metrics, output_path):
         plt.xlabel('Agent')
         plt.ylabel('Metrics')
         plt.grid(True)
-        plt.savefig(output_path, dpi=150)
-        plt.close()
+        temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+        os.close(temp_file_descriptor)
+        temp_file_path = Path(temp_file_path_str)
+        try:
+            plt.savefig(temp_file_path, dpi=150)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            fs_cache.invalidate(str(output_path.parent))
+            atomic_rename(str(temp_file_path), str(output_path))
+            fs_cache.invalidate(str(output_path))
+        except Exception as e:
+            logger.error(f"Error saving empty agent performance plot to {output_path}: {e}")
+            if temp_file_path.exists():
+                try: os.remove(temp_file_path)
+                except OSError: logger.error(f"Failed to remove temp plot file {temp_file_path}")
+        finally:
+            plt.close()
+            if temp_file_path.exists():
+                try: os.remove(temp_file_path)
+                except OSError: pass
         return
     
     # Extract data
@@ -259,11 +349,28 @@ def _generate_agent_performance_plot(metrics, output_path):
     
     # Adjust layout
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
-    plt.close()
+    temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+    os.close(temp_file_descriptor)
+    temp_file_path = Path(temp_file_path_str)
+    try:
+        plt.savefig(temp_file_path, dpi=150)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fs_cache.invalidate(str(output_path.parent))
+        atomic_rename(str(temp_file_path), str(output_path))
+        fs_cache.invalidate(str(output_path))
+    except Exception as e:
+        logger.error(f"Error saving agent performance plot to {output_path}: {e}")
+        if temp_file_path.exists():
+            try: os.remove(temp_file_path)
+            except OSError: logger.error(f"Failed to remove temp plot file {temp_file_path}")
+    finally:
+        plt.close()
+        if temp_file_path.exists():
+            try: os.remove(temp_file_path)
+            except OSError: pass
 
 
-def _generate_html_dashboard(engine, metrics, output_dir, image_paths):
+def _generate_html_dashboard(engine, metrics, output_dir, image_paths, fs_cache: FileSystemStateCache):
     """Generate HTML dashboard that displays all visualizations."""
     html_path = output_dir / "index.html"
     
@@ -386,7 +493,8 @@ def _generate_html_dashboard(engine, metrics, output_dir, image_paths):
     """
     
     # Write HTML to file
-    with open(html_path, "w") as f:
-        f.write(html_content)
+    # Parent directory (output_dir) should have been created and cache invalidated by create_dashboard
+    atomic_write(str(html_path), html_content.encode('utf-8'))
+    fs_cache.invalidate(str(html_path)) # Use the passed fs_cache instance
     
     return str(html_path)

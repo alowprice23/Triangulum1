@@ -13,6 +13,10 @@ import os
 from typing import Dict, List, Any, Optional, Set, Tuple, Union
 from datetime import datetime
 from collections import defaultdict
+from pathlib import Path
+
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +35,21 @@ class VerificationMetrics:
         
         Args:
             metrics_path: Path to save metrics data (optional)
+            fs_cache: Optional FileSystemStateCache instance.
         """
-        self.metrics_path = metrics_path or os.path.join(
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+        _metrics_path_str = metrics_path or os.path.join(
             os.getcwd(), ".triangulum", "metrics", "verification")
+        self.metrics_path = Path(_metrics_path_str) # Store as Path object
         
         # Create the metrics directory if it doesn't exist
-        os.makedirs(self.metrics_path, exist_ok=True)
+        if not self.fs_cache.exists(str(self.metrics_path)):
+            self.metrics_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.metrics_path))
+        elif not self.fs_cache.is_dir(str(self.metrics_path)):
+            logger.warning(f"Metrics path {self.metrics_path} exists but is not a directory. Attempting to create.")
+            self.metrics_path.mkdir(parents=True, exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.metrics_path))
         
         # Initialize metrics data structures
         self.total_verifications = 0
@@ -129,13 +142,14 @@ class VerificationMetrics:
         try:
             # Create a filename based on the session ID
             filename = f"{session['id']}.json"
-            filepath = os.path.join(self.metrics_path, filename)
+            filepath_str = str(self.metrics_path / filename) # self.metrics_path is Path object
             
             # Save the data to a JSON file
-            with open(filepath, 'w') as f:
-                json.dump(session, f, indent=2)
+            content_str = json.dumps(session, indent=2)
+            atomic_write(filepath_str, content_str.encode('utf-8'))
+            self.fs_cache.invalidate(filepath_str)
             
-            logger.info(f"Saved verification session data to {filepath}")
+            logger.info(f"Saved verification session data to {filepath_str} using atomic_write")
         except Exception as e:
             logger.error(f"Failed to save verification session data: {e}")
     
@@ -377,18 +391,27 @@ class VerificationMetrics:
                 f"verification_metrics_{int(time.time())}.json"
             )
         
+        filepath_path = Path(filepath) # Convert to Path object for consistency
         try:
             # Create the directory if it doesn't exist
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            parent_dir = filepath_path.parent
+            if not self.fs_cache.exists(str(parent_dir)):
+                parent_dir.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(parent_dir))
+            elif not self.fs_cache.is_dir(str(parent_dir)):
+                logger.warning(f"Metrics parent path {parent_dir} exists but is not a directory. Attempting mkdir.")
+                parent_dir.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(parent_dir))
             
             # Get the metrics summary
             summary = self.get_summary()
             
             # Save the metrics to a JSON file
-            with open(filepath, 'w') as f:
-                json.dump(summary, f, indent=2)
+            content_str = json.dumps(summary, indent=2)
+            atomic_write(str(filepath_path), content_str.encode('utf-8'))
+            self.fs_cache.invalidate(str(filepath_path))
             
-            logger.info(f"Saved verification metrics to {filepath}")
+            logger.info(f"Saved verification metrics to {filepath_path} using atomic_write")
         except Exception as e:
             logger.error(f"Failed to save verification metrics: {e}")
     

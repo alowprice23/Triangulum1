@@ -12,6 +12,10 @@ import time
 import psutil
 import threading
 from typing import Dict, List, Any, Optional, Union
+from pathlib import Path # Added for consistency
+
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +24,13 @@ class SystemMonitor:
     Monitors the health and performance of the Triangulum system.
     """
 
-    def __init__(self, engine):
+    def __init__(self, engine, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the SystemMonitor.
 
         Args:
             engine: The Triangulum engine
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.engine = engine
         self.metrics = {}
@@ -35,6 +40,7 @@ class SystemMonitor:
         self.monitoring_interval = 60  # seconds
         self.is_monitoring = False
         self.last_check_time = None
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Resource thresholds
         self.thresholds = {
@@ -336,8 +342,18 @@ class SystemMonitor:
         
         # Save to file if specified
         if file_path and result:
-            with open(file_path, 'w') as f:
-                f.write(result)
-            logger.info(f"Exported metrics to {file_path}")
+            output_path = Path(file_path)
+            # Ensure parent directory exists
+            if not self.fs_cache.exists(str(output_path.parent)):
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(output_path.parent))
+            elif not self.fs_cache.is_dir(str(output_path.parent)):
+                logger.warning(f"Parent path for {output_path} exists but is not a directory. Attempting mkdir.")
+                output_path.parent.mkdir(parents=True, exist_ok=True) # May fail
+                self.fs_cache.invalidate(str(output_path.parent))
+
+            atomic_write(str(output_path), result.encode('utf-8')) # Result is already a string
+            self.fs_cache.invalidate(str(output_path))
+            logger.info(f"Exported metrics to {output_path} using atomic_write")
         
         return result if result else self.metrics

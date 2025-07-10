@@ -9,6 +9,10 @@ import os
 import json
 import logging
 from typing import Dict, List, Any, Optional, Tuple
+from pathlib import Path # For consistency if used
+
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
 
 logger = logging.getLogger(__name__)
 
@@ -21,20 +25,30 @@ class RelationshipContextProvider:
     for diagnostic and repair purposes.
     """
 
-    def __init__(self, relationships_path: Optional[str] = None):
+    def __init__(self, relationships_path: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the RelationshipContextProvider.
 
         Args:
             relationships_path: Path to the relationships JSON file (optional)
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.relationships = {}
         self.dependency_graph = {}
         self.reverse_dependency_graph = {}
-        
-        if relationships_path and os.path.exists(relationships_path):
-            self.load_relationships_from_file(relationships_path)
-        
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
+        if relationships_path:
+            # Use cache to check existence
+            if self.fs_cache.exists(relationships_path):
+                self.load_relationships_from_file(relationships_path)
+            elif Path(relationships_path).exists(): # Cache was stale
+                logger.warning(f"Cache miss for existing relationships_path {relationships_path}. Invalidating and loading.")
+                self.fs_cache.invalidate(relationships_path)
+                self.load_relationships_from_file(relationships_path)
+            else:
+                logger.info(f"Relationships file {relationships_path} not found (checked cache and FS). Initializing empty.")
+
         logger.info("RelationshipContextProvider initialized")
 
     def load_relationships_from_file(self, relationships_path: str) -> Dict[str, Any]:
@@ -88,10 +102,15 @@ class RelationshipContextProvider:
             output_path = "triangulum_relationships.json"
         
         try:
-            with open(output_path, 'w', encoding='utf-8') as f:
-                json.dump(self.relationships, f, indent=2)
+            # Ensure parent directory of output_path exists
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True) # Direct mkdir for setup
+            self.fs_cache.invalidate(str(Path(output_path).parent)) # Invalidate parent dir
+
+            content_str = json.dumps(self.relationships, indent=2)
+            atomic_write(output_path, content_str.encode('utf-8'))
+            self.fs_cache.invalidate(output_path)
             
-            logger.info(f"Saved relationships to {output_path}")
+            logger.info(f"Saved relationships to {output_path} using atomic_write")
             return True
         
         except Exception as e:

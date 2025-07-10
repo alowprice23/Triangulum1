@@ -4,6 +4,9 @@ from pathlib import Path
 import numpy as np
 from dataclasses import dataclass, asdict
 from typing import Dict, List, Optional, Any, Union
+
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
 from ..core.state import Phase
 
 @dataclass
@@ -71,13 +74,27 @@ class BugMetrics:
 class MetricsCollector:
     """Collects and stores system metrics."""
     
-    def __init__(self, storage_path: str = "metrics"):
+    def __init__(self, storage_path: str = "metrics", fs_cache: Optional[FileSystemStateCache] = None):
         self.storage_path = Path(storage_path)
-        self.storage_path.mkdir(exist_ok=True, parents=True)
-        
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
+        if not self.fs_cache.exists(str(self.storage_path)):
+            self.storage_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.storage_path))
+        elif not self.fs_cache.is_dir(str(self.storage_path)):
+            logger.warning(f"Storage path {self.storage_path} exists but is not a directory. Attempting to create.")
+            self.storage_path.mkdir(parents=True, exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.storage_path))
+
         self.current_run_id = int(time.time())
         self.run_path = self.storage_path / f"run_{self.current_run_id}"
-        self.run_path.mkdir(exist_ok=True)
+        if not self.fs_cache.exists(str(self.run_path)):
+            self.run_path.mkdir(exist_ok=True) # Parents should exist from above
+            self.fs_cache.invalidate(str(self.run_path))
+        elif not self.fs_cache.is_dir(str(self.run_path)):
+            logger.warning(f"Run path {self.run_path} exists but is not a directory. Attempting to create.")
+            self.run_path.mkdir(exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.run_path))
         
         self.tick_metrics: List[TickMetrics] = []
         self.agent_metrics: Dict[str, List[AgentMetrics]] = {}
@@ -145,8 +162,10 @@ class MetricsCollector:
         """Save comprehensive metrics to disk."""
         if self.comprehensive_metrics:
             data = asdict(self.comprehensive_metrics)
-            with open(self.run_path / 'comprehensive_metrics.json', 'w') as f:
-                json.dump(data, f, indent=2)
+            file_path = self.run_path / 'comprehensive_metrics.json'
+            content_str = json.dumps(data, indent=2)
+            atomic_write(str(file_path), content_str.encode('utf-8'))
+            self.fs_cache.invalidate(str(file_path))
     
     def record_tick(self, engine) -> TickMetrics:
         """Record metrics for the current tick."""
@@ -292,16 +311,20 @@ class MetricsCollector:
         summary['agent_summaries'] = agent_summaries
         
         # Save summary
-        with open(self.run_path / 'summary.json', 'w') as f:
-            json.dump(summary, f, indent=2)
+        file_path = self.run_path / 'summary.json'
+        content_str = json.dumps(summary, indent=2)
+        atomic_write(str(file_path), content_str.encode('utf-8'))
+        self.fs_cache.invalidate(str(file_path))
         
         return summary
     
     def _save_tick_metrics(self) -> None:
         """Save tick metrics to disk."""
         data = [asdict(m) for m in self.tick_metrics]
-        with open(self.run_path / 'tick_metrics.json', 'w') as f:
-            json.dump(data, f, indent=2)
+        file_path = self.run_path / 'tick_metrics.json'
+        content_str = json.dumps(data, indent=2)
+        atomic_write(str(file_path), content_str.encode('utf-8'))
+        self.fs_cache.invalidate(str(file_path))
     
     def _save_agent_metrics(self) -> None:
         """Save agent metrics to disk."""
@@ -309,11 +332,15 @@ class MetricsCollector:
             agent_id: [asdict(m) for m in metrics]
             for agent_id, metrics in self.agent_metrics.items()
         }
-        with open(self.run_path / 'agent_metrics.json', 'w') as f:
-            json.dump(data, f, indent=2)
+        file_path = self.run_path / 'agent_metrics.json'
+        content_str = json.dumps(data, indent=2)
+        atomic_write(str(file_path), content_str.encode('utf-8'))
+        self.fs_cache.invalidate(str(file_path))
     
     def _save_bug_metrics(self) -> None:
         """Save bug metrics to disk."""
         data = {bug_id: asdict(metrics) for bug_id, metrics in self.bug_metrics.items()}
-        with open(self.run_path / 'bug_metrics.json', 'w') as f:
-            json.dump(data, f, indent=2)
+        file_path = self.run_path / 'bug_metrics.json'
+        content_str = json.dumps(data, indent=2)
+        atomic_write(str(file_path), content_str.encode('utf-8'))
+        self.fs_cache.invalidate(str(file_path))

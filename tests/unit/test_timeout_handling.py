@@ -15,6 +15,7 @@ from triangulum_lx.core.monitor import OperationProgress, ProgressStatus, Operat
 from triangulum_lx.core.monitor import EngineMonitor
 from triangulum_lx.agents.base_agent import BaseAgent
 from triangulum_lx.agents.orchestrator_agent import OrchestratorAgent, TaskPriority
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus # Added
 
 # Configure logging for tests
 logging.basicConfig(level=logging.DEBUG)
@@ -380,18 +381,25 @@ class TestBaseAgentTimeoutHandling(unittest.TestCase):
 class TestOrchestratorTimeoutHandling(unittest.TestCase):
     """Test timeout handling in OrchestratorAgent."""
     
-    @patch('triangulum_lx.agents.orchestrator_agent.MessageBus')
-    def test_orchestrator_timeout_handling(self, mock_message_bus):
+    def test_orchestrator_timeout_handling(self): # Removed mock_message_bus from signature
         """Test that OrchestratorAgent properly handles timeouts."""
         # Create a mock engine monitor
         engine_monitor = MagicMock()
-        
-        # Create an orchestrator instance with the mock monitor
+        mock_enhanced_message_bus = MagicMock(spec=EnhancedMessageBus)
+
+        # Create an orchestrator instance with the mock monitor and faster internal timing
+        orchestrator_config = {
+            "timeout": 0.2,  # Task processing timeout
+            "task_check_interval": 0.01, # How often main loop checks queue
+            "progress_update_interval": 0.01, # How often progress/timeout thread runs
+            "default_task_timeout": 0.2, # Default for tasks if not specified
+            "timeout_grace_period": 0.05 # Grace before hard fail
+        }
         orchestrator = OrchestratorAgent(
             agent_id="test_orchestrator",
-            message_bus=mock_message_bus,
+            message_bus=mock_enhanced_message_bus, # Pass mock EnhancedMessageBus
             engine_monitor=engine_monitor,
-            config={"timeout": 0.5}  # Short timeout for testing
+            config=orchestrator_config
         )
         
         # Mock the _assign_task_to_agent method to avoid agent registry dependency

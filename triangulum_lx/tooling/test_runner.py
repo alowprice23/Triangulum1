@@ -12,6 +12,9 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 class TestResult:
     """Result of a test execution."""
     
@@ -23,8 +26,9 @@ class TestResult:
 class TestRunner:
     """Automated test runner."""
     
-    def __init__(self, project_root: str = "."):
+    def __init__(self, project_root: str = ".", fs_cache: Optional[FileSystemStateCache] = None):
         self.project_root = Path(project_root)
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         logger.info("TestRunner initialized")
     
     def discover_tests(self) -> List[Path]:
@@ -269,25 +273,43 @@ class TestRunner:
                 import tempfile
                 
                 # Create temporary backup
-                temp_backup = tempfile.mktemp(suffix='.bak')
-                shutil.copy2(file_path, temp_backup)
-                logger.info(f"Created temporary backup at {temp_backup}")
+                temp_backup_path_str = tempfile.mktemp(suffix='.bak') # Just a name
+                temp_backup = Path(temp_backup_path_str)
+
+                original_content = Path(file_path).read_bytes()
+                atomic_write(str(temp_backup), original_content)
+                self.fs_cache.invalidate(str(temp_backup))
+                logger.info(f"Created temporary backup at {temp_backup} using atomic_write")
                 
                 # Apply temporary patch for testing
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(patch_content)
-                logger.info(f"Applied temporary patch to {file_path}")
+                atomic_write(file_path, patch_content.encode('utf-8'))
+                self.fs_cache.invalidate(file_path)
+                logger.info(f"Applied temporary patch to {file_path} using atomic_write")
                 
             except Exception as e:
-                logger.error(f"Failed to create temporary test environment: {e}")
-                # Try to restore from backup if it was created
-                if temp_backup and Path(temp_backup).exists():
+                logger.error(f"Failed to create temporary test environment for {file_path}: {e}")
+                # Try to restore from backup if it was created and if the original file_path was touched
+                if temp_backup and self.fs_cache.exists(str(temp_backup)): # Check cache first
                     try:
-                        shutil.copy2(temp_backup, file_path)
-                        Path(temp_backup).unlink()
-                    except Exception:
-                        pass
-                
+                        backup_content = temp_backup.read_bytes()
+                        atomic_write(file_path, backup_content) # Restore original
+                        self.fs_cache.invalidate(file_path)
+                        atomic_delete(str(temp_backup)) # Delete backup
+                        self.fs_cache.invalidate(str(temp_backup))
+                        logger.info(f"Restored {file_path} from temp backup {temp_backup} due to setup error.")
+                    except Exception as restore_e:
+                        logger.error(f"Critical error: Failed to restore {file_path} from {temp_backup} after setup error: {restore_e}")
+                elif temp_backup and temp_backup.exists(): # Fallback direct check
+                     try:
+                        backup_content = temp_backup.read_bytes()
+                        atomic_write(file_path, backup_content)
+                        self.fs_cache.invalidate(file_path)
+                        atomic_delete(str(temp_backup))
+                        self.fs_cache.invalidate(str(temp_backup))
+                        logger.info(f"Restored {file_path} from temp backup {temp_backup} (direct check) due to setup error.")
+                     except Exception as restore_e:
+                        logger.error(f"Critical error: Failed to restore {file_path} from {temp_backup} (direct check) after setup error: {restore_e}")
+
                 return TestResult(False, f"Failed to setup test environment: {str(e)}")
         
         try:
@@ -326,14 +348,28 @@ class TestRunner:
             return TestResult(False, f"Error during patch validation: {str(e)}")
             
         finally:
-            # Always restore from backup if we applied a temporary patch
-            if temp_backup and Path(temp_backup).exists():
+            # Always restore from backup if we applied a temporary patch and backup exists
+            if temp_backup and self.fs_cache.exists(str(temp_backup)): # Check cache
                 try:
-                    shutil.copy2(temp_backup, file_path)
-                    Path(temp_backup).unlink()
-                    logger.info(f"Restored original file from {temp_backup}")
+                    backup_content = temp_backup.read_bytes()
+                    atomic_write(file_path, backup_content)
+                    self.fs_cache.invalidate(file_path)
+                    atomic_delete(str(temp_backup))
+                    self.fs_cache.invalidate(str(temp_backup))
+                    logger.info(f"Restored original file {file_path} from {temp_backup}")
                 except Exception as e:
-                    logger.error(f"Failed to restore original file: {e}")
+                    logger.error(f"Failed to restore original file {file_path} from {temp_backup}: {e}")
+            elif temp_backup and temp_backup.exists(): # Fallback direct check if cache said no but it's there
+                logger.warning(f"Temp backup {temp_backup} found by direct check after cache miss. Attempting restore.")
+                try:
+                    backup_content = temp_backup.read_bytes()
+                    atomic_write(file_path, backup_content)
+                    self.fs_cache.invalidate(file_path)
+                    atomic_delete(str(temp_backup))
+                    self.fs_cache.invalidate(str(temp_backup))
+                    logger.info(f"Restored original file {file_path} from {temp_backup} (direct check).")
+                except Exception as e:
+                    logger.error(f"Failed to restore original file {file_path} from {temp_backup} (direct check): {e}")
     
     def find_related_tests(self, file_path: str) -> List[str]:
         """

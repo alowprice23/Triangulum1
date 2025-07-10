@@ -14,6 +14,7 @@ from pathlib import Path
 
 from triangulum_lx.tooling.repair import PatcherAgent
 from triangulum_lx.tooling.test_runner import TestResult
+from triangulum_lx.core.fs_state import FileSystemStateCache # Added import
 
 
 class TestPatcherAgent(unittest.TestCase):
@@ -50,8 +51,9 @@ if __name__ == '__main__':
     unittest.main()
             """)
         
-        # Initialize the PatcherAgent
-        self.agent = PatcherAgent()
+        # Initialize the PatcherAgent with a mock FileSystemStateCache
+        self.mock_fs_cache = MagicMock(spec=FileSystemStateCache)
+        self.agent = PatcherAgent(fs_cache=self.mock_fs_cache)
         
         # Mock the relationship analyzer and provider
         self.agent.relationship_analyzer = MagicMock()
@@ -119,60 +121,82 @@ if __name__ == '__main__':
         self.assertEqual(patch['impact_level'], 'low')
         self.assertEqual(patch['related_files'], [])
     
-    @patch('os.path.exists')
-    @patch('builtins.open', new_callable=mock_open)
-    def test_apply(self, mock_file, mock_exists):
+    @patch('triangulum_lx.tooling.repair.Path')
+    @patch('triangulum_lx.tooling.repair.atomic_write')
+    @patch('triangulum_lx.tooling.repair.PatchBundle') # Keep this for git-style patch part
+    def test_apply(self, MockPatchBundle, mock_atomic_write, mock_path_constructor):
         """Test the _apply method."""
-        # Mock that the backup path exists
-        mock_exists.return_value = True
         
-        # Test with a git-style patch (starts with '---')
+        # --- Test with a git-style patch ---
+        mock_original_content = b"original content for backup"
+        mock_path_instance_for_read = MagicMock()
+        mock_path_instance_for_read.read_bytes.return_value = mock_original_content
+
+        # When Path(self.bug_file) is called for reading original content for backup
+        mock_path_constructor.side_effect = lambda x: mock_path_instance_for_read if x == self.bug_file else MagicMock()
+
         git_patch_data = {
             'bug_id': 'TEST-001',
             'file_path': self.bug_file,
-            'patch_diff': '--- file.py\n+++ file.py\n@@ -1,1 +1,1 @@\n-old\n+new',
+            'patch_diff': '--- file.py\n+++ file.py\n@@ -1,1 +1,1 @@\n-old\n+new', # Git-style
             'impact_level': 'low',
             'related_files': []
         }
         
-        # Mock the PatchBundle for git-style patches
-        with patch('triangulum_lx.tooling.repair.PatchBundle') as MockPatchBundle:
-            mock_bundle = MagicMock()
-            MockPatchBundle.return_value = mock_bundle
+        mock_bundle_instance = MockPatchBundle.return_value
+        self.agent._apply(git_patch_data)
             
-            self.agent._apply(git_patch_data)
+        # Check backup creation: Path(self.bug_file).read_bytes() and atomic_write for backup
+        mock_path_constructor.assert_any_call(self.bug_file) # Called for read_bytes
+        mock_path_instance_for_read.read_bytes.assert_called_once()
+        expected_backup_path = f"{self.bug_file}.bak"
+        mock_atomic_write.assert_any_call(expected_backup_path, mock_original_content)
             
-            # Check that it created a backup
-            mock_file.assert_called()
+        # Check PatchBundle usage
+        MockPatchBundle.assert_called_once_with(
+            git_patch_data['bug_id'],
+            git_patch_data['patch_diff'],
+            fs_cache=self.agent.fs_cache # Check if fs_cache is passed
+        )
+        mock_bundle_instance.apply.assert_called_once()
+
+        # Check that fs_cache.invalidate was called for the main file after PatchBundle.apply()
+        self.agent.fs_cache.invalidate.assert_any_call(self.bug_file)
             
-            # Check that it applied the patch with PatchBundle
-            MockPatchBundle.assert_called_once_with('TEST-001', git_patch_data['patch_diff'])
-            mock_bundle.apply.assert_called_once()
-            
-            # Check that it tracked the applied patch
-            self.assertTrue(hasattr(self.agent, 'applied_patches'))
-            self.assertEqual(self.agent.applied_patches['primary']['file_path'], self.bug_file)
-        
-        # Reset mocks
-        mock_file.reset_mock()
-        
-        # Test with direct content replacement (no git-style patch)
+        self.assertTrue(hasattr(self.agent, 'applied_patches'))
+        self.assertEqual(self.agent.applied_patches['primary']['file_path'], self.bug_file)
+
+        # Reset mocks for the next part of the test
+        mock_atomic_write.reset_mock()
+        mock_path_constructor.reset_mock()
+        mock_path_instance_for_read.reset_mock()
+        # Ensure fs_cache mock is fresh or re-mocked if necessary for PatcherAgent instance
+        self.agent.fs_cache.invalidate.reset_mock()
+
+
+        # --- Test with direct content replacement ---
+        # Path(self.bug_file).read_bytes() will be called again for backup
+        mock_path_constructor.side_effect = lambda x: mock_path_instance_for_read if x == self.bug_file else MagicMock()
+
         direct_patch_data = {
-            'bug_id': 'TEST-001',
+            'bug_id': 'TEST-002',
             'file_path': self.bug_file,
-            'patch_diff': 'def add(a, b): return a + b',
+            'patch_diff': 'def add(a, b): return a + b', # Not a git diff
             'impact_level': 'low',
             'related_files': []
         }
         
-        # Apply direct content patch
         self.agent._apply(direct_patch_data)
         
-        # Check that it created a backup and wrote the content directly
-        mock_file.assert_called()
-        write_call_args = mock_file().write.call_args_list
-        self.assertTrue(len(write_call_args) > 0, "No write calls were made")
-        self.assertEqual(write_call_args[-1][0][0], direct_patch_data['patch_diff'])
+        # Check backup creation again
+        mock_path_instance_for_read.read_bytes.assert_called_once() # Called once in this section
+        mock_atomic_write.assert_any_call(expected_backup_path, mock_original_content)
+
+        # Check direct atomic_write for the patch content
+        mock_atomic_write.assert_any_call(self.bug_file, direct_patch_data['patch_diff'].encode('utf-8'))
+
+        # Check that fs_cache.invalidate was called for the main file
+        self.agent.fs_cache.invalidate.assert_any_call(self.bug_file)
     
     def test_verify_success(self):
         """Test the _verify method with successful tests."""
@@ -204,35 +228,55 @@ if __name__ == '__main__':
         # Check that the result indicates failure
         self.assertFalse(result.success)
     
-    @patch('os.path.exists')
-    @patch('os.remove')
-    def test_rollback(self, mock_remove, mock_exists):
+    @patch('triangulum_lx.tooling.repair.Path')
+    @patch('triangulum_lx.tooling.repair.atomic_write')
+    @patch('triangulum_lx.tooling.repair.atomic_delete')
+    def test_rollback(self, mock_atomic_delete, mock_atomic_write, mock_path_constructor):
         """Test the _rollback method."""
-        # Mock that the backup path exists
-        mock_exists.return_value = True
-        
-        # Set up applied patches tracking
+        backup_file_path = f"{self.bug_file}.bak"
+        backup_content = b"Backup content from rollback"
+
+        # Mock fs_cache.exists and fs_cache.invalidate for the backup file
+        self.agent.fs_cache.exists = MagicMock(return_value=True)
+        self.agent.fs_cache.invalidate = MagicMock() # Mock invalidate method
+
+        # Mock Path(backup_file_path).read_bytes()
+        mock_backup_path_instance = MagicMock()
+        mock_backup_path_instance.read_bytes.return_value = backup_content
+
+        # Configure mock_path_constructor to return the correct mock for the backup path
+        def path_side_effect(p):
+            if str(p) == backup_file_path:
+                return mock_backup_path_instance
+            return MagicMock() # Default mock for other Path calls
+        mock_path_constructor.side_effect = path_side_effect
+
+        # Set up applied patches tracking (as PatcherAgent expects)
         self.agent.applied_patches = {
             'primary': {
                 'file_path': self.bug_file,
-                'backup_path': f"{self.bug_file}.bak"
+                'backup_path': backup_file_path  # Store the full path
             },
             'related': []
         }
         
-        # Open will be mocked to simulate reading and writing files
-        with patch('builtins.open', mock_open(read_data="Backup content")):
-            patch_data = {
-                'bug_id': 'TEST-001',
-                'file_path': self.bug_file,
-                'patch_diff': 'Test patch'
-            }
+        patch_data = { # This is passed to _rollback, but its content isn't directly used by _rollback itself
+            'bug_id': 'TEST-001',
+            'file_path': self.bug_file
+        }
             
-            self.agent._rollback(patch_data)
+        self.agent._rollback(patch_data)
             
-            # Check that it restored from backup
-            mock_exists.assert_called_with(f"{self.bug_file}.bak")
-            mock_remove.assert_called_with(f"{self.bug_file}.bak")
+        # Check that it checked for backup, read it, wrote to original, and deleted backup
+        self.agent.fs_cache.exists.assert_called_with(backup_file_path)
+        mock_path_constructor.assert_any_call(backup_file_path) # Check Path() was called for backup
+        mock_backup_path_instance.read_bytes.assert_called_once()
+        mock_atomic_write.assert_called_once_with(self.bug_file, backup_content)
+        mock_atomic_delete.assert_called_once_with(backup_file_path)
+
+        # Verify cache invalidations
+        self.agent.fs_cache.invalidate.assert_any_call(self.bug_file)
+        self.agent.fs_cache.invalidate.assert_any_call(backup_file_path)
     
     def test_execute_repair_success(self):
         """Test the execute_repair method with successful repair."""

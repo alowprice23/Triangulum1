@@ -107,6 +107,7 @@ class Task:
         """Mark the task as failed."""
         self.completed_at = datetime.now()
         self.status = "failed"
+        self.last_error = error # Ensure last_error is updated
         if self.result is None:
             self.result = {}
         self.result["error"] = error
@@ -671,13 +672,14 @@ class OrchestratorAgent(BaseAgent):
                                     task.processing_stages.append("Timed out")
                                     self.task_queue.update_task(task)
                                     
-                                    # Cancel the operation in the engine monitor
-                                    self._engine_monitor.timeout_operation(
+                                    # Fail the operation in the engine monitor
+                                    self._engine_monitor.fail_operation( # Changed from timeout_operation
                                         operation_id=operation_id,
                                         details={
                                             "task_id": task.id,
                                             "elapsed_time": elapsed,
-                                            "timeout": self.timeout
+                                            "timeout": self.timeout,
+                                            "reason": f"Operation timed out after {elapsed:.1f} seconds"
                                         }
                                     )
                                     
@@ -980,44 +982,68 @@ class OrchestratorAgent(BaseAgent):
                     
                     # Mark task as failed
                     with self.task_lock:
-                        task.mark_failed(str(e))
-                        self.task_queue.update_task(task)
-                        
-                        if self.metrics:
-                            self.metrics.record_metric("orchestrator_task_completed", 1, tags={"task_type": task.type, "status": "failed"})
-                            if task.task_start_time:
-                                duration = time.time() - task.task_start_time
-                                self.metrics.record_metric("orchestrator_task_duration_seconds", duration, tags={"task_type": task.type, "status": "failed"})
+                        worker_error_message = str(e)
+                        logger.error(f"Worker loop error for task {task.id} (workflow: {task.workflow_id}): {worker_error_message}")
+                        logger.debug(traceback.format_exc())
 
-                        # Check if task can be retried
-                        if task.can_retry(self.max_retries):
-                            logger.info(f"Retrying task {task.id} (attempt {task.attempts}/{self.max_retries})")
-                            task.status = "pending"
-                            self.task_queue.update_task(task)
+                        # Fetch the most up-to-date task object from the queue
+                        refreshed_task = self.task_queue.get_task(task.id)
+                        if refreshed_task:
+                            task = refreshed_task
                         else:
-                            # Store failure result
-                            with self.result_lock:
-                                self.task_results[task.id] = {
-                                    "status": "failed",
-                                    "error": str(e),
-                                    "task_id": task.id
-                                }
+                            # Task was removed from queue, perhaps by cancellation. Log and exit.
+                            logger.warning(f"Task {task.id} not found in queue during worker exception handling. It might have been cancelled or removed.")
+                            if task.workflow_id in self.pending_tasks:
+                                del self.pending_tasks[task.workflow_id]
+                            # No further processing for this task by this worker
+                            return # Exit from the 'with self.task_lock' block and the exception handler for this task.
+
+                        # Check if the task was already definitively failed by timeout
+                        is_timed_out = task.status == "failed" and task.last_error and "timed out" in task.last_error.lower()
+
+                        if is_timed_out:
+                            logger.warning(f"Task {task.id} was already timed out ('{task.last_error}'). Worker's subsequent error ('{worker_error_message}') is noted but does not change final state.")
+                            # Ensure result reflects timeout if not already set properly
+                            if task.result is None or "timed out" not in (task.result.get("error", "") or "").lower():
+                                task.result = {"status": "failed", "error": task.last_error, "task_id": task.id}
+                            # No change to status, no retry. Update queue to persist any minor changes to task.result.
+                            self.task_queue.update_task(task)
+
+                        else: # Not timed out, so this worker's error is the primary failure reason (or it's a new failure)
+                            task.mark_failed(worker_error_message) # Set status to "failed" and the worker's error
+
+                            if self.metrics: # Record metrics for worker failure
+                                self.metrics.record_metric("orchestrator_task_completed", 1, tags={"task_type": task.type, "status": "failed_worker_primary"})
+                                if task.task_start_time:
+                                    duration = time.time() - task.task_start_time
+                                    self.metrics.record_metric("orchestrator_task_duration_seconds", duration, tags={"task_type": task.type, "status": "failed_worker_primary"})
                             
-                            # Execute callback if registered
-                            if task.id in self.task_callbacks:
-                                callback = self.task_callbacks[task.id]
-                                try:
-                                    callback({"status": "failed", "error": str(e)})
-                                except Exception as e:
-                                    logger.error(f"Error executing callback for task {task.id}: {str(e)}")
-                        
-                        # Remove from pending tasks
+                            if task.can_retry(self.max_retries):
+                                logger.info(f"Retrying task {task.id} (attempt {task.attempts}/{self.max_retries}) after worker error: {worker_error_message}.")
+                                task.status = "pending"
+                                task.result = None      # Clear result for retry
+                                task.last_error = None  # Clear last_error for retry
+                                # task.task_start_time = None # Reset start time if it's re-queued fully
+                            else:
+                                logger.error(f"Task {task.id} failed after {task.attempts} attempts (worker error: {worker_error_message}). No more retries.")
+                                # task.result already set by mark_failed.
+                                if task.id in self.task_callbacks:
+                                    callback = self.task_callbacks[task.id]
+                                    try:
+                                        callback(task.result) # task.result is already a dict
+                                    except Exception as cb_e:
+                                        logger.error(f"Error executing callback for failed task {task.id}: {str(cb_e)}")
+
+                            self.task_queue.update_task(task)
+
+                        # Common cleanup for both scenarios (timed out or worker-failed)
                         if task.workflow_id in self.pending_tasks:
                             del self.pending_tasks[task.workflow_id]
 
-                        # Update agent effectiveness (failure)
                         if task.assigned_agent:
-                            self.agent_registry.update_agent_effectiveness(task.assigned_agent, False)
+                            # Effectiveness: if status is 'failed' (by timeout or worker), it's a failure.
+                            is_success = (task.status == "completed")
+                            self.agent_registry.update_agent_effectiveness(task.assigned_agent, is_success)
             
             except Exception as e:
                 logger.error(f"Error in worker loop: {str(e)}")

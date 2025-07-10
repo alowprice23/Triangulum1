@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import List, Dict, Any, Set, Tuple, Callable
 import json
+import tempfile # For visualize_graph temp file
+
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_rename
+from triangulum_lx.core.fs_state import FileSystemStateCache
 
 from .ltl_properties import LTLFormula, triangulum_properties, predicate_mapping
 from ..core.state import Phase, BugState
@@ -18,11 +22,12 @@ class TriangulumModelChecker:
     for the Triangulum system and verifies LTL properties against it.
     """
     
-    def __init__(self, max_states: int = 1000):
+    def __init__(self, max_states: int = 1000, fs_cache: Optional[FileSystemStateCache] = None):
         self.max_states = max_states
         self.graph = nx.DiGraph()
         self.states: Dict[int, Dict[str, Any]] = {}
         self.counter_examples: Dict[str, List[Dict[str, Any]]] = {}
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
     
     def build_state_graph(self, engine: TriangulationEngine = None) -> nx.DiGraph:
         """
@@ -294,9 +299,43 @@ class TriangulumModelChecker:
         )
         
         plt.title("Triangulum State Transition Graph")
-        plt.savefig(output_path, dpi=300, bbox_inches="tight")
-        plt.close()
         
+        # Save to a temporary file first
+        temp_file_descriptor, temp_file_path_str = tempfile.mkstemp(suffix=".png", dir=".")
+        os.close(temp_file_descriptor) # Close descriptor, savefig will open/close
+        temp_file_path = Path(temp_file_path_str)
+
+        try:
+            plt.savefig(temp_file_path, dpi=300, bbox_inches="tight")
+            plt.close() # Close the plot to free memory
+
+            # Atomically move to final output_path
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True) # Ensure parent dir
+            self.fs_cache.invalidate(str(Path(output_path).parent))
+
+            atomic_rename(str(temp_file_path), output_path)
+            self.fs_cache.invalidate(output_path)
+            logger.info(f"State graph visualization saved to {output_path} using atomic_rename")
+        except Exception as e:
+            logger.error(f"Error saving graph visualization to {output_path}: {e}")
+            # Clean up temp file if rename failed
+            if temp_file_path.exists():
+                try:
+                    os.remove(temp_file_path)
+                except OSError:
+                    logger.error(f"Failed to remove temporary graph file {temp_file_path}")
+            raise # Re-raise the exception
+        finally:
+            plt.close() # Ensure plot is closed even on error before rename
+            # Temp file should be removed by atomic_rename on success, or by except block on failure.
+            # If atomic_rename fails but doesn't raise, or if an error occurs after atomic_rename
+            # but before this finally, then temp_file_path might not exist.
+            if temp_file_path.exists(): # Final cleanup if somehow still there
+                 try:
+                    os.remove(temp_file_path)
+                 except OSError:
+                    pass # Already logged if problematic
+
         return output_path
     
     def save_results(self, results: Dict[str, bool], path: str = "verification_results.json") -> str:
@@ -334,8 +373,13 @@ class TriangulumModelChecker:
             }
         }
         
-        with open(path, 'w') as f:
-            json.dump(output, f, indent=2)
+        Path(path).parent.mkdir(parents=True, exist_ok=True) # Ensure parent dir
+        self.fs_cache.invalidate(str(Path(path).parent))
+
+        content_str = json.dumps(output, indent=2)
+        atomic_write(path, content_str.encode('utf-8'))
+        self.fs_cache.invalidate(path)
+        logger.info(f"Saved verification results to {path} using atomic_write")
         
         return path
     
@@ -401,7 +445,12 @@ class TriangulumModelChecker:
         report.append(f"* **Transitions:** {self.graph.number_of_edges()}")
         
         # Write report to file
-        with open(output_path, 'w') as f:
-            f.write("\n".join(report))
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True) # Ensure parent dir
+        self.fs_cache.invalidate(str(Path(output_path).parent))
+
+        report_content_str = "\n".join(report)
+        atomic_write(output_path, report_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
+        logger.info(f"Generated verification report to {output_path} using atomic_write")
         
         return output_path

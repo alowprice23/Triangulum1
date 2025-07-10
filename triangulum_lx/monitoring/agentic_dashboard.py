@@ -30,6 +30,10 @@ from triangulum_lx.monitoring.feedback_handler import FeedbackHandler
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+from pathlib import Path # For easier path manipulation
+
 class DashboardHandler(SimpleHTTPRequestHandler):
     """Custom handler for the dashboard HTTP server."""
     
@@ -66,7 +70,8 @@ class AgenticDashboard:
                  update_interval: float = 0.5,
                  enable_server: bool = True,
                  server_port: int = 8080,
-                 auto_open_browser: bool = True):
+                 auto_open_browser: bool = True,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the agentic dashboard.
         
@@ -76,37 +81,54 @@ class AgenticDashboard:
             enable_server: Whether to start an HTTP server for the dashboard
             server_port: Port to use for the HTTP server
             auto_open_browser: Whether to automatically open a browser window
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.output_dir = output_dir
         self.update_interval = update_interval
         self.enable_server = enable_server
         self.server_port = server_port
         self.auto_open_browser = auto_open_browser
-        
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
         # Create visualization directories
-        os.makedirs(output_dir, exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "thought_chains"), exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "agent_network"), exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "progress"), exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "data"), exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "decision_trees"), exist_ok=True)
-        os.makedirs(os.path.join(output_dir, "timeline"), exist_ok=True)
-        
-        # Initialize visualizers
+        # Using Path().mkdir for consistency, direct ops for setup are okay.
+        # Invalidate cache after ensuring directories exist.
+        dirs_to_create = [
+            Path(output_dir),
+            Path(output_dir) / "thought_chains",
+            Path(output_dir) / "agent_network",
+            Path(output_dir) / "progress",
+            Path(output_dir) / "data",
+            Path(output_dir) / "decision_trees",
+            Path(output_dir) / "timeline"
+        ]
+        for d in dirs_to_create:
+            if not self.fs_cache.exists(str(d)): # Check before creating
+                d.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(d))
+            elif not self.fs_cache.is_dir(str(d)): # Path exists but isn't a dir
+                logger.warning(f"Path {d} for dashboard exists but is not a directory. Attempting to ensure it's a directory.")
+                d.mkdir(parents=True, exist_ok=True) # This might fail if 'd' is a file
+                self.fs_cache.invalidate(str(d))
+
+        # Initialize visualizers, passing the cache
         self.thought_chain_visualizer = ThoughtChainVisualizer(
             output_dir=os.path.join(output_dir, "thought_chains"),
             update_interval=update_interval,
-            enable_terminal_output=False
+            enable_terminal_output=False,
+            fs_cache=self.fs_cache
         )
         
         self.agent_network_visualizer = AgentNetworkVisualizer(
             output_dir=os.path.join(output_dir, "agent_network"),
-            update_interval=update_interval
+            update_interval=update_interval,
+            fs_cache=self.fs_cache
         )
         
         self.decision_tree_visualizer = DecisionTreeVisualizer(
             output_dir=os.path.join(output_dir, "decision_trees"),
-            update_interval=update_interval
+            update_interval=update_interval,
+            fs_cache=self.fs_cache
         )
         
         # Initialize feedback handler
@@ -133,11 +155,24 @@ class AgenticDashboard:
         self.server_thread = None
         
         # Use templates directory
-        self.templates_dir = os.path.join(os.path.dirname(__file__), "templates")
-        os.makedirs(self.templates_dir, exist_ok=True)
+        self.templates_dir = Path(os.path.dirname(__file__)) / "templates"
+        if not self.fs_cache.exists(str(self.templates_dir)): # Check before creating
+            self.templates_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.templates_dir))
+        elif not self.fs_cache.is_dir(str(self.templates_dir)):
+            logger.warning(f"Templates dir {self.templates_dir} path exists but is not a directory. Attempting mkdir.")
+            self.templates_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.templates_dir))
+
 
         # Check if a pre-built dashboard exists in output_dir
-        pre_built_dashboard_exists = os.path.exists(os.path.join(self.output_dir, "index.html"))
+        index_html_path_str = os.path.join(self.output_dir, "index.html")
+        pre_built_dashboard_exists = self.fs_cache.exists(index_html_path_str)
+        if not pre_built_dashboard_exists and Path(index_html_path_str).exists(): # Cache stale
+            logger.warning(f"Cache miss for existing index.html {index_html_path_str}. Invalidating.")
+            self.fs_cache.invalidate(index_html_path_str)
+            pre_built_dashboard_exists = True
+
 
         if not pre_built_dashboard_exists:
             logger.info(f"No pre-built index.html found in {self.output_dir}. Generating from templates.")
@@ -148,9 +183,8 @@ class AgenticDashboard:
         else:
             logger.info(f"Using existing index.html and structure in {self.output_dir}.")
             # Ensure necessary data subdirectories exist even if we don't copy templates
-            data_subdirs = ["thought_chains", "agent_network", "progress", "data", "decision_trees", "timeline"]
-            for subdir_name in data_subdirs:
-                os.makedirs(os.path.join(self.output_dir, subdir_name), exist_ok=True)
+            # These were already handled by the loop at the start of __init__
+            pass
         
         # Start HTTP server if enabled
         if self.enable_server:
@@ -165,45 +199,70 @@ class AgenticDashboard:
             thought_chains_src = os.path.join(self.templates_dir, "thought_chains.html")
             thought_chains_dest = os.path.join(self.output_dir, "thought_chains", "thought_chains.html")
             
-            if os.path.exists(thought_chains_src):
+            if self.fs_cache.exists(str(thought_chains_src)): # Use cache for source existence
+                # Direct read for content
                 with open(thought_chains_src, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
-                with open(thought_chains_dest, 'w', encoding='utf-8') as f:
-                    f.write(content)
-            
+                atomic_write(str(thought_chains_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(thought_chains_dest))
+            elif Path(thought_chains_src).exists(): # Cache stale
+                logger.warning(f"Cache miss for existing template {thought_chains_src}. Invalidating and copying.")
+                self.fs_cache.invalidate(str(thought_chains_src))
+                with open(thought_chains_src, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                atomic_write(str(thought_chains_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(thought_chains_dest))
+
             # Copy agent network template
-            agent_network_src = os.path.join(self.templates_dir, "agent_network.html")
-            agent_network_dest = os.path.join(self.output_dir, "agent_network", "agent_network.html")
+            agent_network_src = Path(self.templates_dir) / "agent_network.html"
+            agent_network_dest = Path(self.output_dir) / "agent_network" / "agent_network.html"
             
-            if os.path.exists(agent_network_src):
+            if self.fs_cache.exists(str(agent_network_src)):
                 with open(agent_network_src, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
-                with open(agent_network_dest, 'w', encoding='utf-8') as f:
-                    f.write(content)
-            
+                atomic_write(str(agent_network_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(agent_network_dest))
+            elif Path(agent_network_src).exists(): # Cache stale
+                logger.warning(f"Cache miss for existing template {agent_network_src}. Invalidating and copying.")
+                self.fs_cache.invalidate(str(agent_network_src))
+                with open(agent_network_src, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                atomic_write(str(agent_network_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(agent_network_dest))
+
             # Copy decision trees template
-            decision_trees_src = os.path.join(self.templates_dir, "decision_trees.html")
-            decision_trees_dest = os.path.join(self.output_dir, "decision_trees", "decision_trees.html")
+            decision_trees_src = Path(self.templates_dir) / "decision_trees.html"
+            decision_trees_dest = Path(self.output_dir) / "decision_trees" / "decision_trees.html"
             
-            if os.path.exists(decision_trees_src):
+            if self.fs_cache.exists(str(decision_trees_src)):
                 with open(decision_trees_src, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
-                with open(decision_trees_dest, 'w', encoding='utf-8') as f:
-                    f.write(content)
+                atomic_write(str(decision_trees_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(decision_trees_dest))
+            elif Path(decision_trees_src).exists(): # Cache stale
+                logger.warning(f"Cache miss for existing template {decision_trees_src}. Invalidating and copying.")
+                self.fs_cache.invalidate(str(decision_trees_src))
+                with open(decision_trees_src, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                atomic_write(str(decision_trees_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(decision_trees_dest))
             
             # Copy timeline template
-            timeline_src = os.path.join(self.templates_dir, "timeline.html")
-            timeline_dest = os.path.join(self.output_dir, "timeline", "timeline.html")
+            timeline_src = Path(self.templates_dir) / "timeline.html"
+            timeline_dest = Path(self.output_dir) / "timeline" / "timeline.html"
             
-            if os.path.exists(timeline_src):
+            if self.fs_cache.exists(str(timeline_src)):
                 with open(timeline_src, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
-                with open(timeline_dest, 'w', encoding='utf-8') as f:
-                    f.write(content)
+                atomic_write(str(timeline_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(timeline_dest))
+            elif Path(timeline_src).exists(): # Cache stale
+                logger.warning(f"Cache miss for existing template {timeline_src}. Invalidating and copying.")
+                self.fs_cache.invalidate(str(timeline_src))
+                with open(timeline_src, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                atomic_write(str(timeline_dest), content.encode('utf-8'))
+                self.fs_cache.invalidate(str(timeline_dest))
             
             logger.info("Dashboard templates copied to output directories")
         
@@ -633,19 +692,24 @@ class AgenticDashboard:
 """
         
         # Save the template file
-        template_path = os.path.join(self.templates_dir, "dashboard.html")
-        with open(template_path, 'w', encoding='utf-8') as f:
-            f.write(template)
+        template_path = Path(self.templates_dir) / "dashboard.html"
+        # Ensure parent dir for template_path (self.templates_dir) exists
+        self.templates_dir.mkdir(parents=True, exist_ok=True) # Direct mkdir for setup
+        self.fs_cache.invalidate(str(self.templates_dir))
+
+        atomic_write(str(template_path), template.encode('utf-8'))
+        self.fs_cache.invalidate(str(template_path))
 
         # Generate the initial dashboard with placeholder data
         html = self._generate_dashboard_html(template)
         
         # Write HTML file
-        output_path = os.path.join(self.output_dir, "index.html")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+        output_path = Path(self.output_dir) / "index.html"
+        # Parent self.output_dir should exist from __init__
+        atomic_write(str(output_path), html.encode('utf-8'))
+        self.fs_cache.invalidate(str(output_path))
         
-        logger.info(f"Main dashboard HTML created at {output_path}")
+        logger.info(f"Main dashboard HTML created at {output_path} using atomic_write")
     
     def _generate_dashboard_html(self, template):
         """Generate the dashboard HTML with current data."""
@@ -1116,8 +1180,9 @@ class AgenticDashboard:
             try:
                 if hasattr(self.thought_chain_visualizer, 'thought_chains'):
                     thought_chains_path = os.path.join(self.output_dir, "thought_chains", "thought_chains.json")
-                    with open(thought_chains_path, 'w', encoding='utf-8') as f:
-                        json.dump(self.thought_chain_visualizer.thought_chains, f, indent=2)
+                    content_str = json.dumps(self.thought_chain_visualizer.thought_chains, indent=2)
+                    atomic_write(thought_chains_path, content_str.encode('utf-8'))
+                    self.fs_cache.invalidate(thought_chains_path)
             except Exception as e:
                 logger.error(f"Error exporting thought chains data: {e}")
                 
@@ -1125,8 +1190,9 @@ class AgenticDashboard:
             try:
                 if hasattr(self.agent_network_visualizer, 'messages'):
                     messages_path = os.path.join(self.output_dir, "agent_network", "messages.json")
-                    with open(messages_path, 'w', encoding='utf-8') as f:
-                        json.dump(self.agent_network_visualizer.messages, f, indent=2)
+                    content_str = json.dumps(self.agent_network_visualizer.messages, indent=2)
+                    atomic_write(messages_path, content_str.encode('utf-8'))
+                    self.fs_cache.invalidate(messages_path)
             except Exception as e:
                 logger.error(f"Error exporting messages data: {e}")
                 
@@ -1134,8 +1200,9 @@ class AgenticDashboard:
             try:
                 if hasattr(self.decision_tree_visualizer, 'trees'):
                     trees_path = os.path.join(self.output_dir, "decision_trees", "decision_trees.json")
-                    with open(trees_path, 'w', encoding='utf-8') as f:
-                        json.dump(self.decision_tree_visualizer.trees, f, indent=2)
+                    content_str = json.dumps(self.decision_tree_visualizer.trees, indent=2)
+                    atomic_write(trees_path, content_str.encode('utf-8'))
+                    self.fs_cache.invalidate(trees_path)
             except Exception as e:
                 logger.error(f"Error exporting decision trees data: {e}")
                 
@@ -1173,26 +1240,33 @@ class AgenticDashboard:
                 
                 # Save timeline data
                 timeline_path = os.path.join(self.output_dir, "timeline", "timeline_events.json")
-                with open(timeline_path, 'w', encoding='utf-8') as f:
-                    json.dump(all_events, f, indent=2)
+                content_str = json.dumps(all_events, indent=2)
+                atomic_write(timeline_path, content_str.encode('utf-8'))
+                self.fs_cache.invalidate(timeline_path)
                     
             except Exception as e:
                 logger.error(f"Error exporting timeline data: {e}")
             
             # Regenerate main dashboard
-            template_path = os.path.join(self.templates_dir, "dashboard.html")
-            if not os.path.exists(template_path):
-                self._create_main_dashboard()
+            template_path = Path(self.templates_dir) / "dashboard.html"
+            # Check cache for template_path existence
+            if not self.fs_cache.exists(str(template_path)):
+                if not template_path.exists(): # Double check FS
+                    logger.warning(f"Dashboard template {template_path} not found. Recreating.")
+                    self._create_main_dashboard() # This will create and save it using atomic_write
+                else: # Cache stale
+                    self.fs_cache.invalidate(str(template_path))
 
+            # Direct read for template content
             with open(template_path, 'r', encoding='utf-8') as f:
                 template = f.read()
             
             html = self._generate_dashboard_html(template)
             
-            # Write HTML file
-            output_path = os.path.join(self.output_dir, "index.html")
-            with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(html)
+            # Write HTML file (index.html)
+            index_output_path = os.path.join(self.output_dir, "index.html")
+            atomic_write(index_output_path, html.encode('utf-8'))
+            self.fs_cache.invalidate(index_output_path)
             
             # Save dashboard data as JSON for AJAX updates
             data = {
@@ -1203,8 +1277,9 @@ class AgenticDashboard:
             }
             
             data_path = os.path.join(self.output_dir, "data", "dashboard_data.json")
-            with open(data_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2)
+            data_content_str = json.dumps(data, indent=2)
+            atomic_write(data_path, data_content_str.encode('utf-8'))
+            self.fs_cache.invalidate(data_path)
             
             logger.debug("Dashboard updated")
         
@@ -1231,10 +1306,14 @@ class AgenticDashboard:
         }
         
         # Save to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True) # Ensure parent exists
+        self.fs_cache.invalidate(str(Path(output_path).parent))
+
+        content_str = json.dumps(data, indent=2)
+        atomic_write(output_path, content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.info(f"Dashboard state saved to {output_path}")
+        logger.info(f"Dashboard state saved to {output_path} using atomic_write")
         return output_path
     
     def stop(self):

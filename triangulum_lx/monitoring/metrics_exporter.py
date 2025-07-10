@@ -18,6 +18,9 @@ from datetime import datetime
 # Setup logging
 logger = logging.getLogger("triangulum.metrics_exporter")
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+# Path is already imported from pathlib
 
 class MetricsExporter:
     """
@@ -59,7 +62,8 @@ class FileExporter(MetricsExporter):
                 output_dir: Union[str, Path], 
                 filename_template: str = "metrics_{timestamp}.json",
                 buffer_size: int = 100,
-                flush_interval: int = 60):
+                flush_interval: int = 60,
+                fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the file exporter.
         
@@ -68,6 +72,7 @@ class FileExporter(MetricsExporter):
             filename_template: Template for filenames
             buffer_size: How many metrics to buffer before writing
             flush_interval: Seconds between forced flushes
+            fs_cache: Optional FileSystemStateCache instance.
         """
         super().__init__("file")
         self.output_dir = Path(output_dir)
@@ -77,9 +82,16 @@ class FileExporter(MetricsExporter):
         self.flush_interval = flush_interval
         self.last_flush = time.time()
         self.lock = threading.RLock()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Create output directory if it doesn't exist
-        self.output_dir.mkdir(exist_ok=True, parents=True)
+        if not self.fs_cache.exists(str(self.output_dir)):
+            self.output_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.output_dir))
+        elif not self.fs_cache.is_dir(str(self.output_dir)):
+            logger.warning(f"Output dir {self.output_dir} exists but is not a directory. Attempting to create.")
+            self.output_dir.mkdir(parents=True, exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.output_dir))
         
         # Start background thread for timed flushes
         if flush_interval > 0:
@@ -144,12 +156,14 @@ class FileExporter(MetricsExporter):
                 file_path = self.output_dir / filename
                 
                 # Write metrics to file
-                with open(file_path, 'w') as f:
-                    json.dump({
-                        "batch_timestamp": timestamp,
-                        "metrics_count": len(self.buffer),
-                        "metrics": self.buffer
-                    }, f, indent=2)
+                data_to_write = {
+                    "batch_timestamp": timestamp,
+                    "metrics_count": len(self.buffer),
+                    "metrics": self.buffer
+                }
+                content_str = json.dumps(data_to_write, indent=2)
+                atomic_write(str(file_path), content_str.encode('utf-8'))
+                self.fs_cache.invalidate(str(file_path))
                 
                 # Clear buffer and update last flush time
                 self.buffer = []
@@ -304,7 +318,8 @@ class CSVExporter(MetricsExporter):
     def __init__(self, 
                 output_dir: Union[str, Path],
                 filename_template: str = "metrics_{date}.csv",
-                rotate_daily: bool = True):
+                rotate_daily: bool = True,
+                fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the CSV exporter.
         
@@ -312,19 +327,30 @@ class CSVExporter(MetricsExporter):
             output_dir: Directory to write CSV files to
             filename_template: Template for CSV filenames
             rotate_daily: Whether to create a new file each day
+            fs_cache: Optional FileSystemStateCache instance.
         """
         super().__init__("csv")
         self.output_dir = Path(output_dir)
         self.filename_template = filename_template
         self.rotate_daily = rotate_daily
         self.current_day = datetime.now().date()
-        self.current_file = None
+        self.current_file_path_str: Optional[str] = None # Store path for invalidation
         self.lock = threading.RLock()
-        self.csv_writer = None
-        self.headers = set()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
+        # In-memory buffer for CSV rows
+        self.csv_rows: List[Dict[str, Any]] = []
+        self.headers: List[str] = ["timestamp"] # Ensure timestamp is always first if possible
+        self.headers_written_to_current_file = False
+
         # Create output directory if it doesn't exist
-        self.output_dir.mkdir(exist_ok=True, parents=True)
+        if not self.fs_cache.exists(str(self.output_dir)):
+            self.output_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.output_dir))
+        elif not self.fs_cache.is_dir(str(self.output_dir)):
+            logger.warning(f"Output dir {self.output_dir} exists but is not a directory. Attempting to create.")
+            self.output_dir.mkdir(parents=True, exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.output_dir))
     
     def export(self, metrics: Dict[str, Any]) -> bool:
         """
@@ -338,36 +364,26 @@ class CSVExporter(MetricsExporter):
         """
         with self.lock:
             try:
-                # Check if we need to rotate file
-                today = datetime.now().date()
-                if self.rotate_daily and today != self.current_day:
-                    self._close_file()
-                    self.current_day = today
-                
-                # Open file if needed
-                if not self.current_file:
-                    self._open_file()
-                
-                # Flatten metrics
+                # Add a timestamp to the metrics
                 flat_metrics = self._flatten_metrics(metrics)
+                flat_metrics["timestamp"] = datetime.now().isoformat()
+
+                # Update headers: ensure all keys from flat_metrics are in self.headers
+                # and maintain order if possible (new keys added at the end for simplicity here)
+                new_keys_found = False
+                for key in flat_metrics.keys():
+                    if key not in self.headers:
+                        self.headers.append(key)
+                        new_keys_found = True
                 
-                # Update headers
-                new_headers = set(flat_metrics.keys())
-                if new_headers - self.headers:
-                    # We have new headers, need to rewrite the file
-                    self.headers.update(new_headers)
-                    self._rewrite_headers()
+                self.csv_rows.append(flat_metrics)
                 
-                # Write metrics row
-                row = {}
-                for header in self.headers:
-                    row[header] = flat_metrics.get(header, "")
-                
-                self.csv_writer.writerow(row)
-                self.current_file.flush()
+                # Simple periodic flush or buffer size based flush
+                # A more robust solution might use a background thread like FileExporter
+                if len(self.csv_rows) >= 10 or new_keys_found: # Flush if buffer full or headers changed
+                    self._flush_csv_buffer()
                 
                 return True
-                
             except Exception as e:
                 logger.error(f"Error exporting metrics to CSV: {e}")
                 return False
@@ -407,41 +423,120 @@ class CSVExporter(MetricsExporter):
                 result[full_key] = value
         
         return result
-    
-    def _open_file(self) -> None:
-        """Open a new CSV file for writing."""
-        # Generate filename
+
+    def _get_current_file_path(self) -> Path:
+        """Determines the current CSV file path based on rotation policy."""
         date_str = self.current_day.strftime("%Y%m%d")
         filename = self.filename_template.format(date=date_str)
-        file_path = self.output_dir / filename
+        return self.output_dir / filename
+
+    def _flush_csv_buffer(self) -> bool:
+        """Flushes the in-memory CSV row buffer to disk using atomic_write."""
+        if not self.csv_rows:
+            return True
+
+        file_path = self._get_current_file_path()
+        self.current_file_path_str = str(file_path) # Store for potential later use if needed
+
+        output_buffer = io.StringIO()
+        # Ensure headers are sorted for consistent column order if they changed.
+        # If self.headers is a list and we append, it preserves insertion order.
+        # For DictWriter, fieldnames order matters.
+        sorted_headers = sorted(list(set(self.headers))) # Use set to ensure uniqueness, then sort
+
+        writer = csv.DictWriter(output_buffer, fieldnames=sorted_headers, lineterminator='\n')
         
-        # Check if file exists
-        file_exists = file_path.exists()
-        
-        # Open file
-        self.current_file = open(file_path, 'a', newline='')
-        self.csv_writer = csv.DictWriter(self.current_file, fieldnames=[])
-        
-        # If new file, write headers
-        if not file_exists:
-            self.headers = {"timestamp"}  # Always include timestamp
-            self._rewrite_headers()
-    
-    def _rewrite_headers(self) -> None:
-        """Rewrite headers in the current CSV file."""
-        # Set writer fieldnames
-        self.csv_writer.fieldnames = sorted(self.headers)
-        
-        # Write header row
-        if self.current_file.tell() == 0:  # Only if at start of file
-            self.csv_writer.writeheader()
-    
-    def _close_file(self) -> None:
-        """Close the current CSV file."""
-        if self.current_file:
-            self.current_file.close()
-            self.current_file = None
-            self.csv_writer = None
+        existing_content_lines = []
+        file_existed_prior = False
+
+        if self.fs_cache.exists(str(file_path)):
+            if Path(file_path).exists(): # Double check FS if cache says yes
+                file_existed_prior = True
+                try:
+                    with open(file_path, 'r', newline='', encoding='utf-8') as f_read:
+                        # Naively skip header if present; a more robust way would be to check content
+                        first_line = f_read.readline()
+                        if first_line.strip() == ",".join(sorted_headers): # Basic header check
+                            existing_content_lines.extend(f_read.readlines())
+                        else:
+                            existing_content_lines.append(first_line) # Put it back if not header
+                            existing_content_lines.extend(f_read.readlines())
+                except Exception as e:
+                    logger.error(f"Error reading existing CSV {file_path} for append: {e}")
+                    # Proceed as if writing a new file if read fails
+                    file_existed_prior = False
+            else: # Cache was stale, file doesn't exist
+                self.fs_cache.invalidate(str(file_path))
+                file_existed_prior = False
+
+
+        if not file_existed_prior or not existing_content_lines: # Write header if new file or empty
+            writer.writeheader()
+            self.headers_written_to_current_file = True # Mark that we've written headers for this conceptual "file stream"
+
+        # Write existing content if any (from a previous atomic_write of this same daily file)
+        # This part is tricky; if existing_content_lines were read, they are already strings.
+        # We need to ensure they are written correctly before new rows.
+        # For simplicity now, if file_existed_prior, we are re-writing the whole thing
+        # including old data + new data. This is the "read all, append, atomic_write all" pattern.
+
+        if file_existed_prior: # Rewrite header if file existed, then all old rows, then new rows
+            output_buffer = io.StringIO() # Restart buffer
+            writer = csv.DictWriter(output_buffer, fieldnames=sorted_headers, lineterminator='\n')
+            writer.writeheader()
+            # This requires parsing existing_content_lines back into dicts to use DictWriter,
+            # or just writing them as strings. Simpler to just write new rows if appending to string buffer.
+            # For true append-like behavior with DictWriter and atomic_write, it's complex.
+
+            # Let's simplify: if file existed, read its rows, append new rows, then write all.
+            all_rows_to_write = []
+            if file_existed_prior:
+                try:
+                    # Re-read as dicts to merge properly
+                    with open(file_path, 'r', newline='', encoding='utf-8') as f_read_dict:
+                        reader = csv.DictReader(f_read_dict)
+                        # Update headers from existing file if they are more comprehensive
+                        if reader.fieldnames:
+                            for header_key in reader.fieldnames:
+                                if header_key not in self.headers:
+                                    self.headers.append(header_key)
+                            sorted_headers = sorted(list(set(self.headers))) # Re-sort
+                        all_rows_to_write.extend(list(reader))
+                except Exception as e:
+                    logger.error(f"Could not properly parse existing CSV {file_path} to merge rows: {e}")
+                    # Fallback: just write new rows, potentially losing old if format changed
+                    all_rows_to_write = [] # This means old data might be lost if read fails.
+
+            all_rows_to_write.extend(self.csv_rows) # Add the new rows from buffer
+
+            # Re-initialize buffer and writer with potentially updated sorted_headers
+            output_buffer = io.StringIO()
+            writer = csv.DictWriter(output_buffer, fieldnames=sorted_headers, lineterminator='\n')
+            writer.writeheader()
+            writer.writerows(all_rows_to_write)
+
+        else: # New file, just write buffered rows
+            writer.writerows(self.csv_rows)
+
+        try:
+            Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(Path(file_path).parent))
+
+            atomic_write(str(file_path), output_buffer.getvalue().encode('utf-8'))
+            self.fs_cache.invalidate(str(file_path))
+            self.csv_rows.clear()
+            self.headers_written_to_current_file = True # Since we wrote, headers are conceptually there.
+            logger.debug(f"Flushed {len(self.csv_rows)} CSV rows to {file_path}")
+            return True
+        except Exception as e:
+            logger.error(f"Error flushing CSV buffer to {file_path}: {e}")
+            return False
+        finally:
+            output_buffer.close()
+
+    # def _open_file(self) -> None: ... (Commented out / To be removed)
+    # def _rewrite_headers(self) -> None: ... (Commented out / To be removed)
+    # def _close_file(self) -> None: ... (Commented out / To be removed)
 
 
 # Factory function to create an exporter

@@ -29,6 +29,10 @@ import traceback
 # Setup logging
 logger = logging.getLogger("triangulum.rollback")
 
+from pathlib import Path # Added import
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 # Type definitions
 T = TypeVar('T')
 TransactionID = str
@@ -112,12 +116,11 @@ class FileSnapshot:
         """
         try:
             if self.snapshot_type == SnapshotType.FULL:
-                # Ensure directory exists
-                os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+                # Ensure directory exists (atomic_write handles this, but explicit doesn't hurt)
+                Path(self.file_path).parent.mkdir(parents=True, exist_ok=True)
                 
-                # Write content back to file
-                with open(self.file_path, 'wb') as f:
-                    f.write(self.content)
+                atomic_write(self.file_path, self.content)
+                # Caller (TransactionManager) should invalidate self.file_path from its cache
                 
                 return True
             
@@ -152,12 +155,13 @@ class FileSnapshot:
                 # Check if file should exist
                 if not self.metadata.get('exists', True):
                     # File shouldn't exist, delete it if it does
-                    if os.path.exists(self.file_path):
-                        os.unlink(self.file_path)
+                    if Path(self.file_path).exists(): # Direct check, as cache is not available here
+                        atomic_delete(self.file_path)
+                        # Caller (TransactionManager) should invalidate self.file_path from its cache
                     return True
                 
                 # Restore metadata only
-                if os.path.exists(self.file_path):
+                if Path(self.file_path).exists(): # Direct check
                     # Restore permissions
                     if 'mode' in self.metadata:
                         os.chmod(self.file_path, self.metadata['mode'])
@@ -249,6 +253,12 @@ class Transaction:
         
         # Rollback in reverse order of creation (LIFO)
         success = True
+        # The cache to be used for invalidation should be from the TransactionManager
+        # This Transaction object itself doesn't have a cache.
+        # This implies TransactionManager.rollback_transaction needs to handle invalidation.
+        # For now, I cannot directly call self.fs_cache.invalidate here.
+        # This will be handled by the TransactionManager after calling transaction.rollback().
+
         for file_path, snapshot in sorted(
             self.snapshots.items(),
             key=lambda x: x[1].timestamp,
@@ -257,6 +267,8 @@ class Transaction:
             if not snapshot.restore():
                 logger.error(f"Failed to restore {file_path}")
                 success = False
+            # else:
+            #    Caller (TransactionManager) must invalidate file_path from its cache.
         
         if success:
             self.state = TransactionState.ROLLED_BACK
@@ -284,15 +296,25 @@ class TransactionManager:
     committing, and rolling back.
     """
     
-    def __init__(self, storage_dir: Optional[str] = None):
+    def __init__(self, storage_dir: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the transaction manager.
         
         Args:
             storage_dir: Directory to store transaction data
+            fs_cache: Optional FileSystemStateCache instance.
         """
-        self.storage_dir = storage_dir or os.path.join(tempfile.gettempdir(), "triangulum_transactions")
-        os.makedirs(self.storage_dir, exist_ok=True)
+        self.storage_dir_str = storage_dir or os.path.join(tempfile.gettempdir(), "triangulum_transactions")
+        self.storage_dir = Path(self.storage_dir_str) # Work with Path object
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
+        if not self.fs_cache.exists(str(self.storage_dir)):
+            self.storage_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.storage_dir))
+        elif not self.fs_cache.is_dir(str(self.storage_dir)):
+            logger.warning(f"TransactionManager storage_dir {self.storage_dir} exists but is not a directory. Attempting to create.")
+            self.storage_dir.mkdir(parents=True, exist_ok=True) # May fail
+            self.fs_cache.invalidate(str(self.storage_dir))
         
         self.active_transactions: Dict[TransactionID, Transaction] = {}
         self.transaction_history: Dict[TransactionID, Transaction] = {}
@@ -302,6 +324,7 @@ class TransactionManager:
         
         # Lock for thread safety
         self.lock = threading.RLock()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Load existing transactions
         self._load_transactions()
@@ -309,15 +332,32 @@ class TransactionManager:
     def _load_transactions(self) -> None:
         """Load existing transactions from storage."""
         try:
-            transaction_dir = os.path.join(self.storage_dir, "transactions")
-            if not os.path.exists(transaction_dir):
-                os.makedirs(transaction_dir, exist_ok=True)
+            # Transaction JSON files are directly in self.storage_dir (which is now a Path object)
+            if not self.fs_cache.exists(str(self.storage_dir)):
+                logger.info(f"Transaction storage directory {self.storage_dir} does not exist. No transactions to load.")
+                return # Nothing to load if the main directory isn't there
+            if not self.fs_cache.is_dir(str(self.storage_dir)):
+                logger.error(f"Transaction storage path {self.storage_dir} is not a directory. Cannot load transactions.")
                 return
-            
-            for filename in os.listdir(transaction_dir):
+
+            filenames = self.fs_cache.listdir(str(self.storage_dir))
+            if filenames is None:
+                logger.warning(f"Could not list directory {self.storage_dir} using cache. Trying direct read.")
+                if not self.storage_dir.is_dir(): # Check directly
+                    logger.error(f"Path {self.storage_dir} is not a directory (direct check). Cannot load transactions.")
+                    return
+                try:
+                    filenames = [f.name for f in self.storage_dir.iterdir() if f.is_file()] # Direct listdir
+                except OSError as e:
+                    logger.error(f"Failed to list directory {self.storage_dir} directly: {e}")
+                    return
+
+            for filename in filenames:
                 if filename.endswith(".json"):
+                    file_full_path = self.storage_dir / filename
                     try:
-                        with open(os.path.join(transaction_dir, filename), 'r') as f:
+                        # Reading JSON, direct read is fine. Cache doesn't store content.
+                        with open(file_full_path, 'r') as f:
                             data = json.load(f)
                         
                         # Create transaction from data
@@ -336,16 +376,29 @@ class TransactionManager:
                         
                         # Load snapshots
                         snapshot_dir = os.path.join(self.storage_dir, "snapshots", transaction_id)
-                        if os.path.exists(snapshot_dir):
-                            for snapshot_file in os.listdir(snapshot_dir):
-                                if snapshot_file.endswith(".pickle"):
+                        if self.fs_cache.exists(snapshot_dir) and self.fs_cache.is_dir(snapshot_dir): # Use cache
+                            snapshot_files = self.fs_cache.listdir(snapshot_dir)
+                            if snapshot_files is None: # Should not happen if is_dir was true, but defensive
+                                logger.warning(f"Could not list snapshot dir {snapshot_dir} via cache despite existing. Trying direct.")
+                                try:
+                                    snapshot_files = os.listdir(snapshot_dir)
+                                except OSError as e:
+                                    logger.error(f"Failed to list snapshot_dir {snapshot_dir} directly: {e}")
+                                    snapshot_files = []
+
+                            for snapshot_filename in snapshot_files:
+                                if snapshot_filename.endswith(".pickle"):
+                                    snapshot_full_path = os.path.join(snapshot_dir, snapshot_filename)
                                     try:
-                                        with open(os.path.join(snapshot_dir, snapshot_file), 'rb') as f:
+                                        # Reading pickle, direct read is fine.
+                                        with open(snapshot_full_path, 'rb') as f:
                                             snapshot = pickle.load(f)
                                         transaction.snapshots[snapshot.file_path] = snapshot
                                     except Exception as e:
-                                        logger.error(f"Error loading snapshot {snapshot_file}: {e}")
-                        
+                                        logger.error(f"Error loading snapshot {snapshot_filename}: {e}")
+                        elif self.fs_cache.exists(snapshot_dir) and not self.fs_cache.is_dir(snapshot_dir):
+                            logger.error(f"Snapshot path {snapshot_dir} exists but is not a directory.")
+
                         # Add to appropriate collection
                         if transaction.state == TransactionState.ACTIVE:
                             self.active_transactions[transaction_id] = transaction
@@ -366,11 +419,9 @@ class TransactionManager:
             transaction: The transaction to save
         """
         try:
-            # Create transaction directory
-            transaction_dir = os.path.join(self.storage_dir, "transactions")
-            os.makedirs(transaction_dir, exist_ok=True)
+            # self.storage_dir is already a Path object and its existence is ensured by __init__
             
-            # Save transaction metadata
+            # Save transaction metadata directly into self.storage_dir
             transaction_data = {
                 "id": transaction.id,
                 "name": transaction.name,
@@ -383,20 +434,33 @@ class TransactionManager:
                 "rolled_back_at": transaction.rolled_back_at
             }
             
-            with open(os.path.join(transaction_dir, f"{transaction.id}.json"), 'w') as f:
-                json.dump(transaction_data, f, indent=2)
-            
-            # Save snapshots
-            snapshot_dir = os.path.join(self.storage_dir, "snapshots", transaction.id)
-            os.makedirs(snapshot_dir, exist_ok=True)
-            
+            transaction_file_path = self.storage_dir / f"{transaction.id}.json" # Use Path object
+            transaction_content = json.dumps(transaction_data, indent=2)
+            atomic_write(str(transaction_file_path), transaction_content.encode('utf-8'))
+            self.fs_cache.invalidate(str(transaction_file_path))
+
+            # Save snapshots into a "snapshots" subdirectory of self.storage_dir
+            snapshot_base_dir = self.storage_dir / "snapshots"
+            # No need to create transaction_dir, snapshots go under snapshot_base_dir / transaction.id
+
+            snapshot_specific_dir = snapshot_base_dir / transaction.id
+            # Ensure snapshot_specific_dir exists.
+            if not self.fs_cache.exists(str(snapshot_specific_dir)):
+                 snapshot_specific_dir.mkdir(parents=True, exist_ok=True)
+                 self.fs_cache.invalidate(str(snapshot_specific_dir))
+            elif not self.fs_cache.is_dir(str(snapshot_specific_dir)):
+                 logger.error(f"Snapshot storage path {snapshot_specific_dir} exists but is not a directory. Attempting to recreate.")
+                 snapshot_specific_dir.mkdir(parents=True, exist_ok=True) # This might fail if it's a file
+                 self.fs_cache.invalidate(str(snapshot_specific_dir))
+
             for file_path, snapshot in transaction.snapshots.items():
                 # Create a safe filename
-                safe_name = re.sub(r'[^\w\-_.]', '_', file_path)
-                snapshot_path = os.path.join(snapshot_dir, f"{safe_name}.pickle")
+                safe_name = re.sub(r'[^\w\-_.]', '_', Path(file_path).name) # Use Path(file_path).name for safety
+                snapshot_filename_path = snapshot_specific_dir / f"{safe_name}.pickle"
                 
-                with open(snapshot_path, 'wb') as f:
-                    pickle.dump(snapshot, f)
+                snapshot_content_bytes = pickle.dumps(snapshot)
+                atomic_write(str(snapshot_filename_path), snapshot_content_bytes)
+                self.fs_cache.invalidate(str(snapshot_filename_path))
         
         except Exception as e:
             logger.error(f"Error saving transaction {transaction.id}: {e}")
@@ -534,21 +598,27 @@ class TransactionManager:
                         return False
             
             # Rollback the transaction
-            success = transaction.rollback()
+            rollback_successful = transaction.rollback()
             
+            if rollback_successful:
+                # Invalidate all affected files from cache
+                for file_path in transaction.snapshots.keys():
+                    self.fs_cache.invalidate(file_path)
+                logger.debug(f"Invalidated cached files for rolled back transaction {transaction_id}")
+
             # Update collections
             if transaction_id in self.active_transactions:
                 del self.active_transactions[transaction_id]
-            self.transaction_history[transaction_id] = transaction
+            self.transaction_history[transaction_id] = transaction # Keep history, state is ROLLED_BACK or FAILED
             
-            # Save the transaction
+            # Save the transaction (its state has changed)
             self._save_transaction(transaction)
             
             # Remove from transaction stack if present
             if transaction_id in self.transaction_stack:
                 self.transaction_stack.remove(transaction_id)
             
-            return success
+            return rollback_successful
     
     def add_file_snapshot(
         self,
@@ -652,18 +722,54 @@ class TransactionManager:
                     to_remove.append(transaction_id)
             
             for transaction_id in to_remove:
-                # Remove snapshot files
-                snapshot_dir = os.path.join(self.storage_dir, "snapshots", transaction_id)
-                if os.path.exists(snapshot_dir):
-                    shutil.rmtree(snapshot_dir)
-                
+                # Remove snapshot files and directory
+                # self.storage_dir is already a Path object
+                snapshot_dir_path = self.storage_dir / "snapshots" / transaction_id
+                if self.fs_cache.exists(str(snapshot_dir_path)) and self.fs_cache.is_dir(str(snapshot_dir_path)):
+                    # Invalidate cache for all children before attempting deletion
+                    # This is a simplistic approach for recursive invalidation here.
+                    # A more robust way would be to list recursively and invalidate.
+                    # For now, invalidate the main dir, assuming children are handled by ops.
+
+                    paths_to_delete_in_order: List[Tuple[str, bool]] = [] # (path, is_dir)
+                    for root, dirs, files in os.walk(snapshot_dir_path, topdown=False):
+                        for name in files:
+                            paths_to_delete_in_order.append((os.path.join(root, name), False))
+                        for name in dirs:
+                            paths_to_delete_in_order.append((os.path.join(root, name), True))
+
+                    for item_path_str, is_dir in paths_to_delete_in_order:
+                        self.fs_cache.invalidate(item_path_str) # Invalidate before op
+                        if is_dir:
+                            try:
+                                os.rmdir(item_path_str)
+                                logger.debug(f"Removed directory during cleanup: {item_path_str}")
+                            except OSError as e:
+                                logger.error(f"Error removing directory {item_path_str} during cleanup: {e}")
+                        else:
+                            atomic_delete(item_path_str) # atomic_delete will invalidate its own path
+                            logger.debug(f"Deleted file during cleanup: {item_path_str}")
+
+                    # Final attempt to remove the top snapshot_dir if it's now empty
+                    try:
+                        os.rmdir(snapshot_dir_path)
+                        self.fs_cache.invalidate(snapshot_dir_path)
+                        logger.debug(f"Removed top snapshot directory: {snapshot_dir_path}")
+                    except OSError as e:
+                        logger.error(f"Error removing top snapshot directory {snapshot_dir_path}: {e}. It might not be empty.")
+
+                elif self.fs_cache.exists(snapshot_dir_path): # Exists but not a dir
+                     logger.warning(f"Expected {snapshot_dir_path} to be a directory for cleanup, but it's not. Skipping rmtree-like part.")
+
                 # Remove transaction file
-                transaction_file = os.path.join(self.storage_dir, "transactions", f"{transaction_id}.json")
-                if os.path.exists(transaction_file):
-                    os.unlink(transaction_file)
+                transaction_file_path = self.storage_dir / f"{transaction_id}.json" # Corrected path
+                if self.fs_cache.exists(str(transaction_file_path)): # Use cache
+                    atomic_delete(str(transaction_file_path))
+                    # fs_cache.invalidate is called by atomic_delete
                 
                 # Remove from history
-                del self.transaction_history[transaction_id]
+                if transaction_id in self.transaction_history: # Check before deleting
+                    del self.transaction_history[transaction_id]
             
             return len(to_remove)
     
@@ -763,25 +869,27 @@ class RecoveryManager:
     that can be rolled back together to restore system state.
     """
     
-    def __init__(self, transaction_manager: TransactionManager, storage_dir: Optional[str] = None):
+    def __init__(self, transaction_manager: TransactionManager, storage_dir: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the recovery manager.
         
         Args:
             transaction_manager: Transaction manager to use
             storage_dir: Directory to store recovery point data
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.transaction_manager = transaction_manager
         self.storage_dir = storage_dir or os.path.join(
-            os.path.dirname(transaction_manager.storage_dir),
+            os.path.dirname(transaction_manager.storage_dir), # Relies on transaction_manager's storage_dir
             "triangulum_recovery_points"
         )
-        os.makedirs(self.storage_dir, exist_ok=True)
+        os.makedirs(self.storage_dir, exist_ok=True) # Direct makedirs for setup
         
         self.recovery_points: Dict[RecoveryPointID, RecoveryPoint] = {}
         
         # Lock for thread safety
         self.lock = threading.RLock()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Load existing recovery points
         self._load_recovery_points()
@@ -789,10 +897,25 @@ class RecoveryManager:
     def _load_recovery_points(self) -> None:
         """Load existing recovery points from storage."""
         try:
-            for filename in os.listdir(self.storage_dir):
+            # self.storage_dir is already a Path object
+            filenames = self.fs_cache.listdir(str(self.storage_dir))
+            if filenames is None:
+                logger.warning(f"Could not list recovery_points dir {self.storage_dir} via cache. Trying direct.")
+                if not self.storage_dir.is_dir():
+                    logger.error(f"Recovery points storage path {self.storage_dir} is not a directory.")
+                    return
+                try:
+                    filenames = [f.name for f in self.storage_dir.iterdir() if f.is_file()]
+                except OSError as e:
+                    logger.error(f"Failed to list directory {self.storage_dir} directly: {e}")
+                    return
+
+            for filename in filenames:
                 if filename.endswith(".json"):
+                    file_full_path = self.storage_dir / filename
                     try:
-                        with open(os.path.join(self.storage_dir, filename), 'r') as f:
+                        # Direct read for JSON content
+                        with open(file_full_path, 'r') as f:
                             data = json.load(f)
                         
                         # Create recovery point from data
@@ -831,8 +954,10 @@ class RecoveryManager:
                 "metadata": recovery_point.metadata
             }
             
-            with open(os.path.join(self.storage_dir, f"{recovery_point.id}.json"), 'w') as f:
-                json.dump(recovery_point_data, f, indent=2)
+            recovery_point_file_path = os.path.join(self.storage_dir, f"{recovery_point.id}.json")
+            content = json.dumps(recovery_point_data, indent=2)
+            atomic_write(recovery_point_file_path, content.encode('utf-8'))
+            self.fs_cache.invalidate(recovery_point_file_path)
         
         except Exception as e:
             logger.error(f"Error saving recovery point {recovery_point.id}: {e}")
@@ -973,10 +1098,17 @@ class RecoveryManager:
             del self.recovery_points[recovery_point_id]
             
             # Remove file
-            recovery_point_file = os.path.join(self.storage_dir, f"{recovery_point_id}.json")
-            if os.path.exists(recovery_point_file):
-                os.unlink(recovery_point_file)
-            
+            recovery_point_file_path_obj = self.storage_dir / f"{recovery_point_id}.json" # Use Path obj
+            recovery_point_file_path_str = str(recovery_point_file_path_obj)
+
+            if self.fs_cache.exists(recovery_point_file_path_str): # Use cache
+                atomic_delete(recovery_point_file_path_str)
+                # fs_cache.invalidate is called by atomic_delete
+            elif recovery_point_file_path_obj.exists(): # Direct check if cache says no but it's there
+                logger.warning(f"Cache said {recovery_point_file_path_str} absent, but it exists. Deleting.")
+                atomic_delete(recovery_point_file_path_str)
+                # fs_cache.invalidate is called by atomic_delete
+
             return True
     
     def cleanup_old_recovery_points(self, days_old: int = 30) -> int:
@@ -1011,25 +1143,31 @@ class RollbackManager:
     with transaction support, snapshots, and recovery points.
     """
     
-    def __init__(self, storage_dir: Optional[str] = None):
+    def __init__(self, storage_dir: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the rollback manager.
         
         Args:
             storage_dir: Directory to store rollback data
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.storage_dir = storage_dir or os.path.join(tempfile.gettempdir(), "triangulum_rollback")
-        os.makedirs(self.storage_dir, exist_ok=True)
+        os.makedirs(self.storage_dir, exist_ok=True) # Direct makedirs for setup
         
+        # Create or use provided fs_cache and pass it down
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
         # Initialize transaction manager
         self.transaction_manager = TransactionManager(
-            storage_dir=os.path.join(self.storage_dir, "transactions")
+            storage_dir=os.path.join(self.storage_dir, "transactions"),
+            fs_cache=self.fs_cache
         )
         
         # Initialize recovery manager
         self.recovery_manager = RecoveryManager(
             transaction_manager=self.transaction_manager,
-            storage_dir=os.path.join(self.storage_dir, "recovery_points")
+            storage_dir=os.path.join(self.storage_dir, "recovery_points"),
+            fs_cache=self.fs_cache
         )
         
         # Lock for thread safety

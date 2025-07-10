@@ -20,6 +20,10 @@ import random
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+from pathlib import Path # For easier path manipulation
+
 class AgentNetworkVisualizer:
     """
     Visualizes agent communication networks, providing transparent
@@ -29,7 +33,8 @@ class AgentNetworkVisualizer:
     def __init__(self, 
                  output_dir: str = "./agent_network_visualizations",
                  update_interval: float = 0.5,
-                 max_history: int = 1000):
+                 max_history: int = 1000,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the agent network visualizer.
         
@@ -37,14 +42,23 @@ class AgentNetworkVisualizer:
             output_dir: Directory to store visualization outputs
             update_interval: How frequently to update visualizations (seconds)
             max_history: Maximum number of messages to keep in history
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.output_dir = output_dir
         self.update_interval = update_interval
         self.max_history = max_history
-        
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
         # Create visualization directory
-        os.makedirs(output_dir, exist_ok=True)
-        
+        output_dir_path = Path(output_dir)
+        if not self.fs_cache.exists(str(output_dir_path)):
+            output_dir_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(output_dir_path))
+        elif not self.fs_cache.is_dir(str(output_dir_path)):
+            logger.warning(f"Output dir {output_dir_path} exists but is not a directory. Attempting to create.")
+            output_dir_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(output_dir_path))
+
         # Initialize network data
         self.agents = set()  # Set of agent IDs
         self.messages = []   # List of messages between agents
@@ -53,14 +67,25 @@ class AgentNetworkVisualizer:
         self.last_update = time.time()
         
         # Templates for visualization
-        self.html_template_path = os.path.join(os.path.dirname(__file__), "templates", "agent_network.html")
+        templates_dir_path = Path(os.path.dirname(__file__)) / "templates"
+        self.html_template_path = str(templates_dir_path / "agent_network.html")
         
         # Create templates directory if it doesn't exist
-        os.makedirs(os.path.join(os.path.dirname(__file__), "templates"), exist_ok=True)
+        if not self.fs_cache.exists(str(templates_dir_path)):
+            templates_dir_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(templates_dir_path))
+        elif not self.fs_cache.is_dir(str(templates_dir_path)):
+            logger.warning(f"Templates dir {templates_dir_path} exists but is not a directory. Attempting to create.")
+            templates_dir_path.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(templates_dir_path))
         
         # Create default HTML template if it doesn't exist
-        if not os.path.exists(self.html_template_path):
-            self._create_default_template()
+        if not self.fs_cache.exists(self.html_template_path):
+            if not Path(self.html_template_path).exists(): # Double check FS
+                self._create_default_template()
+            else: # Cache stale
+                logger.warning(f"Cache miss for existing template {self.html_template_path}. Invalidating.")
+                self.fs_cache.invalidate(self.html_template_path)
         
         logger.info(f"Agent Network Visualizer initialized with output_dir={output_dir}")
     
@@ -313,12 +338,13 @@ class AgentNetworkVisualizer:
 </html>
 """
         
-        # Create templates directory if it doesn't exist
-        os.makedirs(os.path.dirname(self.html_template_path), exist_ok=True)
+        # Create templates directory if it doesn't exist (already handled in __init__ with cache checks)
+        # Path(self.html_template_path).parent.mkdir(parents=True, exist_ok=True)
+        # self.fs_cache.invalidate(str(Path(self.html_template_path).parent))
         
         # Save the template
-        with open(self.html_template_path, 'w', encoding='utf-8') as f:
-            f.write(template)
+        atomic_write(self.html_template_path, template.encode('utf-8'))
+        self.fs_cache.invalidate(self.html_template_path)
     
     def register_message(self, 
                         source_agent: str, 
@@ -503,10 +529,10 @@ class AgentNetworkVisualizer:
         
         # Write HTML file
         output_path = os.path.join(self.output_dir, "agent_network.html")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
+        atomic_write(output_path, html.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.debug(f"HTML visualization updated at {output_path}")
+        logger.debug(f"HTML visualization updated at {output_path} using atomic_write")
     
     def save_network_data(self, output_path: Optional[str] = None):
         """
@@ -529,10 +555,14 @@ class AgentNetworkVisualizer:
         }
         
         # Save to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True) # Ensure parent dir for safety
+        self.fs_cache.invalidate(str(Path(output_path).parent))
+
+        content_str = json.dumps(data, indent=2)
+        atomic_write(output_path, content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.info(f"Agent network data saved to {output_path}")
+        logger.info(f"Agent network data saved to {output_path} using atomic_write")
         return output_path
 
 

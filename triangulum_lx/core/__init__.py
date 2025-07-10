@@ -50,6 +50,7 @@ from .entropy_explainer import (
     explain_verification_result,
     format_entropy_chart,
 )
+from .fs_state import FileSystemStateCache # Added import
 
 # ---------------------------------------------------------------------------
 # 3.  Re-export public symbols.
@@ -72,4 +73,5 @@ __all__ = [
     "explain_verification_result",
     "format_entropy_chart",
     "get_triangulum_engine",
+    "FileSystemStateCache", # Added export
 ]

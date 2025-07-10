@@ -18,6 +18,9 @@ from collections import defaultdict
 
 from .metrics import VerificationMetrics
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 logger = logging.getLogger(__name__)
 
 class AdaptiveVerifier:
@@ -29,14 +32,16 @@ class AdaptiveVerifier:
     targeted and efficient verification that learns from past verification sessions.
     """
     
-    def __init__(self, metrics: Optional[VerificationMetrics] = None):
+    def __init__(self, metrics: Optional[VerificationMetrics] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the adaptive verifier.
         
         Args:
             metrics: Verification metrics for learning (optional)
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.metrics = metrics or VerificationMetrics()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         self.history = []
         self.strategy_performance = defaultdict(lambda: defaultdict(list))
         self.bug_specific_strategies = defaultdict(dict)
@@ -53,12 +58,29 @@ class AdaptiveVerifier:
         """
         default_path = os.path.join(
             os.getcwd(), ".triangulum", "verification", "strategies.json")
-        path = strategy_path or default_path
+        path_str = strategy_path or default_path # Keep as string for cache
         
-        if os.path.exists(path):
+        loaded_from_fs = False
+        if self.fs_cache.exists(path_str): # Use cache
             try:
-                with open(path, 'r') as f:
+                # Direct read for content
+                with open(path_str, 'r') as f:
                     data = json.load(f)
+                loaded_from_fs = True
+            except Exception as e:
+                logger.error(f"Error loading strategies from {path_str} (found via cache): {e}")
+        elif Path(path_str).exists(): # Cache was stale
+            logger.warning(f"Cache miss for existing strategies file {path_str}. Invalidating and loading.")
+            self.fs_cache.invalidate(path_str)
+            try:
+                with open(path_str, 'r') as f:
+                    data = json.load(f)
+                loaded_from_fs = True
+            except Exception as e:
+                logger.error(f"Error loading strategies from {path_str} (found via direct FS check): {e}")
+
+        if loaded_from_fs:
+            try:
                 
                 if "bug_specific_strategies" in data:
                     self.bug_specific_strategies = defaultdict(dict, data["bug_specific_strategies"])
@@ -82,10 +104,18 @@ class AdaptiveVerifier:
         """
         default_path = os.path.join(
             os.getcwd(), ".triangulum", "verification", "strategies.json")
-        path = strategy_path or default_path
+        path_str = strategy_path or default_path # Keep as string
         
         try:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            # Ensure parent directory exists using Pathlib for cleaner path ops
+            parent_dir = Path(path_str).parent
+            if not self.fs_cache.exists(str(parent_dir)): # Use cache
+                parent_dir.mkdir(parents=True, exist_ok=True) # Direct mkdir for setup
+                self.fs_cache.invalidate(str(parent_dir)) # Invalidate as it might have been created
+            elif not self.fs_cache.is_dir(str(parent_dir)):
+                 logger.warning(f"Strategies parent path {parent_dir} exists but is not a directory. Attempting mkdir.")
+                 parent_dir.mkdir(parents=True, exist_ok=True)
+                 self.fs_cache.invalidate(str(parent_dir))
             
             # Convert defaultdicts to regular dicts for JSON serialization
             data = {
@@ -96,10 +126,11 @@ class AdaptiveVerifier:
                 }
             }
             
-            with open(path, 'w') as f:
-                json.dump(data, f, indent=2)
+            content_str = json.dumps(data, indent=2)
+            atomic_write(path_str, content_str.encode('utf-8'))
+            self.fs_cache.invalidate(path_str)
             
-            logger.info(f"Saved verification strategies to {path}")
+            logger.info(f"Saved verification strategies to {path_str} using atomic_write")
         except Exception as e:
             logger.error(f"Failed to save verification strategies: {e}")
     

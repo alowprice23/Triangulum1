@@ -22,7 +22,10 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional, Set, Tuple, Union, Callable
 from contextlib import contextmanager
 
-from .code_relationship_analyzer import CodeRelationshipAnalyzer
+from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
+from .code_relationship_analyzer_stub import CodeRelationshipAnalyzer # Use the stub
 from .relationship_context_provider import RelationshipContextProvider
 from .test_runner import TestRunner
 from .patch_bundle import PatchBundle
@@ -174,7 +177,8 @@ class RepairTool:
     def __init__(self, 
                  rollback_manager: Optional[RollbackManager] = None,
                  relationships_path: Optional[str] = None,
-                 dependency_graph: Optional[DependencyGraph] = None):
+                 dependency_graph: Optional[DependencyGraph] = None,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the RepairTool.
         
@@ -182,14 +186,17 @@ class RepairTool:
             rollback_manager: RollbackManager for transaction management
             relationships_path: Path to the relationships JSON file
             dependency_graph: DependencyGraph for code dependencies
+            fs_cache: Optional FileSystemStateCache instance.
         """
         # Initialize components
         self.rollback_manager = rollback_manager or RollbackManager()
+        # Pass fs_cache to CodeRelationshipAnalyzer if it also takes it, for now stub doesn't need it passed.
         self.relationship_analyzer = CodeRelationshipAnalyzer()
-        self.relationship_provider = RelationshipContextProvider(relationships_path)
+        self.relationship_provider = RelationshipContextProvider(relationships_path) # This might need cache too
         self.test_runner = TestRunner()
         self.dependency_graph = dependency_graph or DependencyGraph()
         self.incremental_analyzer = IncrementalAnalyzer(self.dependency_graph)
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Default relationships path if not provided
         self.relationships_path = relationships_path or "triangulum_relationships.json"
@@ -346,8 +353,8 @@ class RepairTool:
         
         # Check that all files exist
         for change in repair_plan.changes:
-            if not os.path.exists(change.file_path):
-                validation_messages.append(f"File {change.file_path} does not exist")
+            if not self.fs_cache.exists(change.file_path):
+                validation_messages.append(f"File {change.file_path} does not exist (checked via cache)")
         
         if validation_messages:
             return False, validation_messages
@@ -585,7 +592,7 @@ class RepairTool:
                     all_affected = affected_files.union(impact_boundary)
                     
                     for file_path in all_affected:
-                        if os.path.exists(file_path):
+                        if self.fs_cache.exists(file_path): # Use cache for exists check
                             self.rollback_manager.add_file_snapshot(file_path)
                     
                     # Apply changes in a specific order to minimize conflicts
@@ -619,8 +626,9 @@ class RepairTool:
                             new_content = "\n".join(new_lines)
                             
                             # Write the new content
-                            with open(change.file_path, 'w', encoding='utf-8') as f:
-                                f.write(new_content)
+                            # Convert to bytes for atomic_write
+                            atomic_write(change.file_path, new_content.encode('utf-8'))
+                            self.fs_cache.invalidate(change.file_path) # Invalidate cache after write
                             
                             applied_changes.append({
                                 "file_path": change.file_path,
@@ -647,8 +655,8 @@ class RepairTool:
                             new_content = "\n".join(new_lines)
                             
                             # Write the new content
-                            with open(change.file_path, 'w', encoding='utf-8') as f:
-                                f.write(new_content)
+                            atomic_write(change.file_path, new_content.encode('utf-8'))
+                            self.fs_cache.invalidate(change.file_path)
                             
                             applied_changes.append({
                                 "file_path": change.file_path,
@@ -674,8 +682,8 @@ class RepairTool:
                             new_content = "\n".join(new_lines)
                             
                             # Write the new content
-                            with open(change.file_path, 'w', encoding='utf-8') as f:
-                                f.write(new_content)
+                            atomic_write(change.file_path, new_content.encode('utf-8'))
+                            self.fs_cache.invalidate(change.file_path)
                             
                             applied_changes.append({
                                 "file_path": change.file_path,
@@ -925,7 +933,7 @@ class RepairTool:
             if run_tests:
                 test_results = []
                 for file_path in all_affected:
-                    if not os.path.exists(file_path):
+                    if not self.fs_cache.exists(file_path): # Use cache
                         continue
                         
                     # Find tests related to this file
@@ -963,7 +971,7 @@ class RepairTool:
                 static_analysis_results = []
                 
                 for file_path in all_affected:
-                    if not os.path.exists(file_path):
+                    if not self.fs_cache.exists(file_path): # Use cache
                         continue
                         
                     # Perform static analysis based on file type
@@ -1089,21 +1097,30 @@ class PatcherAgent:
     verifies that it resolves the issue.
     """
     
-    def __init__(self, tooling_manager=None, relationships_path: Optional[str] = None):
+    def __init__(self,
+                 tooling_manager=None,
+                 relationships_path: Optional[str] = None,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the PatcherAgent.
         
         Args:
             tooling_manager: Reference to the tooling manager (optional)
             relationships_path: Path to the relationships JSON file (optional)
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.tooling_manager = tooling_manager
-        self.relationship_analyzer = CodeRelationshipAnalyzer()
-        self.relationship_provider = RelationshipContextProvider(relationships_path)
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
+
+        # Pass the (potentially new) fs_cache instance to components it initializes
+        self.relationship_analyzer = CodeRelationshipAnalyzer() # Stub's constructor doesn't take fs_cache yet.
+                                                                # If it did: CodeRelationshipAnalyzer(fs_cache=self.fs_cache)
+                                                                # The stub *internally* creates one.
+        self.relationship_provider = RelationshipContextProvider(relationships_path) # This might also benefit from fs_cache
         self.test_runner = TestRunner()
         
-        # Create a RepairTool instance
-        self.repair_tool = RepairTool(relationships_path=relationships_path)
+        # Create a RepairTool instance, passing down the cache
+        self.repair_tool = RepairTool(relationships_path=relationships_path, fs_cache=self.fs_cache)
         
         # Default relationships path if not provided
         self.relationships_path = relationships_path or "triangulum_relationships.json"
@@ -1127,6 +1144,13 @@ class PatcherAgent:
         logger.info(f"PatcherAgent received repair task: {task}")
 
         try:
+            # Ensure task is a dict, as expected by subsequent calls if we changed them
+            if not isinstance(task, dict):
+                 # This case should ideally not happen if called correctly,
+                 # but adding a safeguard or logging if task structure is unexpected.
+                 logger.error(f"PatcherAgent.execute_repair expects task to be a dict, got {type(task)}")
+                 # Convert or raise, for now assume it's dict-like due to previous error
+
             # 1. Analyze the bug
             context = self._analyze(task)
 
@@ -1172,7 +1196,7 @@ class PatcherAgent:
         Returns:
             Dictionary containing analysis context
         """
-        file_path = task.file_path
+        file_path = task['file_path'] # Changed to dict access
         logger.info(f"Analyzing bug in {file_path}")
         
         # Ensure we have analyzed the code relationships
@@ -1216,9 +1240,9 @@ class PatcherAgent:
         context = {
             "file_path": file_path,
             "file_content": file_content,
-            "bug_id": task.bug_id if hasattr(task, 'bug_id') else 'unknown',
-            "bug_description": task.description if hasattr(task, 'description') else 'No description provided',
-            "error_message": task.error_message if hasattr(task, 'error_message') else None,
+            "bug_id": task.get('bug_id', 'unknown'),
+            "bug_description": task.get('bug_description', 'No description provided'), # Corrected key
+            "error_message": task.get('error_message'),
             "repair_context": repair_context,
             "impact_analysis": impact_analysis,
             "refactoring_suggestions": refactoring_suggestions,
@@ -1314,10 +1338,11 @@ class PatcherAgent:
         # Create backup of original file for potential rollback
         backup_path = f"{file_path}.bak"
         try:
-            with open(file_path, 'r', encoding='utf-8') as src:
-                with open(backup_path, 'w', encoding='utf-8') as dst:
-                    dst.write(src.read())
-            logger.info(f"Created backup at {backup_path}")
+            # Read original content first
+            src_content_bytes = Path(file_path).read_bytes()
+            atomic_write(backup_path, src_content_bytes)
+            self.fs_cache.invalidate(backup_path) # Invalidate cache for the new backup file
+            logger.info(f"Created backup at {backup_path} using atomic_write")
         except Exception as e:
             logger.error(f"Failed to create backup of {file_path}: {e}")
             raise Exception(f"Failed to create backup: {e}")
@@ -1337,14 +1362,18 @@ class PatcherAgent:
             patch_content = patch['patch_diff']
             if patch_content.lstrip().startswith(('diff', '---')):
                 # Use PatchBundle for git-style patches
-                patch_bundle = PatchBundle(patch['bug_id'], patch_content)
+                patch_bundle = PatchBundle(patch['bug_id'], patch_content, fs_cache=self.fs_cache) # Pass fs_cache
                 patch_bundle.apply()  # PatchBundle.apply() doesn't take arguments
                 logger.info(f"Applied git-style patch to {file_path}")
+                # Assuming PatchBundle.apply() internally handles its own cache invalidations if necessary,
+                # or it will be refactored separately. For now, focus on direct writes in this class.
+                # If PatchBundle uses standard file I/O, it's a candidate for later refactoring.
+                self.fs_cache.invalidate(file_path) # Invalidate after PatchBundle.apply()
             else:
-                # Direct content replacement (for integration tests or simple content replacement)
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(patch_content)
-                logger.info(f"Applied direct content replacement to {file_path}")
+                # Direct content replacement
+                atomic_write(file_path, patch_content.encode('utf-8')) # Assuming patch_content is str
+                self.fs_cache.invalidate(file_path)
+                logger.info(f"Applied direct content replacement to {file_path} using atomic_write")
             
         except Exception as e:
             logger.error(f"Failed to apply patch to {file_path}: {e}")
@@ -1479,21 +1508,28 @@ class PatcherAgent:
         Returns:
             True if successful, False otherwise
         """
-        if not os.path.exists(backup_path):
-            logger.error(f"Backup file {backup_path} not found")
-            return False
+        if not self.fs_cache.exists(backup_path): # Use cache
+            logger.error(f"Backup file {backup_path} not found (checked via cache)")
+            # Attempt direct check if critical, but for now trust cache or assume external check failed
+            if not Path(backup_path).exists():
+                 logger.error(f"Backup file {backup_path} confirmed not found by direct check.")
+                 return False
+            else: # Cache was stale, file actually exists
+                 logger.warning(f"Cache indicated backup {backup_path} was absent, but it exists. Proceeding with restore.")
+                 self.fs_cache.invalidate(backup_path) # Correct the cache
         
         try:
-            with open(backup_path, 'r', encoding='utf-8') as src:
-                with open(file_path, 'w', encoding='utf-8') as dst:
-                    dst.write(src.read())
-            
-            logger.info(f"Restored {file_path} from backup")
+            backup_content_bytes = Path(backup_path).read_bytes()
+            atomic_write(file_path, backup_content_bytes)
+            self.fs_cache.invalidate(file_path) # Invalidate restored file
+            logger.info(f"Restored {file_path} from backup {backup_path} using atomic_write")
             
             # Remove backup file
-            os.remove(backup_path)
+            atomic_delete(backup_path)
+            self.fs_cache.invalidate(backup_path) # Invalidate deleted backup
+            logger.info(f"Deleted backup file {backup_path} using atomic_delete")
             return True
             
         except Exception as e:
-            logger.error(f"Failed to restore {file_path} from backup: {e}")
+            logger.error(f"Failed to restore {file_path} from backup {backup_path}: {e}")
             return False

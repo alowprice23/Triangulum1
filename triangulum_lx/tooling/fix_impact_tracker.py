@@ -18,18 +18,42 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("triangulum.fix_impact_tracker")
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 class FixImpactTracker:
     """Tracks the impact of fixes across files with dependencies."""
     
-    def __init__(self, project_path: str, database_path: Optional[str] = None):
+    def __init__(self, project_path: str, database_path: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         self.project_path = Path(project_path)
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         self.database_path = Path(database_path) if database_path else self.project_path / ".triangulum" / "fix_database.json"
-        self.database_path.parent.mkdir(exist_ok=True)
+
+        # Ensure parent directory exists. Direct mkdir for setup is fine.
+        # Invalidate cache for parent if we ensure its creation.
+        parent_dir = self.database_path.parent
+        if not self.fs_cache.exists(str(parent_dir)): # Check cache before creating
+            parent_dir.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(parent_dir)) # Invalidate as it might have been created
+        elif not self.fs_cache.is_dir(str(parent_dir)):
+             logger.warning(f"Database parent path {parent_dir} exists but is not a directory. Attempting mkdir.")
+             parent_dir.mkdir(parents=True, exist_ok=True) # May error if it's a file
+             self.fs_cache.invalidate(str(parent_dir))
+
         self.database = self._load_database()
         self.modified_files = set()
     
     def _load_database(self) -> Dict[str, Any]:
-        if self.database_path.exists():
+        if self.fs_cache.exists(str(self.database_path)): # Use cache
+            try:
+                # Direct read for content
+                with open(self.database_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.error(f"Error loading fix database {self.database_path}: {e}")
+        elif self.database_path.exists(): # Cache was stale, file actually exists
+            logger.warning(f"Cache miss for existing database {self.database_path}. Invalidating and loading.")
+            self.fs_cache.invalidate(str(self.database_path))
             try:
                 with open(self.database_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
@@ -41,8 +65,10 @@ class FixImpactTracker:
     def _save_database(self):
         try:
             self.database["last_updated"] = time.time()
-            with open(self.database_path, 'w', encoding='utf-8') as f:
-                json.dump(self.database, f, indent=2)
+            db_content_str = json.dumps(self.database, indent=2)
+            atomic_write(str(self.database_path), db_content_str.encode('utf-8'))
+            self.fs_cache.invalidate(str(self.database_path))
+            logger.debug(f"Saved fix database to {self.database_path} using atomic_write")
         except Exception as e:
             logger.error(f"Error saving fix database: {e}")
     

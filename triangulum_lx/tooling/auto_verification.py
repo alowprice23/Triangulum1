@@ -23,6 +23,9 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 class FixVerificationError(Exception):
     """Exception raised for errors during fix verification."""
     pass
@@ -39,7 +42,8 @@ class AutoVerifier:
                  test_command: Optional[str] = None,
                  enable_regression_testing: bool = True,
                  enable_performance_testing: bool = False,
-                 timeout: int = 300):
+                 timeout: int = 300,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the auto verifier.
         
@@ -50,6 +54,7 @@ class AutoVerifier:
             enable_regression_testing: Whether to test for regressions
             enable_performance_testing: Whether to test performance impacts
             timeout: Timeout in seconds for test execution
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.project_root = os.path.abspath(project_root)
         self.verification_dir = verification_dir or os.path.join(self.project_root, ".verification")
@@ -57,9 +62,14 @@ class AutoVerifier:
         self.enable_regression_testing = enable_regression_testing
         self.enable_performance_testing = enable_performance_testing
         self.timeout = timeout
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Create verification directory
-        os.makedirs(self.verification_dir, exist_ok=True)
+        # This is a setup operation, direct os.makedirs is fine.
+        # If it needs to be atomic itself, that's a deeper change.
+        Path(self.verification_dir).mkdir(parents=True, exist_ok=True)
+        if not self.fs_cache.exists(self.verification_dir): # Ensure cache knows about it
+            self.fs_cache.invalidate(self.verification_dir)
         
         # Initialize verification data structures
         self.baseline_state = {}
@@ -95,20 +105,27 @@ class AutoVerifier:
         # Store file hashes and stats
         for file_path in files:
             abs_path = os.path.join(self.project_root, file_path) if not os.path.isabs(file_path) else file_path
-            if os.path.exists(abs_path) and os.path.isfile(abs_path):
+            # Use cache for existence and type checks
+            if self.fs_cache.exists(abs_path) and self.fs_cache.is_file(abs_path):
                 try:
+                    # Direct read for content hash, size, mtime
                     with open(abs_path, 'rb') as f:
                         content = f.read()
                         file_hash = hashlib.sha256(content).hexdigest()
                     
                     baseline["files"][file_path] = {
                         "hash": file_hash,
-                        "size": os.path.getsize(abs_path),
-                        "modified": os.path.getmtime(abs_path)
+                        "size": os.path.getsize(abs_path), # Direct, no cache method yet
+                        "modified": os.path.getmtime(abs_path) # Direct, or use self.fs_cache.get_mtime(abs_path) if populated
                     }
                 except Exception as e:
                     logger.warning(f"Could not create baseline for {file_path}: {e}")
-        
+            elif not self.fs_cache.exists(abs_path):
+                 logger.debug(f"File {file_path} (abs: {abs_path}) not found via cache for baseline.")
+            elif not self.fs_cache.is_file(abs_path):
+                 logger.debug(f"Path {file_path} (abs: {abs_path}) is not a file via cache for baseline.")
+
+
         # Run tests if test command is available
         if self.test_command:
             try:
@@ -125,11 +142,12 @@ class AutoVerifier:
         
         # Save baseline
         baseline_path = os.path.join(self.verification_dir, "baseline.json")
-        with open(baseline_path, 'w', encoding='utf-8') as f:
-            json.dump(baseline, f, indent=2)
+        baseline_content_str = json.dumps(baseline, indent=2)
+        atomic_write(baseline_path, baseline_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(baseline_path)
         
         self.baseline_state = baseline
-        logger.info(f"Baseline created and saved to {baseline_path}")
+        logger.info(f"Baseline created and saved to {baseline_path} using atomic_write")
         
         return baseline
     
@@ -146,9 +164,15 @@ class AutoVerifier:
         if baseline_path is None:
             baseline_path = os.path.join(self.verification_dir, "baseline.json")
         
-        if not os.path.exists(baseline_path):
-            raise FileNotFoundError(f"Baseline file not found: {baseline_path}")
-        
+        if not self.fs_cache.exists(baseline_path): # Use cache
+            # If cache says no, double check to be sure before raising error
+            if not Path(baseline_path).exists():
+                raise FileNotFoundError(f"Baseline file not found: {baseline_path} (checked cache and FS)")
+            else: # Cache was stale
+                logger.warning(f"Cache miss for existing baseline {baseline_path}. Invalidating.")
+                self.fs_cache.invalidate(baseline_path)
+
+        # Direct read for content is fine.
         with open(baseline_path, 'r', encoding='utf-8') as f:
             baseline = json.load(f)
         
@@ -200,9 +224,13 @@ class AutoVerifier:
         try:
             # Check if fixed file exists
             abs_path = os.path.join(self.project_root, file_path) if not os.path.isabs(file_path) else file_path
-            if not os.path.exists(abs_path):
-                raise FixVerificationError(f"Fixed file does not exist: {abs_path}")
-            
+            if not self.fs_cache.exists(abs_path): # Use cache
+                if not Path(abs_path).exists(): # Double check
+                    raise FixVerificationError(f"Fixed file does not exist: {abs_path} (checked cache and FS)")
+                else: # Cache stale
+                    logger.warning(f"Cache miss for existing fixed file {abs_path}. Invalidating.")
+                    self.fs_cache.invalidate(abs_path)
+
             # Verify syntax correctness
             self._verify_syntax(abs_path)
             
@@ -247,8 +275,9 @@ class AutoVerifier:
         # Save verification result
         result_id = hashlib.md5(f"{file_path}:{time.time()}".encode()).hexdigest()[:8]
         result_path = os.path.join(self.verification_dir, f"verification_{result_id}.json")
-        with open(result_path, 'w', encoding='utf-8') as f:
-            json.dump(verification_result, f, indent=2)
+        result_content_str = json.dumps(verification_result, indent=2)
+        atomic_write(result_path, result_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(result_path)
         
         return verification_result
     
@@ -284,8 +313,9 @@ class AutoVerifier:
         # Save batch results
         batch_id = hashlib.md5(f"batch:{time.time()}".encode()).hexdigest()[:8]
         batch_path = os.path.join(self.verification_dir, f"batch_verification_{batch_id}.json")
-        with open(batch_path, 'w', encoding='utf-8') as f:
-            json.dump(batch_results, f, indent=2)
+        batch_content_str = json.dumps(batch_results, indent=2)
+        atomic_write(batch_path, batch_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(batch_path)
         
         logger.info(f"Batch verification completed: {batch_results['verified_count']} verified, "
                    f"{batch_results['failed_count']} failed")
@@ -318,8 +348,8 @@ class AutoVerifier:
         test_path = os.path.join(test_dir, test_filename)
         
         # Write test code to file
-        with open(test_path, 'w', encoding='utf-8') as f:
-            f.write(test_code)
+        atomic_write(test_path, test_code.encode('utf-8'))
+        self.fs_cache.invalidate(test_path)
         
         # Register the regression test
         self.regression_tests[test_id] = {
@@ -330,8 +360,9 @@ class AutoVerifier:
         
         # Save regression test registry
         registry_path = os.path.join(self.verification_dir, "regression_tests.json")
-        with open(registry_path, 'w', encoding='utf-8') as f:
-            json.dump(self.regression_tests, f, indent=2)
+        registry_content_str = json.dumps(self.regression_tests, indent=2)
+        atomic_write(registry_path, registry_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(registry_path)
         
         logger.info(f"Created regression test {test_filename} for {file_path}")
         return test_path
@@ -355,9 +386,14 @@ class AutoVerifier:
         
         # Read the fixed file
         abs_path = os.path.join(self.project_root, file_path) if not os.path.isabs(file_path) else file_path
-        if not os.path.exists(abs_path):
-            raise FileNotFoundError(f"Fixed file does not exist: {abs_path}")
-        
+        if not self.fs_cache.exists(abs_path): # Use cache
+            if not Path(abs_path).exists(): # Double check
+                raise FileNotFoundError(f"Fixed file does not exist: {abs_path} (checked cache and FS)")
+            else: # Cache stale
+                logger.warning(f"Cache miss for existing fixed file {abs_path} in generate_regression_test. Invalidating.")
+                self.fs_cache.invalidate(abs_path)
+
+        # Direct read for content
         with open(abs_path, 'r', encoding='utf-8') as f:
             fixed_code = f.read()
         
@@ -381,10 +417,16 @@ class AutoVerifier:
         # Load regression tests if needed
         if not self.regression_tests:
             registry_path = os.path.join(self.verification_dir, "regression_tests.json")
-            if os.path.exists(registry_path):
+            if self.fs_cache.exists(registry_path): # Use cache
+                # Direct read for content
                 with open(registry_path, 'r', encoding='utf-8') as f:
                     self.regression_tests = json.load(f)
-        
+            elif Path(registry_path).exists(): # Cache stale
+                 logger.warning(f"Cache miss for existing registry {registry_path}. Invalidating and loading.")
+                 self.fs_cache.invalidate(registry_path)
+                 with open(registry_path, 'r', encoding='utf-8') as f:
+                    self.regression_tests = json.load(f)
+
         if not self.regression_tests:
             logger.warning("No regression tests found.")
             return {"success": True, "tests_run": 0, "passed": 0, "failed": 0, "results": []}
@@ -412,9 +454,13 @@ class AutoVerifier:
             test_info = self.regression_tests[test_id]
             test_path = test_info["test_path"]
             
-            if not os.path.exists(test_path):
-                logger.warning(f"Regression test not found: {test_path}")
-                continue
+            if not self.fs_cache.exists(test_path): # Use cache
+                if not Path(test_path).exists(): # Double check
+                    logger.warning(f"Regression test not found: {test_path} (checked cache and FS)")
+                    continue
+                else: # Cache stale
+                    logger.warning(f"Cache miss for existing test_path {test_path}. Invalidating.")
+                    self.fs_cache.invalidate(test_path)
             
             try:
                 # Run the test
@@ -476,8 +522,9 @@ class AutoVerifier:
         # Save regression test results
         result_id = hashlib.md5(f"regression:{time.time()}".encode()).hexdigest()[:8]
         result_path = os.path.join(self.verification_dir, f"regression_results_{result_id}.json")
-        with open(result_path, 'w', encoding='utf-8') as f:
-            json.dump(results, f, indent=2)
+        results_content_str = json.dumps(results, indent=2)
+        atomic_write(result_path, results_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(result_path)
         
         logger.info(f"Regression tests completed: {results['passed']}/{results['tests_run']} passed")
         return results
@@ -512,10 +559,11 @@ class AutoVerifier:
         }
         
         # Save report
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(report, f, indent=2)
+        report_content_str = json.dumps(report, indent=2)
+        atomic_write(output_path, report_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.info(f"Verification report exported to {output_path}")
+        logger.info(f"Verification report exported to {output_path} using atomic_write")
         return output_path
     
     def _discover_project_files(self) -> List[str]:
@@ -549,9 +597,13 @@ class AutoVerifier:
         Returns:
             True if syntax is correct, False otherwise
         """
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File not found: {file_path}")
-        
+        if not self.fs_cache.exists(file_path): # Use cache
+            if not Path(file_path).exists(): # Double check
+                 raise FileNotFoundError(f"File not found: {file_path} (checked cache and FS)")
+            else: # Cache stale
+                logger.warning(f"Cache miss for existing file {file_path} in _verify_syntax. Invalidating.")
+                self.fs_cache.invalidate(file_path)
+
         # Determine file type
         _, ext = os.path.splitext(file_path)
         
@@ -677,18 +729,24 @@ class AutoVerifier:
                 continue
             
             abs_path = os.path.join(self.project_root, file_path) if not os.path.isabs(file_path) else file_path
-            if not os.path.exists(abs_path):
-                # File was deleted
-                regression_results["file_changes"].append({
-                    "file": file_path,
-                    "type": "deleted",
-                    "baseline_hash": baseline_info["hash"]
-                })
-                continue
-            
+            if not self.fs_cache.exists(abs_path): # Use cache
+                # Check if it truly doesn't exist or if cache was stale
+                if not Path(abs_path).exists():
+                    regression_results["file_changes"].append({
+                        "file": file_path,
+                        "type": "deleted",
+                        "baseline_hash": baseline_info["hash"]
+                    })
+                    continue
+                else: # Cache was stale, file actually exists
+                    logger.warning(f"Cache miss for existing file {abs_path} in _check_for_regressions (expected deleted). Invalidating.")
+                    self.fs_cache.invalidate(abs_path)
+                    # Proceed to hash check as it exists
+
             # Check if file was modified
             try:
-                with open(abs_path, 'rb') as f:
+                # Direct read for content hash
+                with open(abs_path, 'rb') as f: # This open() is for read, so it's okay.
                     content = f.read()
                     file_hash = hashlib.sha256(content).hexdigest()
                 
@@ -712,7 +770,8 @@ class AutoVerifier:
         # Check for significant file changes outside the fixed file
         if len(regression_results["file_changes"]) > 0:
             # Only flag as regression if more than 1 file changed or deleted
-            if len(regression_results["file_changes"]) > 1:
+            # (or if any file changed, depending on strictness)
+            if len(regression_results["file_changes"]) > 0: # Stricter: any unexpected change is a regression sign
                 regression_results["regressions_detected"] = True
         
         return regression_results

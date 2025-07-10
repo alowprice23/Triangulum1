@@ -22,6 +22,9 @@ from collections import defaultdict
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 # Import quantum simulator if available, otherwise use classical fallback
 try:
     import numpy as np
@@ -44,7 +47,8 @@ class QuantumCodeAnalyzer:
                 optimization_level: int = 1,
                 noise_model: Optional[str] = None,
                 caching: bool = True,
-                cache_dir: Optional[str] = None):
+                 cache_dir: Optional[str] = None,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the quantum code analyzer.
         
@@ -56,6 +60,7 @@ class QuantumCodeAnalyzer:
             noise_model: Noise model to use for quantum simulation
             caching: Whether to cache analysis results
             cache_dir: Directory to store cache files
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.use_quantum = use_quantum and QUANTUM_AVAILABLE
         self.qubits = qubits
@@ -63,10 +68,18 @@ class QuantumCodeAnalyzer:
         self.optimization_level = optimization_level
         self.noise_model = noise_model
         self.caching = caching
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         self.cache_dir = cache_dir or os.path.join(os.getcwd(), ".quantum_cache")
         
         if self.caching:
-            os.makedirs(self.cache_dir, exist_ok=True)
+            # Direct mkdir for setup is fine. Invalidate if created based on cache state.
+            if not self.fs_cache.exists(self.cache_dir):
+                os.makedirs(self.cache_dir, exist_ok=True)
+                self.fs_cache.invalidate(self.cache_dir)
+            elif not self.fs_cache.is_dir(self.cache_dir):
+                 logger.warning(f"Cache dir {self.cache_dir} exists but is not a directory. Attempting to create.")
+                 os.makedirs(self.cache_dir, exist_ok=True) # May fail if it's a file
+                 self.fs_cache.invalidate(self.cache_dir)
         
         self.code_embeddings = {}
         self.pattern_database = {}
@@ -734,13 +747,26 @@ class QuantumCodeAnalyzer:
     
     def _generate_cache_key(self, file_path: str) -> str:
         """Generate a cache key for a file."""
-        if not os.path.exists(file_path):
-            return hashlib.md5(file_path.encode()).hexdigest()
-        
-        # Use file path, size, and modification time for the key
-        file_stat = os.stat(file_path)
-        key_data = f"{file_path}:{file_stat.st_size}:{file_stat.st_mtime}"
-        return hashlib.md5(key_data.encode()).hexdigest()
+        # Use self.fs_cache.exists and self.fs_cache.get_mtime if available,
+        # otherwise direct os.stat for key generation is fine as it's read-only.
+        # The primary concern is atomic writes, not reads for cache keying.
+        if not self.fs_cache.exists(file_path):
+            # If cache says no, confirm with FS before generating key based on path only
+            if not Path(file_path).exists():
+                 return hashlib.md5(file_path.encode()).hexdigest()
+            else: # Cache was stale for existence check
+                 self.fs_cache.invalidate(file_path) # Invalidate, then proceed to get fresh stat
+
+        # File exists, use its properties
+        try:
+            # Direct os.stat is acceptable for cache key generation as it's read-only
+            # and needed if mtime/size are not already in cache for this path.
+            file_stat = os.stat(file_path)
+            key_data = f"{file_path}:{file_stat.st_size}:{file_stat.st_mtime}"
+            return hashlib.md5(key_data.encode()).hexdigest()
+        except FileNotFoundError: # Should be caught by exists check, but as a safeguard
+            logger.warning(f"File {file_path} not found during stat for cache key generation after existence check.")
+            return hashlib.md5(file_path.encode()).hexdigest() # Fallback to path-only key
     
     def _check_cache(self, cache_key: str) -> Optional[Dict]:
         """Check if a cache entry exists and return it if it does."""
@@ -748,12 +774,21 @@ class QuantumCodeAnalyzer:
             return None
         
         cache_path = os.path.join(self.cache_dir, f"{cache_key}.json")
-        if os.path.exists(cache_path):
+        if self.fs_cache.exists(cache_path): # Use cache
+            try:
+                # Direct read for content
+                with open(cache_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning(f"Error loading cache entry {cache_path}: {e}")
+        elif Path(cache_path).exists(): # Cache was stale
+            logger.warning(f"Cache miss for existing cache file {cache_path}. Invalidating and loading.")
+            self.fs_cache.invalidate(cache_path)
             try:
                 with open(cache_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except Exception as e:
-                logger.warning(f"Error loading cache entry: {e}")
+                logger.warning(f"Error loading cache entry {cache_path} after stale cache: {e}")
         
         return None
     
@@ -764,10 +799,16 @@ class QuantumCodeAnalyzer:
         
         cache_path = os.path.join(self.cache_dir, f"{cache_key}.json")
         try:
-            with open(cache_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f)
+            # Ensure parent directory exists (atomic_write handles its immediate parent,
+            # but self.cache_dir should exist from __init__)
+            Path(self.cache_dir).mkdir(parents=True, exist_ok=True)
+
+            content_str = json.dumps(data)
+            atomic_write(cache_path, content_str.encode('utf-8'))
+            self.fs_cache.invalidate(cache_path)
+            logger.debug(f"Stored cache entry to {cache_path} using atomic_write")
         except Exception as e:
-            logger.warning(f"Error storing cache entry: {e}")
+            logger.warning(f"Error storing cache entry {cache_path}: {e}")
     
     def _extract_dependencies(self, file_path: str, limit_to_files: Optional[List[str]] = None) -> List[Dict]:
         """

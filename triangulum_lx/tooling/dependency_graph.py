@@ -7,6 +7,7 @@ Builds and analyzes dependency graphs between files to enable cascade-aware repa
 import re
 import os
 import logging
+import time # Added import
 from pathlib import Path
 from typing import Dict, List, Set, Tuple, Any, Optional
 import networkx as nx
@@ -17,6 +18,9 @@ from collections import defaultdict, deque # Keep for parsers if still needed
 
 # Setup logging
 logger = logging.getLogger("triangulum.dependency_graph")
+
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
 
 # --- Import canonical graph models ---
 from .graph_models import (
@@ -61,28 +65,52 @@ class PythonDependencyParser(BaseDependencyParser):
                         dep = self._process_import(module_name, node.lineno, file_path, root_dir)
                         if dep: dependencies.append(dep)
                 elif isinstance(node, ast.ImportFrom):
-                    level = node.level
-                    module_name = node.module or ''
-                    current_file_path_obj = Path(file_path)
-                    current_dir_parts = list(current_file_path_obj.parent.parts)
-                    if level > 0:
-                        if level > len(current_dir_parts) and not (len(current_dir_parts) == 0 and level == 1 and current_file_path_obj.parent.name == ''): # Handle top-level relative import
-                             logger.debug(f"Relative import level {level} too deep for path {file_path} (module: {module_name}, dir_parts: {current_dir_parts})")
-                             continue
-                        slice_end_index = len(current_dir_parts) - (level - 1)
-                        eff_base_parts = current_dir_parts[:slice_end_index] if slice_end_index >= 0 else []
-                        imported_module_parts = eff_base_parts + module_name.split('.') if module_name else eff_base_parts
-                        imported_module_parts = [part for part in imported_module_parts if part]
-                        full_module_name = ".".join(imported_module_parts) if imported_module_parts else ""
-                    else:
-                        full_module_name = module_name
+                    level = node.level # 0 for absolute, 1 for '.', 2 for '..'
+                    module_name_in_from = node.module  # e.g., 'config' in 'from .config import X', or None in 'from . import helpers'
 
-                    for name_obj in node.names:
-                        symbol = name_obj.name
-                        dep = self._process_import(full_module_name, node.lineno, file_path, root_dir, is_from=True, symbol=symbol)
-                        if dep: dependencies.append(dep)
+                    current_file_path_obj = Path(file_path)
+                    current_dir_parts = list(current_file_path_obj.parent.parts) # e.g., ['mypackage', 'utils']
+
+                    base_path_parts = []
+                    if level > 0: # Relative import
+                        # For 'from .mod import X', level=1. slice_idx = len(current_dir_parts)
+                        # For 'from ..mod import X', level=2. slice_idx = len(current_dir_parts) - 1
+                        slice_idx = len(current_dir_parts) - (level - 1)
+                        if slice_idx < 0:
+                            logger.debug(f"Relative import level {level} is too high for path {file_path} with current_dir_parts {current_dir_parts}")
+                            continue
+                        base_path_parts = current_dir_parts[:slice_idx]
+
+                    # If level is 0 (absolute import), base_path_parts remains empty, module_name_in_from is the start.
+
+                    for alias in node.names: # ast.alias objects (name, asname)
+                        imported_symbol_name = alias.name # The name being imported, could be module or variable/class/func
+
+                        module_to_resolve_parts = list(base_path_parts) # Start with relative base
+
+                        if module_name_in_from: # e.g., 'from .config import X' or 'from package import module'
+                            module_to_resolve_parts.extend(module_name_in_from.split('.'))
+                            symbol_for_metadata = imported_symbol_name # We are importing a symbol from this module
+                        else: # e.g., 'from . import helpers' or 'from . import subpackage.module'
+                              # Here, imported_symbol_name is the module/package relative to base_path_parts
+                            module_to_resolve_parts.append(imported_symbol_name)
+                            symbol_for_metadata = None # We are importing the module itself as the primary target
+
+                        # Filter out empty parts that might arise from ".." resolving to above project root if not careful,
+                        # or from multiple dots in module_name_in_from.
+                        module_to_resolve_parts_cleaned = [part for part in module_to_resolve_parts if part]
+                        if not module_to_resolve_parts_cleaned:
+                            logger.debug(f"Could not determine module to resolve for import in {file_path} (line {node.lineno})")
+                            continue
+
+                        module_to_resolve_str = ".".join(module_to_resolve_parts_cleaned)
+
+                        dep = self._process_import(module_to_resolve_str, node.lineno, file_path, root_dir,
+                                                   is_from=True, symbol=symbol_for_metadata)
+                        if dep:
+                            dependencies.append(dep)
         except Exception as e:
-            logger.warning(f"Error parsing Python file {file_path}: {str(e)}")
+            logger.warning(f"Error parsing Python file {file_path}: {str(e)}", exc_info=True) # Add exc_info
         return dependencies
 
     def _process_import(self, module_name: str, line_no: int, current_file_path: str, root_dir: str, is_from: bool = False, symbol: Optional[str] = None) -> Optional[Tuple[str, DependencyMetadata]]:
@@ -194,11 +222,12 @@ class ParserRegistry:
     def register_parser(self, parser: BaseDependencyParser): self.parsers.append(parser)
 
 class DependencyGraphBuilder:
-    def __init__(self, cache_dir: Optional[str] = None, max_workers: int = 4, parser_registry: Optional[ParserRegistry] = None):
+    def __init__(self, cache_dir: Optional[str] = None, max_workers: int = 4, parser_registry: Optional[ParserRegistry] = None, fs_cache: Optional[FileSystemStateCache] = None):
         self.cache_dir = cache_dir
-        if cache_dir: Path(cache_dir).mkdir(parents=True, exist_ok=True)
+        if cache_dir: Path(cache_dir).mkdir(parents=True, exist_ok=True) # Direct mkdir for setup
         self.max_workers = max_workers
         self.parser_registry = parser_registry or ParserRegistry()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
 
     def build_graph(self, root_dir: str, include_patterns: Optional[List[str]] = None, exclude_patterns: Optional[List[str]] = None, incremental: bool = True, previous_graph_json_str: Optional[str] = None) -> DependencyGraph:
         start_time = time.time()
@@ -280,7 +309,7 @@ class DependencyGraphBuilder:
                 file_path_abs = Path(dirpath_str, filename)
                 file_path_rel = file_path_abs.relative_to(abs_root_dir).as_posix()
 
-                is_excluded = any(fnmatch.fnmatch(file_path_rel, pat) or fnmatch.fnmatch(filename, pat.lstrip('**/'))) for pat in effective_exclude_patterns)
+                is_excluded = any(fnmatch.fnmatch(file_path_rel, pat) or fnmatch.fnmatch(filename, pat.lstrip('**/')) for pat in effective_exclude_patterns)
                 if is_excluded: continue
 
                 if any(fnmatch.fnmatch(filename, pat) or fnmatch.fnmatch(file_path_rel, pat) for pat in include_patterns):
@@ -313,9 +342,10 @@ class DependencyGraphBuilder:
         cache_name = f"dep_graph_cache_{Path(root_dir).name}_{root_dir_hash_part}.json"
         cache_path = Path(self.cache_dir, cache_name)
         try:
-            with open(cache_path, 'w', encoding='utf-8') as f:
-                f.write(graph.to_json(indent=2)) # Use canonical to_json
-            logger.info(f"Cached dependency graph data to {cache_path}")
+            graph_json_content = graph.to_json(indent=2) # Use canonical to_json
+            atomic_write(str(cache_path), graph_json_content.encode('utf-8'))
+            self.fs_cache.invalidate(str(cache_path))
+            logger.info(f"Cached dependency graph data to {cache_path} using atomic_write")
         except Exception as e:
             logger.error(f"Error caching graph data: {e}", exc_info=True)
 
@@ -324,9 +354,18 @@ class DependencyGraphBuilder:
         root_dir_hash_part = str(hash(Path(root_dir).resolve().as_posix()))[-8:]
         cache_name = f"dep_graph_cache_{Path(root_dir).name}_{root_dir_hash_part}.json"
         cache_path = Path(self.cache_dir, cache_name)
-        if not cache_path.exists():
-            logger.info(f"No cache file found at {cache_path}")
-            return None
+
+        # Use cache to check existence
+        if not self.fs_cache.exists(str(cache_path)): # Check cache first
+            # If cache says no, double check filesystem directly before giving up
+            if not cache_path.exists():
+                logger.info(f"No cache file found at {cache_path} (checked cache then FS).")
+                return None
+            else: # Cache was stale
+                logger.warning(f"Cache indicated {cache_path} absent, but it exists. Invalidating and proceeding to load.")
+                self.fs_cache.invalidate(str(cache_path)) # Correct the cache
+
+        # At this point, file should exist if we are to load it
         try:
             with open(cache_path, 'r', encoding='utf-8') as f: json_str = f.read()
             logger.info(f"Loaded cached dependency graph JSON string from {cache_path}")
@@ -503,5 +542,3 @@ def analyze_dependencies(repo_path: str = ".", include_patterns: List[str] = Non
 def get_repair_cascades(affected_files: List[str], repo_path: str = ".") -> List[Set[str]]:
     analyzer = analyze_dependencies(repo_path)
     return analyzer.get_repair_batches()
-
-[end of triangulum_lx/tooling/dependency_graph.py]

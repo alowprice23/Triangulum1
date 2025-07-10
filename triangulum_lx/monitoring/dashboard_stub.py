@@ -21,6 +21,10 @@ from collections import defaultdict, deque
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("triangulum.dashboard_stub")
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+# Path is already imported from pathlib
+
 # Try to import optional dependencies
 try:
     import dash
@@ -54,7 +58,8 @@ class DashboardStub:
     def __init__(self, 
                  config_path: Optional[str] = None,
                  metrics_path: Optional[str] = None,
-                 update_interval: int = 5):
+                 update_interval: int = 5,
+                 fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the dashboard stub.
         
@@ -62,10 +67,12 @@ class DashboardStub:
             config_path: Path to the dashboard configuration file
             metrics_path: Path to the metrics data file
             update_interval: Interval in seconds for updating the dashboard
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.config_path = config_path or "triangulum_lx/config/dashboard_config.json"
         self.metrics_path = metrics_path or "triangulum_lx/data/metrics/system_metrics.json"
         self.update_interval = update_interval
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         
         # Load configuration
         self.config = self._load_config()
@@ -126,7 +133,16 @@ class DashboardStub:
             "historical_data_retention_days": 7
         }
         
-        if os.path.exists(self.config_path):
+        if self.fs_cache.exists(self.config_path): # Use cache
+            try:
+                # Direct read for content
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    user_config = json.load(f)
+            except Exception as e:
+                logger.error(f"Error loading dashboard configuration from {self.config_path} (found via cache): {e}")
+        elif Path(self.config_path).exists(): # Cache stale
+            logger.warning(f"Cache miss for existing config file {self.config_path}. Invalidating and loading.")
+            self.fs_cache.invalidate(self.config_path)
             try:
                 with open(self.config_path, 'r', encoding='utf-8') as f:
                     user_config = json.load(f)
@@ -165,13 +181,22 @@ class DashboardStub:
         """Save dashboard configuration to file."""
         try:
             # Create directory if it doesn't exist
-            os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
+            config_p = Path(self.config_path)
+            parent_dir = config_p.parent
+            if not self.fs_cache.exists(str(parent_dir)):
+                parent_dir.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(parent_dir))
+            elif not self.fs_cache.is_dir(str(parent_dir)):
+                logger.warning(f"Config parent path {parent_dir} exists but is not a directory. Attempting mkdir.")
+                parent_dir.mkdir(parents=True, exist_ok=True)
+                self.fs_cache.invalidate(str(parent_dir))
             
             # Save to file
-            with open(self.config_path, 'w', encoding='utf-8') as f:
-                json.dump(self.config, f, indent=2)
+            content_str = json.dumps(self.config, indent=2)
+            atomic_write(self.config_path, content_str.encode('utf-8'))
+            self.fs_cache.invalidate(self.config_path)
             
-            logger.info(f"Saved dashboard configuration to {self.config_path}")
+            logger.info(f"Saved dashboard configuration to {self.config_path} using atomic_write")
         except Exception as e:
             logger.error(f"Error saving dashboard configuration: {e}")
     
@@ -179,18 +204,26 @@ class DashboardStub:
         """Initialize monitoring components."""
         try:
             # Initialize metrics collector
-            self.metrics_collector = MetricsCollector()
+            self.metrics_collector = MetricsCollector(fs_cache=self.fs_cache)
             
             # Initialize metrics exporter
-            self.metrics_exporter = MetricsExporter(
-                export_path=self.metrics_path
+            # Assuming MetricsExporter base or specific exporters will take fs_cache
+            # For now, if MetricsExporter is a factory, it might need fs_cache.
+            # If it's a specific type like FileExporter, it will take fs_cache.
+            # This part depends on MetricsExporter's own refactoring.
+            # Let's assume a refactored FileExporter is used by default if path is local.
+            from .metrics_exporter import FileExporter # Make specific for now
+            self.metrics_exporter = FileExporter(
+                output_dir=Path(self.metrics_path).parent, # Assuming metrics_path is a file
+                filename_template=Path(self.metrics_path).name,
+                fs_cache=self.fs_cache
             )
             
             # Initialize visualizer
-            self.visualizer = Visualizer()
+            self.visualizer = Visualizer(fs_cache=self.fs_cache) # Assuming Visualizer will take fs_cache
             
             # Initialize system monitor
-            self.system_monitor = SystemMonitor()
+            self.system_monitor = SystemMonitor(engine=None, fs_cache=self.fs_cache) # Engine might be set later or passed
             
             logger.info("Initialized monitoring components")
         except Exception as e:

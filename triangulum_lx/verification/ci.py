@@ -19,6 +19,9 @@ from .metrics import VerificationMetrics
 
 logger = logging.getLogger(__name__)
 
+from triangulum_lx.tooling.fs_ops import atomic_write
+from triangulum_lx.core.fs_state import FileSystemStateCache
+
 class CIReporter:
     """
     Reports verification results in CI-friendly formats.
@@ -28,14 +31,16 @@ class CIReporter:
     JSON, and Markdown.
     """
     
-    def __init__(self, metrics: Optional[VerificationMetrics] = None):
+    def __init__(self, metrics: Optional[VerificationMetrics] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the CI reporter.
         
         Args:
             metrics: Verification metrics for reporting (optional)
+            fs_cache: Optional FileSystemStateCache instance.
         """
         self.metrics = metrics or VerificationMetrics()
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
     
     def generate_junit_report(
         self,
@@ -127,9 +132,13 @@ class CIReporter:
         
         # Save the report if output_path is provided
         if output_path:
-            with open(output_path, "wb") as f:
-                f.write(xml_string)
-            logger.info(f"JUnit report saved to {output_path}")
+            # Ensure parent directory exists
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(Path(output_path).parent))
+
+            atomic_write(output_path, xml_string) # xml_string is already bytes
+            self.fs_cache.invalidate(output_path)
+            logger.info(f"JUnit report saved to {output_path} using atomic_write")
             return output_path
         
         # Otherwise, generate a default path
@@ -141,13 +150,14 @@ class CIReporter:
         )
         
         # Ensure the directory exists
-        os.makedirs(os.path.dirname(default_path), exist_ok=True)
+        Path(default_path).parent.mkdir(parents=True, exist_ok=True)
+        self.fs_cache.invalidate(str(Path(default_path).parent))
         
         # Save the report
-        with open(default_path, "wb") as f:
-            f.write(xml_string)
+        atomic_write(default_path, xml_string) # xml_string is already bytes
+        self.fs_cache.invalidate(default_path)
         
-        logger.info(f"JUnit report saved to {default_path}")
+        logger.info(f"JUnit report saved to {default_path} using atomic_write")
         return default_path
     
     def generate_json_report(
@@ -175,13 +185,15 @@ class CIReporter:
             )
         
         # Ensure the directory exists
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        self.fs_cache.invalidate(str(Path(output_path).parent))
         
         # Save the report
-        with open(output_path, "w") as f:
-            json.dump(verification_results, f, indent=2)
+        content_str = json.dumps(verification_results, indent=2)
+        atomic_write(output_path, content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.info(f"JSON report saved to {output_path}")
+        logger.info(f"JSON report saved to {output_path} using atomic_write")
         return output_path
     
     def generate_markdown_report(
@@ -209,7 +221,8 @@ class CIReporter:
             )
         
         # Ensure the directory exists
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        self.fs_cache.invalidate(str(Path(output_path).parent))
         
         # Generate the report content
         report = []
@@ -286,10 +299,11 @@ class CIReporter:
             report.append("")
         
         # Save the report
-        with open(output_path, "w") as f:
-            f.write("\n".join(report))
+        report_content_str = "\n".join(report)
+        atomic_write(output_path, report_content_str.encode('utf-8'))
+        self.fs_cache.invalidate(output_path)
         
-        logger.info(f"Markdown report saved to {output_path}")
+        logger.info(f"Markdown report saved to {output_path} using atomic_write")
         return output_path
 
 
@@ -307,9 +321,12 @@ class CIVerifier:
         
         Args:
             config: Configuration for the CI verifier (optional)
+            fs_cache: Optional FileSystemStateCache instance for the reporter.
         """
         self.config = config or {}
-        self.reporter = CIReporter()
+        # Pass fs_cache to CIReporter, or let it create its own if None
+        self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache() # CIVerifier might need its own too
+        self.reporter = CIReporter(fs_cache=self.fs_cache)
         
         # Determine if running in a CI environment
         self.in_ci = self._detect_ci_environment()
