@@ -123,12 +123,78 @@ function loadAgentStatus() {
 }
 
 
+// Function to load and display timeline data
+function loadTimelineData() {
+    fetch('timeline/timeline_events.json')
+        .then(response => response.json())
+        .then(data => {
+            const timelineContainer = document.querySelector('.timeline-container');
+            if (timelineContainer) {
+                timelineContainer.innerHTML = ''; // Clear existing static content
+                data.forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = 'timeline-event';
+
+                    const eventHeader = document.createElement('div');
+                    eventHeader.className = 'timeline-event-header';
+
+                    const agentName = document.createElement('div');
+                    agentName.className = 'timeline-agent';
+                    agentName.textContent = event.agent_id;
+
+                    const timestamp = document.createElement('div');
+                    timestamp.className = 'timeline-timestamp';
+                    // Format timestamp for display (e.g., only time part)
+                    try {
+                        timestamp.textContent = new Date(event.timestamp).toLocaleTimeString();
+                    } catch (e) {
+                        timestamp.textContent = event.timestamp; // Fallback
+                    }
+
+                    eventHeader.appendChild(agentName);
+                    eventHeader.appendChild(timestamp);
+
+                    const eventContent = document.createElement('div');
+                    eventContent.className = 'timeline-content';
+                    eventContent.textContent = event.content;
+
+                    eventElement.appendChild(eventHeader);
+                    eventElement.appendChild(eventContent);
+
+                    timelineContainer.appendChild(eventElement);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading timeline data:', error));
+}
+
 // Load data when the page is ready
 document.addEventListener('DOMContentLoaded', () => {
     loadGlobalProgress();
     loadAgentStatus();
+    loadTimelineData(); // Load timeline data
 
     // Optional: Refresh data periodically
     // setInterval(loadGlobalProgress, 30000); // Refresh every 30 seconds
     // setInterval(loadAgentStatus, 30000);  // Refresh every 30 seconds
+    // setInterval(loadTimelineData, 30000); // Refresh timeline every 30 seconds
+
+    // Add event listeners for refresh buttons
+    const refreshProgressBtn = document.getElementById('refresh-progress');
+    if (refreshProgressBtn) refreshProgressBtn.addEventListener('click', loadGlobalProgress);
+
+    const refreshAgentsBtn = document.getElementById('refresh-agents');
+    if (refreshAgentsBtn) refreshAgentsBtn.addEventListener('click', loadAgentStatus);
+
+    const refreshTimelineBtn = document.getElementById('refresh-timeline');
+    if (refreshTimelineBtn) refreshTimelineBtn.addEventListener('click', loadTimelineData);
+
+    // For iframed content, their respective refresh buttons are inside the iframes.
+    // If we wanted parent page to control iframe refresh:
+    // const refreshThoughtsBtn = document.getElementById('refresh-thoughts');
+    // if (refreshThoughtsBtn) refreshThoughtsBtn.addEventListener('click', () => {
+    //     const iframe = document.querySelector('#thought-chains iframe');
+    //     if (iframe) iframe.contentWindow.location.reload();
+    // });
+    // Similar for agent-network and decision-trees
 });

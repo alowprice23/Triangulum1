@@ -27,13 +27,7 @@ scrape_configs:
   # Scrape Triangulum engine metrics
   - job_name: "triangulum-engine"
     static_configs:
-      - targets: ["engine:9091"]
-    scrape_interval: 5s
-
-  # Scrape Triangulum dashboard metrics
-  - job_name: "triangulum-dashboard"
-    static_configs:
-      - targets: ["dashboard:9091"]
+      - targets: ["engine:9091"] # This should expose all relevant Triangulum metrics
     scrape_interval: 5s
 
   # Scrape Triangulum human hub metrics

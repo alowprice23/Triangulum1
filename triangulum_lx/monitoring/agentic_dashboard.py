@@ -136,11 +136,21 @@ class AgenticDashboard:
         self.templates_dir = os.path.join(os.path.dirname(__file__), "templates")
         os.makedirs(self.templates_dir, exist_ok=True)
 
-        # Copy template files to output directories
-        self._copy_template_files()
-        
-        # Create the main dashboard HTML
-        self._create_main_dashboard()
+        # Check if a pre-built dashboard exists in output_dir
+        pre_built_dashboard_exists = os.path.exists(os.path.join(self.output_dir, "index.html"))
+
+        if not pre_built_dashboard_exists:
+            logger.info(f"No pre-built index.html found in {self.output_dir}. Generating from templates.")
+            # Copy template files to output directories
+            self._copy_template_files()
+            # Create the main dashboard HTML
+            self._create_main_dashboard()
+        else:
+            logger.info(f"Using existing index.html and structure in {self.output_dir}.")
+            # Ensure necessary data subdirectories exist even if we don't copy templates
+            data_subdirs = ["thought_chains", "agent_network", "progress", "data", "decision_trees", "timeline"]
+            for subdir_name in data_subdirs:
+                os.makedirs(os.path.join(self.output_dir, subdir_name), exist_ok=True)
         
         # Start HTTP server if enabled
         if self.enable_server:

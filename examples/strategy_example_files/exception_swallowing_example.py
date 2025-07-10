@@ -1,4 +1,3 @@
-
 def process_data(data):
     try:
         # Process the data

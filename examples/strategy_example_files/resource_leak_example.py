@@ -1,4 +1,3 @@
-
 def save_log_entry(log_entry):
     # Bug: File is opened but not properly closed
     log_file = open("application.log", "a")

@@ -17,27 +17,8 @@ services:
       - ./logs:/app/logs
     ports:
       - "8888:8888"  # API port
+      - "8080:8080"  # Dashboard UI port (served by AgenticDashboard in engine)
     command: python -m triangulum_lx.scripts.cli run
-    restart: unless-stopped
-    networks:
-      - triangulum-net
-
-  # Dashboard for visualization
-  dashboard:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dashboard
-    container_name: triangulum-dashboard
-    depends_on:
-      - engine
-    environment:
-      - PYTHONUNBUFFERED=1
-    volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
-    ports:
-      - "8080:8080"  # Dashboard UI port
-    command: python -m triangulum_lx.monitoring.dashboard_stub
     restart: unless-stopped
     networks:
       - triangulum-net

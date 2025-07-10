@@ -1,4 +1,3 @@
-
 def search_users(search_term):
     # Bug: SQL injection vulnerability
     query = "SELECT * FROM users WHERE name LIKE '%" + search_term + "%'"

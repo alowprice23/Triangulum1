@@ -1,4 +1,3 @@
-
 def get_user_profile(user_id):
     # Get user from database
     user = get_user_from_database(user_id)
