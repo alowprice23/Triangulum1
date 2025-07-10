@@ -1,4 +1,6 @@
 PLAN-TRIANGULUM-CONSOLIDATE
+FS-UNBLOCK ROADMAP (attach this to TRIANGULUM_END-PLAN.md under a new section “FS-01”) ID Objective Files to create / modify Definition of Done FS-01.1 Introduce an AtomicFileOps utility that wraps every write/rename/delete in an O_TMPFILE → fsync → atomic rename sequence. triangulum_lx/tooling/fs_ops.py • All file-mutating calls in core & tooling go through this module. • Unit test writes 1 000 temp files in parallel and detects 0 stale reads. FS-01.2 Add a FileSystemStateCache with explicit invalidation after each atomic op. triangulum_lx/core/fs_state.py • exists(path) and listdir(path) always reflect reality after any op. • Cache hit ratio logged; mismatch counter remains 0 in stress test. FS-01.3 Implement a post-op verifier (assert_fs_consistency) run in CI: reads back every path touched in last commit and fails on “file not found” or unexpected presence. tests/fs/test_consistency.py • Fails if stale metadata occurs; passes on clean repo. FS-01.4 Wire all tooling scripts (repair.py, rollback_manager.py, cleanup scripts) to call AtomicFileOps and invalidate the cache. Modify listed files (search “open(…,'w')” / os.rename) • Grep for direct mutating calls → 0 remaining. FS-01.5 Add a watchdog fallback (Linux: inotify, macOS: FSEvents, else polling) to auto-invalidate the cache when any external process changes files. triangulum_lx/core/fs_watch.py • Integration test spawns a separate process to delete a file; cache reflects change within ≤ 1 s.
+
 
 **Inventory**
 * Total files scanned : 457
@@ -250,4 +252,6 @@ triangulum_lx/verification/plugins/python.py | PURPOSE=verification_plugin_pytho
     *   Incomplete feature migration from deprecated components to canonical ones.
     *   Test suite gaps after refactoring, leading to undetected regressions.
     *   Misinterpretation of "essential" files, leading to accidental deletion of a subtly used script or config.
+
+
 END-PLAN
