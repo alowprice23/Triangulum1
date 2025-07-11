@@ -1,0 +1,183 @@
+{
+  "session": {
+    "agent_id": "agent_2",
+    "description": "Simulated processing by agent_2",
+    "start_time": "2025-07-07T23:47:46.010815",
+    "end_time": "2025-07-07T23:49:00.929960",
+    "status": "completed",
+    "token_count": 14,
+    "average_confidence": 70.89285714285714,
+    "average_processing_time": 74.37352305574795
+  },
+  "tokens": [
+    {
+      "token": "By",
+      "confidence": 50.0,
+      "processing_time_ms": 69.37193226111374,
+      "timestamp": "2025-07-07T23:47:53.082314",
+      "index": 0,
+      "attention_weights": null,
+      "metadata": {
+        "position": 0,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "visualizing",
+      "confidence": 53.214285714285715,
+      "processing_time_ms": 85.39794990686886,
+      "timestamp": "2025-07-07T23:47:54.281370",
+      "index": 1,
+      "attention_weights": null,
+      "metadata": {
+        "position": 1,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "token-level",
+      "confidence": 56.42857142857143,
+      "processing_time_ms": 76.30784389919498,
+      "timestamp": "2025-07-07T23:47:55.521154",
+      "index": 2,
+      "attention_weights": null,
+      "metadata": {
+        "position": 2,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "confidence",
+      "confidence": 59.64285714285714,
+      "processing_time_ms": 79.0382656913537,
+      "timestamp": "2025-07-07T23:47:56.810544",
+      "index": 3,
+      "attention_weights": null,
+      "metadata": {
+        "position": 3,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "and",
+      "confidence": 62.857142857142854,
+      "processing_time_ms": 65.11742476757676,
+      "timestamp": "2025-07-07T23:47:58.054552",
+      "index": 4,
+      "attention_weights": null,
+      "metadata": {
+        "position": 4,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "attention",
+      "confidence": 66.07142857142857,
+      "processing_time_ms": 83.63086498438291,
+      "timestamp": "2025-07-07T23:47:59.327949",
+      "index": 5,
+      "attention_weights": null,
+      "metadata": {
+        "position": 5,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "patterns,",
+      "confidence": 69.28571428571428,
+      "processing_time_ms": 81.55473814936539,
+      "timestamp": "2025-07-07T23:48:00.515939",
+      "index": 6,
+      "attention_weights": null,
+      "metadata": {
+        "position": 6,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "we",
+      "confidence": 72.5,
+      "processing_time_ms": 69.61134247699638,
+      "timestamp": "2025-07-07T23:48:01.732028",
+      "index": 7,
+      "attention_weights": null,
+      "metadata": {
+        "position": 7,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "gain",
+      "confidence": 75.71428571428571,
+      "processing_time_ms": 68.26477090981606,
+      "timestamp": "2025-07-07T23:48:02.899453",
+      "index": 8,
+      "attention_weights": null,
+      "metadata": {
+        "position": 8,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "insights",
+      "confidence": 78.92857142857143,
+      "processing_time_ms": 73.33323481015434,
+      "timestamp": "2025-07-07T23:48:05.478560",
+      "index": 9,
+      "attention_weights": null,
+      "metadata": {
+        "position": 9,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "into",
+      "confidence": 82.14285714285714,
+      "processing_time_ms": 58.696737042376,
+      "timestamp": "2025-07-07T23:48:06.602613",
+      "index": 10,
+      "attention_weights": null,
+      "metadata": {
+        "position": 10,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "the",
+      "confidence": 85.35714285714286,
+      "processing_time_ms": 62.957975417367564,
+      "timestamp": "2025-07-07T23:48:07.730496",
+      "index": 11,
+      "attention_weights": null,
+      "metadata": {
+        "position": 11,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "model's",
+      "confidence": 88.57142857142857,
+      "processing_time_ms": 73.49318387480552,
+      "timestamp": "2025-07-07T23:48:08.910229",
+      "index": 12,
+      "attention_weights": null,
+      "metadata": {
+        "position": 12,
+        "text_idx": 1
+      }
+    },
+    {
+      "token": "reasoning.",
+      "confidence": 91.78571428571428,
+      "processing_time_ms": 94.4530585890993,
+      "timestamp": "2025-07-07T23:48:10.072700",
+      "index": 13,
+      "attention_weights": null,
+      "metadata": {
+        "position": 13,
+        "text_idx": 1
+      }
+    }
+  ],
+  "last_updated": "2025-07-07T23:49:08.985295"
+}

@@ -14,6 +14,14 @@ def process_file(filename):
     # f.close() is missing
     return data
 
+def read_configuration_leak(): # Renamed to avoid conflict if a safe one is added
+    # Bug: Resource leak if an exception occurs before close()
+    config_file = open("config.ini", "r") # Example path
+    config_data = config_file.read()
+    # If read() raises an exception, close() is never called.
+    config_file.close()
+    return config_data
+
 # SQL injection
 def get_user_data(user_id, cursor):
     # Vulnerable to SQL injection
@@ -24,6 +32,12 @@ def get_user_data_fstring(user_id, cursor):
     # Vulnerable with f-string
     cursor.execute(f"SELECT * FROM users WHERE name = '{user_id}'")
     return cursor.fetchone()
+
+def search_users_sqli(search_term, cursor):
+    # Vulnerable to SQL injection with LIKE clause
+    query = "SELECT * FROM users WHERE name LIKE '%" + search_term + "%'"
+    cursor.execute(query)
+    return cursor.fetchall()
 
 # Exception swallowing
 def divide_numbers(a, b):

@@ -1,0 +1,267 @@
+{
+  "session": {
+    "agent_id": "agent_1",
+    "description": "Simulated processing by agent_1",
+    "start_time": "2025-07-07T23:47:01.604117",
+    "end_time": "2025-07-07T23:47:58.053399",
+    "status": "completed",
+    "token_count": 21,
+    "average_confidence": 77.5084604537935,
+    "average_processing_time": 75.98307409000712
+  },
+  "tokens": [
+    {
+      "token": "The",
+      "confidence": 95.0,
+      "processing_time_ms": 71.88176457721671,
+      "timestamp": "2025-07-07T23:47:01.613117",
+      "index": 0,
+      "attention_weights": null,
+      "metadata": {
+        "position": 0,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "Triangulum",
+      "confidence": 92.0,
+      "processing_time_ms": 80.89726674114317,
+      "timestamp": "2025-07-07T23:47:01.714005",
+      "index": 1,
+      "attention_weights": null,
+      "metadata": {
+        "position": 1,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "system",
+      "confidence": 89.0,
+      "processing_time_ms": 79.93616258781536,
+      "timestamp": "2025-07-07T23:47:01.814517",
+      "index": 2,
+      "attention_weights": null,
+      "metadata": {
+        "position": 2,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "is",
+      "confidence": 86.0,
+      "processing_time_ms": 64.6070864161508,
+      "timestamp": "2025-07-07T23:47:02.532161",
+      "index": 3,
+      "attention_weights": null,
+      "metadata": {
+        "position": 3,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "designed",
+      "confidence": 83.0,
+      "processing_time_ms": 71.2966742178975,
+      "timestamp": "2025-07-07T23:47:03.164480",
+      "index": 4,
+      "attention_weights": null,
+      "metadata": {
+        "position": 4,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "to",
+      "confidence": 80.0,
+      "processing_time_ms": 64.58271961146835,
+      "timestamp": "2025-07-07T23:47:03.793923",
+      "index": 5,
+      "attention_weights": null,
+      "metadata": {
+        "position": 5,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "provide",
+      "confidence": 77.0,
+      "processing_time_ms": 82.81554040325929,
+      "timestamp": "2025-07-07T23:47:04.408439",
+      "index": 6,
+      "attention_weights": null,
+      "metadata": {
+        "position": 6,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "transparent",
+      "confidence": 74.0,
+      "processing_time_ms": 89.45567030445629,
+      "timestamp": "2025-07-07T23:47:05.094088",
+      "index": 7,
+      "attention_weights": null,
+      "metadata": {
+        "position": 7,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "LLM",
+      "confidence": 71.0,
+      "processing_time_ms": 65.9911377760758,
+      "timestamp": "2025-07-07T23:47:05.738671",
+      "index": 8,
+      "attention_weights": null,
+      "metadata": {
+        "position": 8,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "processing.",
+      "confidence": 68.0,
+      "processing_time_ms": 95.04856842790599,
+      "timestamp": "2025-07-07T23:47:07.432652",
+      "index": 9,
+      "attention_weights": null,
+      "metadata": {
+        "position": 9,
+        "text_idx": 0
+      }
+    },
+    {
+      "token": "This",
+      "confidence": 70.0,
+      "processing_time_ms": 66.82540251419088,
+      "timestamp": "2025-07-07T23:47:27.416399",
+      "index": 10,
+      "attention_weights": null,
+      "metadata": {
+        "position": 0,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "transparency",
+      "confidence": 87.67766952966369,
+      "processing_time_ms": 84.23828285655604,
+      "timestamp": "2025-07-07T23:47:28.735681",
+      "index": 11,
+      "attention_weights": null,
+      "metadata": {
+        "position": 1,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "helps",
+      "confidence": 95.0,
+      "processing_time_ms": 76.55063248301596,
+      "timestamp": "2025-07-07T23:47:29.994471",
+      "index": 12,
+      "attention_weights": null,
+      "metadata": {
+        "position": 2,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "users",
+      "confidence": 87.67766952966369,
+      "processing_time_ms": 60.49848395364721,
+      "timestamp": "2025-07-07T23:47:31.216092",
+      "index": 13,
+      "attention_weights": null,
+      "metadata": {
+        "position": 3,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "understand",
+      "confidence": 70.0,
+      "processing_time_ms": 85.88239512507602,
+      "timestamp": "2025-07-07T23:47:32.564138",
+      "index": 14,
+      "attention_weights": null,
+      "metadata": {
+        "position": 4,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "why",
+      "confidence": 52.32233047033631,
+      "processing_time_ms": 63.5430913270734,
+      "timestamp": "2025-07-07T23:47:33.856297",
+      "index": 15,
+      "attention_weights": null,
+      "metadata": {
+        "position": 5,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "the",
+      "confidence": 45.0,
+      "processing_time_ms": 75.10275967832472,
+      "timestamp": "2025-07-07T23:47:35.143610",
+      "index": 16,
+      "attention_weights": null,
+      "metadata": {
+        "position": 6,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "model",
+      "confidence": 52.32233047033631,
+      "processing_time_ms": 75.58749892509225,
+      "timestamp": "2025-07-07T23:47:36.438998",
+      "index": 17,
+      "attention_weights": null,
+      "metadata": {
+        "position": 7,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "makes",
+      "confidence": 70.0,
+      "processing_time_ms": 79.68878343699795,
+      "timestamp": "2025-07-07T23:47:37.645183",
+      "index": 18,
+      "attention_weights": null,
+      "metadata": {
+        "position": 8,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "certain",
+      "confidence": 87.67766952966369,
+      "processing_time_ms": 69.19355933016544,
+      "timestamp": "2025-07-07T23:47:40.516046",
+      "index": 19,
+      "attention_weights": null,
+      "metadata": {
+        "position": 9,
+        "text_idx": 2
+      }
+    },
+    {
+      "token": "decisions.",
+      "confidence": 95.0,
+      "processing_time_ms": 92.02107519662043,
+      "timestamp": "2025-07-07T23:47:41.955886",
+      "index": 20,
+      "attention_weights": null,
+      "metadata": {
+        "position": 10,
+        "text_idx": 2
+      }
+    }
+  ],
+  "last_updated": "2025-07-07T23:47:59.887917"
+}

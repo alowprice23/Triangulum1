@@ -20,6 +20,7 @@
             <div class="nav-item" data-tab="decision-trees">Decision Trees</div>
             <div class="nav-item" data-tab="timeline">Timeline View</div>
             <div class="nav-item" data-tab="progress">Progress Tracking</div>
+            <div class="nav-item" data-tab="token-visualization">Token Visualization</div>
         </div>
         
         <div id="overview" class="tab-container active">
@@ -237,6 +238,16 @@
                 <div class="timeline-container">
                     <!-- Timeline events will be populated by main.js -->
                 </div>
+            </div>
+        </div>
+
+        <div id="token-visualization" class="tab-container">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-title">Token Processing Visualization</div>
+                    <div class="section-action" onclick="document.getElementById('token-iframe').src = document.getElementById('token-iframe').src">Refresh</div>
+                </div>
+                <iframe id="token-iframe" src="token_visualization/index.html" class="iframe-container"></iframe>
             </div>
         </div>
     </div>
