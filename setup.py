@@ -39,7 +39,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "triangulum=triangulum_lx.scripts.cli:main",
+            "triangulum=triangulum_lx.scripts.cli:cli",
         ],
     },
 )

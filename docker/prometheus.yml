@@ -36,7 +36,7 @@ scrape_configs:
       - targets: ["hub:9091"]
     scrape_interval: 5s
 
-  # Node exporter for host metrics
-  - job_name: "node"
-    static_configs:
-      - targets: ["node-exporter:9100"]
+  # Node exporter for host metrics (Removed as node-exporter service is not defined)
+  # - job_name: "node"
+  #   static_configs:
+  #     - targets: ["node-exporter:9100"]

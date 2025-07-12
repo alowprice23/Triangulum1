@@ -1,0 +1,24 @@
+# Core application dependencies from setup.py
+autogen>=0.2.0
+numpy>=1.20.0
+networkx>=2.6.0
+matplotlib>=3.4.0
+PyYAML>=6.0
+scikit-learn>=1.0.0
+joblib>=1.0.0
+
+# Additional dependencies discovered via smoke test
+psutil
+openai
+click
+jsonschema
+chardet
+anthropic
+groq
+backoff
+
+# Dependencies for dashboard/hub from Dockerfiles
+fastapi
+uvicorn
+python-multipart
+aiofiles

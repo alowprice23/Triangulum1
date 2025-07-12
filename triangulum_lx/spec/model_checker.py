@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from pathlib import Path
-from typing import List, Dict, Any, Set, Tuple, Callable
+from typing import List, Dict, Any, Set, Tuple, Callable, Optional
 import json
 import tempfile # For visualize_graph temp file
 
@@ -11,7 +11,7 @@ from triangulum_lx.core.fs_state import FileSystemStateCache
 from .ltl_properties import LTLFormula, triangulum_properties, predicate_mapping
 from ..core.state import Phase, BugState
 from ..core.transition import step
-from ..core.engine import TriangulationEngine
+from ..core.engine import TriangulumEngine as TriangulationEngine
 
 
 class TriangulumModelChecker:

@@ -8,7 +8,7 @@ import readline  # For command history
 
 from ..core.engine import TriangulumEngine
 from ..core.monitor import Monitor
-from ..agents.coordinator import Coordinator
+# from ..agents.coordinator import Coordinator # Deprecated
 from .feedback import FeedbackType, FeedbackItem, FeedbackManager
 from ..monitoring.metrics import MetricsCollector
 
@@ -33,7 +33,7 @@ class InteractiveDebugger(cmd.Cmd):
         self.engine = TriangulumEngine()
         self.monitor = Monitor(self.engine)
         self.engine.monitor = self.monitor
-        self.coordinator = None
+        # self.coordinator = None # Deprecated
         self.metrics = MetricsCollector()
         self.feedback = FeedbackManager()
         self.current_bug_id = None
@@ -67,7 +67,7 @@ class InteractiveDebugger(cmd.Cmd):
         self.monitor = Monitor(self.engine)
         self.engine.monitor = self.monitor
         agents = {"observer": None, "analyst": None, "patcher": None, "verifier": None}
-        self.coordinator = Coordinator(self.engine, agents)
+        # self.coordinator = Coordinator(self.engine, agents) # Deprecated
         self.metrics = MetricsCollector()
         self.debug_session_active = True
         

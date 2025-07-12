@@ -20,7 +20,7 @@ from triangulum_lx.core.fs_state import FileSystemStateCache
 
 logger = logging.getLogger(__name__)
 
-class VerificationMetrics:
+class MetricsCollector:
     """
     Collects and analyzes metrics about the verification process.
     
@@ -29,14 +29,16 @@ class VerificationMetrics:
     It also provides methods to analyze these metrics and generate reports.
     """
     
-    def __init__(self, metrics_path: Optional[str] = None):
+    def __init__(self, namespace: str, metrics_path: Optional[str] = None, fs_cache: Optional[FileSystemStateCache] = None):
         """
         Initialize the verification metrics.
         
         Args:
+            namespace: The namespace for the metrics (e.g., "verification.python.syntax")
             metrics_path: Path to save metrics data (optional)
             fs_cache: Optional FileSystemStateCache instance.
         """
+        self.namespace = namespace
         self.fs_cache = fs_cache if fs_cache is not None else FileSystemStateCache()
         _metrics_path_str = metrics_path or os.path.join(
             os.getcwd(), ".triangulum", "metrics", "verification")

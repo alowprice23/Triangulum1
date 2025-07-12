@@ -8,9 +8,9 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
 from triangulum_lx.core.state import Phase, BugState
-from triangulum_lx.core.engine import TriangulationEngine
+from triangulum_lx.core.engine import TriangulumEngine
 from triangulum_lx.core.monitor import EngineMonitor
-from triangulum_lx.agents.coordinator import AutoGenCoordinator
+from triangulum_lx.agents.orchestrator_agent import OrchestratorAgent as AutoGenCoordinator
 
 class MockBug:
     """

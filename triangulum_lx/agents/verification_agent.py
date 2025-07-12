@@ -32,7 +32,7 @@ from .enhanced_message_bus import EnhancedMessageBus # New
 from ..core.exceptions import TriangulumError, VerificationError
 from ..verification.core import VerificationEnvironment, TestGenerator
 from ..verification.code_fixer import CodeFixer
-from ..verification.metrics import VerificationMetrics as GlobalVerificationMetrics
+from ..verification.metrics import MetricsCollector as GlobalVerificationMetrics
 
 logger = logging.getLogger(__name__)
 

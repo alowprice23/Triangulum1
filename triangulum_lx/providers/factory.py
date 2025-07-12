@@ -885,3 +885,13 @@ def get_provider(provider_type: str, config: Optional[Dict[str, Any]] = None) ->
     """
     factory = get_factory()
     return factory.get_or_create_provider(provider_type, config)
+
+def get_provider_map() -> Dict[str, Type[BaseProvider]]:
+    """
+    Convenience function to get the map of registered providers.
+
+    Returns:
+        A dictionary mapping provider names to their classes.
+    """
+    factory = get_factory()
+    return factory.PROVIDER_REGISTRY

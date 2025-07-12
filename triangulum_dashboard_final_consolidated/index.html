@@ -234,8 +234,24 @@
                     <div class="section-action" id="refresh-timeline">Refresh</div>
                 </div>
                 
-                <div class="timeline-container">
-                    <!-- Timeline events will be populated by main.js -->
+                <div class="timeline-filter">
+                    <div>
+                        <button class="filter-btn active" data-filter="all">All Events</button>
+                        <button class="filter-btn" data-filter="thought">Thoughts Only</button>
+                        <button class="filter-btn" data-filter="message">Messages Only</button>
+                    </div>
+                    <div class="agent-filter">
+                        <label for="timeline-agent-select">Filter by agent:</label>
+                        <select id="timeline-agent-select" class="agent-select">
+                            <option value="all">All Agents</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="timeline-container-wrapper">
+                    <div class="timeline-container" id="main-timeline-container">
+                        <!-- Timeline events will be populated by main.js -->
+                        <div class="no-data">Loading timeline events...</div>
+                    </div>
                 </div>
             </div>
         </div>

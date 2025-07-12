@@ -19,8 +19,63 @@ import string
 import re
 from typing import Dict, List, Any, Optional, Tuple, Callable, Set, Union
 from pathlib import Path
+from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
+
+
+class CodeArtifact(ABC):
+    """Represents a piece of code to be verified."""
+    def __init__(self, artifact_id: str, file_path: str, content: str):
+        self.id = artifact_id
+        self.file_path = file_path
+        self.content = content
+
+class VerificationContext:
+    """Holds context for a verification run."""
+    def __init__(self, config: Dict[str, Any]):
+        self.config = config
+
+class VerificationResult:
+    """Holds the result of a verification check."""
+    def __init__(self, artifact_id: str, plugin_id: str, status: 'VerificationStatus', success: bool, confidence: float, issues: List[Dict], recommendations: List[Dict], metrics: Dict, duration_ms: int, details: Dict):
+        self.artifact_id = artifact_id
+        self.plugin_id = plugin_id
+        self.status = status
+        self.success = success
+        self.confidence = confidence
+        self.issues = issues
+        self.recommendations = recommendations
+        self.metrics = metrics
+        self.duration_ms = duration_ms
+        self.details = details
+
+class VerificationStatus:
+    SUCCESS = "SUCCESS"
+    FAILURE = "FAILURE"
+    ERROR = "ERROR"
+
+class MetricDefinition:
+    def __init__(self, name: str, description: str, unit: str, type: str, labels: Optional[List[str]] = None):
+        self.name = name
+        self.description = description
+        self.unit = unit
+        self.type = type
+        self.labels = labels or []
+
+class VerifierPlugin(ABC):
+    """Abstract base class for all verifier plugins."""
+    def __init__(self, context: VerificationContext):
+        self.context = context
+
+    @abstractmethod
+    async def verify(self, artifact: CodeArtifact) -> VerificationResult:
+        """Perform verification on a code artifact."""
+        pass
+
+    def register_metrics(self) -> List[MetricDefinition]:
+        """Define metrics that this plugin will report."""
+        return []
 
 class VerificationEnvironment:
     """

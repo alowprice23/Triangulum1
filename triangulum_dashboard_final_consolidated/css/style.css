@@ -113,6 +113,66 @@ body {
     font-size: 14px;
     color: #666;
 }
+
+.timeline-filter {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timeline-filter > div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-btn {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background-color: #1890ff;
+    color: white;
+    border-color: #1890ff;
+}
+
+.agent-filter {
+    margin-top: 10px; /* Or remove if flex gap is enough */
+}
+
+.agent-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-style: italic;
+}
+
+.timeline-container-wrapper {
+    /* if you want a fixed height scrollable container */
+    /* max-height: 600px; */
+    /* overflow-y: auto; */
+}
+
+/* Specific event types for dot coloring, if data supports 'type' */
+.timeline-event.timeline-event-thought:before {
+    background-color: #52c41a; /* green for thoughts */
+}
+.timeline-event.timeline-event-message:before {
+    background-color: #faad14; /* orange for messages, assuming default is blue for generic */
+}
+
 .agent-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

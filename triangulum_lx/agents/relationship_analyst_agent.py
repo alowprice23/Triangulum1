@@ -18,8 +18,8 @@ from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType
 # from .message_bus import MessageBus # Old
 from .enhanced_message_bus import EnhancedMessageBus # New
-# Updated import to point to the consolidated dependency_analyzer
-from ..tooling.dependency_analyzer import DependencyGraphBuilder, DependencyAnalyzer, DependencyGraph, FileNode, DependencyType, DependencyMetadata
+# Updated import to point to the consolidated dependency_graph
+from ..tooling.dependency_graph import DependencyGraphBuilder, DependencyAnalyzer, DependencyGraph, FileNode, DependencyType, DependencyMetadata
 # CodeRelationshipAnalyzer is removed as its functionality is being simplified/merged or deferred.
 
 logger = logging.getLogger(__name__)
@@ -474,12 +474,15 @@ class RelationshipAnalystAgent(BaseAgent):
         logger.info("Enhancing dependency graph with static analysis...")
         
         try:
-        # This method is removed as CodeRelationshipAnalyzer was removed.
-        # Its functionality (deeper static analysis for Python like function calls)
-        # would need to be integrated into PythonDependencyParser or a new,
-        # more focused AST analysis tool if required.
-        # For now, the dependency graph relies on what the parsers (mainly import-based) provide.
-        logger.info("Skipping _enhance_with_static_analysis as CodeRelationshipAnalyzer is removed/refactored.")
+            # This method is removed as CodeRelationshipAnalyzer was removed.
+            # Its functionality (deeper static analysis for Python like function calls)
+            # would need to be integrated into PythonDependencyParser or a new,
+            # more focused AST analysis tool if required.
+            # For now, the dependency graph relies on what the parsers (mainly import-based) provide.
+            logger.info("Skipping _enhance_with_static_analysis as CodeRelationshipAnalyzer is removed/refactored.")
+            pass
+        except Exception as e:
+            logger.error(f"Error during static analysis enhancement: {e}", exc_info=True)
     
     def _incorporate_runtime_traces(self) -> None:
         """

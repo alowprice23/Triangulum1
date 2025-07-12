@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Union
 
-from .metrics import VerificationMetrics
+from .metrics import MetricsCollector as VerificationMetrics
 
 logger = logging.getLogger(__name__)
 

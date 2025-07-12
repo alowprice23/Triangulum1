@@ -11,7 +11,7 @@ We use the following temporal operators:
 
 from enum import Enum
 import re
-from typing import List, Dict, Any, Callable
+from typing import List, Dict, Any, Callable, Optional
 
 from ..core.state import Phase
 

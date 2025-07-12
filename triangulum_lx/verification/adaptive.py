@@ -16,7 +16,7 @@ from typing import Dict, List, Any, Optional, Tuple, Set, Union
 from pathlib import Path
 from collections import defaultdict
 
-from .metrics import VerificationMetrics
+from .metrics import MetricsCollector as VerificationMetrics
 
 from triangulum_lx.tooling.fs_ops import atomic_write
 from triangulum_lx.core.fs_state import FileSystemStateCache

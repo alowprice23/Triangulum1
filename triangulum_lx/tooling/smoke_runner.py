@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 
-from .test_runner import run_tests, run_pytest, run_npm_test, TestResult
+from .test_runner import TestRunner, TestResult
 from .canary_runner import CanaryRunner
 
 # Setup logging
@@ -170,20 +170,32 @@ class SmokeTestRunner:
         Returns:
             TestResult with results
         """
-        smoke_tests = Path(self.project_path) / self.smoke_tests_path
-        if not smoke_tests.exists():
-            logger.info(f"No smoke tests found at {smoke_tests}")
-            return TestResult(passed=0, failed=0)
+        smoke_tests_dir = Path(self.project_path) / self.smoke_tests_path
+        if not smoke_tests_dir.exists():
+            logger.info(f"No smoke tests found at {smoke_tests_dir}")
+            return TestResult(success=True, message="No smoke tests found")
         
-        logger.info(f"Running smoke tests at {smoke_tests}")
-        result_dict = run_pytest(str(smoke_tests))
-        
-        # Convert to TestResult object if it's a dictionary
-        if isinstance(result_dict, dict):
-            return TestResult.from_dict(result_dict)
-        else:
-            logger.error(f"Unexpected result type from run_pytest: {type(result_dict)}")
-            return TestResult(passed=0, failed=1)
+        logger.info(f"Running smoke tests in {smoke_tests_dir}")
+        try:
+            # Instantiate the test runner
+            test_runner = TestRunner(project_root=str(self.project_path))
+
+            # Discover smoke tests
+            smoke_test_files = list(smoke_tests_dir.glob("**/test_*.py"))
+            if not smoke_test_files:
+                logger.info(f"No test files found in {smoke_tests_dir}")
+                return TestResult(success=True, message="No smoke test files found")
+
+            # Run the discovered smoke tests
+            results = test_runner.run_tests(test_files=smoke_test_files)
+
+            success = results.get("failed", 0) == 0
+            message = f"Smoke tests completed. Passed: {results.get('passed', 0)}, Failed: {results.get('failed', 0)}"
+
+            return TestResult(success=success, message=message, details=results)
+        except Exception as e:
+            logger.error(f"Error running pytest smoke tests: {e}", exc_info=True)
+            return TestResult(success=False, message=f"Error running smoke tests: {e}")
     
     def run(self) -> Dict[str, Any]:
         """

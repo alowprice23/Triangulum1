@@ -1,5 +1,7 @@
-"""Future directions and roadmap for Triangulum."""
+"""
+Future directions and roadmap for Triangulum.
 
-from .roadmap import TriangulumRoadmap, RoadmapItem, TimeFrame, Priority, research_themes
-
-__all__ = ['TriangulumRoadmap', 'RoadmapItem', 'TimeFrame', 'Priority', 'research_themes']
+This package is reserved for future development and experimental features.
+The previous roadmap.py has been deprecated and its contents absorbed into
+the main project planning documents.
+"""

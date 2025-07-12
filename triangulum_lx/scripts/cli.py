@@ -8,7 +8,7 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from triangulum_lx.core.engine import TriangulumEngine
-from triangulum_lx.monitoring.system_monitor import start_monitor
+from triangulum_lx.monitoring.system_monitor import SystemMonitor
 
 # Configure logging
 logging.basicConfig(
@@ -44,8 +44,24 @@ def run(goal, verbose):
     engine = TriangulumEngine()
     
     # Start the system monitor
-    monitor = start_monitor(engine)
+    monitor = SystemMonitor(engine)
+    monitor.start_monitoring()
     
+    # Start the Agentic Dashboard
+    dashboard = None
+    try:
+        from triangulum_lx.monitoring.agentic_dashboard import AgenticDashboard
+        # Path to the consolidated dashboard relative to the project root
+        dashboard_dir = str(project_root / "triangulum_dashboard_final_consolidated")
+        dashboard = AgenticDashboard(
+            output_dir=dashboard_dir,
+            server_port=8080, # As per docker-compose.yml
+            auto_open_browser=False # Usually False for server environments
+        )
+        logger.info(f"Agentic Dashboard initialized, serving from: {dashboard_dir}")
+    except Exception as e:
+        logger.error(f"Failed to initialize Agentic Dashboard: {e}", exc_info=True)
+
     try:
         logger.info(f"Starting engine with goal file: {goal}")
         engine.run(goal_file=goal)
@@ -53,8 +69,11 @@ def run(goal, verbose):
         logger.info("Shutdown signal received.")
     finally:
         logger.info("Shutting down Triangulum Engine...")
+        if dashboard:
+            logger.info("Stopping Agentic Dashboard...")
+            dashboard.stop()
         engine.shutdown()
-        monitor.stop()
+        monitor.stop_monitoring()
         logger.info("Shutdown complete.")
 
 @cli.command()
