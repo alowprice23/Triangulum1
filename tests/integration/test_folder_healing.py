@@ -13,7 +13,7 @@ import shutil
 import time
 from pathlib import Path
 
-from triangulum_lx.agents.message_bus import MessageBus
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus
 from triangulum_lx.agents.bug_detector_agent import BugDetectorAgent
 from triangulum_lx.agents.relationship_analyst_agent import RelationshipAnalystAgent
 from triangulum_lx.agents.priority_analyzer_agent import PriorityAnalyzerAgent

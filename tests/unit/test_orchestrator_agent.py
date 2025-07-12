@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 
 from triangulum_lx.agents.orchestrator_agent import OrchestratorAgent, TaskPriority, Task
 from triangulum_lx.agents.message import AgentMessage, MessageType
-from triangulum_lx.agents.message_bus import MessageBus
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus
 
 
 class MockMessageBus:

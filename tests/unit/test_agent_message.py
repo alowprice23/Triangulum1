@@ -13,7 +13,7 @@ import time
 from unittest.mock import MagicMock
 
 from triangulum_lx.agents.message import AgentMessage, MessageType, ConversationMemory
-from triangulum_lx.agents.message_bus import MessageBus, SubscriptionInfo
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus, SubscriptionInfo
 
 
 class TestAgentMessage(unittest.TestCase):
