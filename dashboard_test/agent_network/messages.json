@@ -1,9 +1,0 @@
-[
-  {
-    "timestamp": "2025-07-08T01:23:49.160382",
-    "source_agent": "orchestrator",
-    "target_agent": "bug_detector",
-    "message_type": "command",
-    "content": "Start bug detection"
-  }
-]
