@@ -172,9 +172,9 @@
 <body>
     <div class="visualization-header">
         <div class="visualization-title">Triangulum Decision Tree Visualization</div>
-        <div class="visualization-refresh">Last updated: 2025-07-08 01:23:59</div>
+        <div class="visualization-refresh">Last updated: 2025-07-13 10:58:40</div>
     </div>
-    
+
     <div class="visualization-controls">
         <div class="control-group">
             <div class="control-label">Agent:</div>
@@ -186,7 +186,7 @@
         <div class="control-group">
             <div class="control-label">Decision Tree:</div>
             <select id="tree-select" class="control-select">
-                <option value="22c6940f-1bab-43ca-bc85-c15c24005000">Test Decision Tree</option>
+                <option value="dd6fc15d-4938-4358-9208-8a7e6810fd1c">Test Decision Tree</option>
 
             </select>
         </div>
@@ -199,15 +199,15 @@
             </select>
         </div>
     </div>
-    
+
     <div class="dashboard">
         <div class="tree-container" id="tree-visualization"></div>
-        
+
         <div class="tree-info">
             <div class="tree-info-title">Tree Information</div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Tree ID:</div>
-                <div class="tree-info-value" id="tree-id">22c6940f-1bab-43ca-bc85-c15c24005000</div>
+                <div class="tree-info-value" id="tree-id">dd6fc15d-4938-4358-9208-8a7e6810fd1c</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Agent:</div>
@@ -215,11 +215,11 @@
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Created:</div>
-                <div class="tree-info-value" id="tree-created">2025-07-08 01:23:49</div>
+                <div class="tree-info-value" id="tree-created">2025-07-13 10:58:29</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Last Updated:</div>
-                <div class="tree-info-value" id="tree-updated">2025-07-08 01:23:49</div>
+                <div class="tree-info-value" id="tree-updated">2025-07-13 10:58:29</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Nodes:</div>
@@ -234,31 +234,31 @@
                 <div class="tree-info-value" id="tree-status">Active</div>
             </div>
         </div>
-        
+
         <div class="node-details" id="node-details">
             <div class="node-details-title">Node Details</div>
             <div class="node-details-content" id="node-content"></div>
-            
+
             <div class="alternatives-container" id="alternatives-container">
                 <div class="tree-info-title">Alternative Paths</div>
                 <div id="alternatives-list"></div>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Decision tree data
-        const treeData = {"22c6940f-1bab-43ca-bc85-c15c24005000": {"tree_id": "22c6940f-1bab-43ca-bc85-c15c24005000", "agent_id": "orchestrator", "name": "Test Decision Tree", "description": "Tree for dashboard testing", "created_at": "2025-07-08T01:23:49.173381", "last_updated": "2025-07-08T01:23:49.174384", "status": "Active", "node_count": 2, "depth": 1, "root": {"name": "Root", "type": "root", "content": "Decision tree root", "children": [{"id": "589ce86e-acea-4d8b-89ec-91a1afb1cab5", "name": "Root Node", "type": "decision", "content": "Test decision node", "confidence": 90, "alternatives": [], "metadata": {}, "children": []}]}}};
-        const agentTrees = {"orchestrator": ["22c6940f-1bab-43ca-bc85-c15c24005000"]};
-        
+        const treeData = {"dd6fc15d-4938-4358-9208-8a7e6810fd1c": {"tree_id": "dd6fc15d-4938-4358-9208-8a7e6810fd1c", "agent_id": "orchestrator", "name": "Test Decision Tree", "description": "Tree for dashboard testing", "created_at": "2025-07-13T10:58:29.890484", "last_updated": "2025-07-13T10:58:29.890547", "status": "Active", "node_count": 2, "depth": 1, "root": {"name": "Root", "type": "root", "content": "Decision tree root", "children": [{"id": "7938811e-0f6e-453d-8abd-ab7f24d5bc40", "name": "Root Node", "type": "decision", "content": "Test decision node", "confidence": 90, "alternatives": [], "metadata": {}, "children": []}]}}};
+        const agentTrees = {"orchestrator": ["dd6fc15d-4938-4358-9208-8a7e6810fd1c"]};
+
         // Set up the tree visualization using D3.js
         const width = document.getElementById('tree-visualization').clientWidth;
         const height = document.getElementById('tree-visualization').clientHeight;
         const margin = {top: 20, right: 90, bottom: 30, left: 90};
-        
+
         // Clear previous SVG
         d3.select('#tree-visualization').selectAll('svg').remove();
-        
+
         // Create SVG
         const svg = d3.select('#tree-visualization')
             .append('svg')
@@ -266,23 +266,23 @@
             .attr('height', height)
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
-            
+
         // Create a tooltip div
         const tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
             .style('opacity', 0);
-        
+
         // Create tree layout
         const treemap = d3.tree().size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
-        
+
         // Helper function to update the tree visualization
         function updateTree(treeId) {
             if (!treeData[treeId]) return;
-            
+
             // Process data for D3
             const root = d3.hierarchy(treeData[treeId].root);
             const nodes = treemap(root);
-            
+
             // Add links
             const link = svg.selectAll('.link')
                 .data(nodes.descendants().slice(1))
@@ -291,7 +291,7 @@
                 .attr('d', d => {
                     return `M${d.y},${d.x}C${(d.y + d.parent.y) / 2},${d.x} ${(d.y + d.parent.y) / 2},${d.parent.x} ${d.parent.y},${d.parent.x}`;
                 });
-            
+
             // Add nodes
             const node = svg.selectAll('.node')
                 .data(nodes.descendants())
@@ -307,17 +307,17 @@
                     tooltip.transition()
                         .duration(200)
                         .style('opacity', .9);
-                    
+
                     // Format confidence with color
                     let confidenceHtml = '';
                     if (d.data.confidence) {
                         let confidenceClass = 'confidence-medium';
                         if (d.data.confidence >= 80) confidenceClass = 'confidence-high';
                         if (d.data.confidence < 50) confidenceClass = 'confidence-low';
-                        
+
                         confidenceHtml = `<div>Confidence: <span class="${confidenceClass}">${d.data.confidence}%</span></div>`;
                     }
-                    
+
                     tooltip.html(`
                         <div>${d.data.name}</div>
                         ${confidenceHtml}
@@ -335,15 +335,15 @@
                     // Show node details
                     document.getElementById('node-details').classList.add('active');
                     document.getElementById('node-content').textContent = d.data.content || d.data.name;
-                    
+
                     // Show alternatives if any
                     const alternativesContainer = document.getElementById('alternatives-container');
                     const alternativesList = document.getElementById('alternatives-list');
-                    
+
                     if (d.data.alternatives && d.data.alternatives.length > 0) {
                         alternativesContainer.style.display = 'block';
                         alternativesList.innerHTML = '';
-                        
+
                         d.data.alternatives.forEach(alt => {
                             const altItem = document.createElement('div');
                             altItem.className = 'alternative-item';
@@ -354,12 +354,12 @@
                         alternativesContainer.style.display = 'none';
                     }
                 });
-            
+
             // Add circles to nodes
             node.append('circle')
                 .attr('r', d => d.data.type === 'decision' ? 8 : 5)
                 .attr('fill', d => d.data.color || '#fff');
-            
+
             // Add labels to nodes
             node.append('text')
                 .attr('dy', '.35em')
@@ -372,7 +372,7 @@
                     }
                     return text;
                 });
-            
+
             // Update tree info
             document.getElementById('tree-id').textContent = treeId;
             document.getElementById('tree-agent').textContent = treeData[treeId].agent_id;
@@ -382,7 +382,7 @@
             document.getElementById('tree-depth').textContent = treeData[treeId].depth || 'Unknown';
             document.getElementById('tree-status').textContent = treeData[treeId].status || 'Unknown';
         }
-        
+
         // Populate agent select
         const agentSelect = document.getElementById('agent-select');
         Object.keys(agentTrees).forEach(agentId => {
@@ -391,57 +391,57 @@
             option.textContent = agentId;
             agentSelect.appendChild(option);
         });
-        
+
         // Update tree select when agent changes
         agentSelect.addEventListener('change', () => {
             const agentId = agentSelect.value;
             const treeSelect = document.getElementById('tree-select');
-            
+
             // Clear current options
             treeSelect.innerHTML = '';
-            
+
             // Add options for selected agent
             if (agentTrees[agentId]) {
                 agentTrees[agentId].forEach(treeId => {
                     const option = document.createElement('option');
                     option.value = treeId;
-                    
+
                     // Get tree name or use ID
                     let treeName = treeId;
                     if (treeData[treeId] && treeData[treeId].name) {
                         treeName = treeData[treeId].name;
                     }
-                    
+
                     option.textContent = treeName;
                     treeSelect.appendChild(option);
                 });
-                
+
                 // Update tree visualization
                 if (agentTrees[agentId].length > 0) {
                     updateTree(agentTrees[agentId][0]);
                 }
             }
         });
-        
+
         // Update visualization when tree changes
         document.getElementById('tree-select').addEventListener('change', (e) => {
             const treeId = e.target.value;
             updateTree(treeId);
         });
-        
+
         // View select handling
         document.getElementById('view-select').addEventListener('change', (e) => {
             const viewType = e.target.value;
             // Implement different view types (full tree, selected path, show alternatives)
             // This would require more complex logic based on the selected tree data
         });
-        
+
         // Initialize with first tree if available
         if (Object.keys(treeData).length > 0) {
             const firstTreeId = Object.keys(treeData)[0];
             updateTree(firstTreeId);
         }
-        
+
         // Auto-refresh every 5 seconds
         setTimeout(function() {
             location.reload();

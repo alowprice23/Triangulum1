@@ -1,0 +1,49 @@
+{
+    "logging": {
+        "level": "INFO",
+        "file": "triangulum_logs/test_startup.log"
+    },
+    "providers": {
+        "default_provider": "local",
+        "local": {
+            "enabled": true,
+            "models": [
+                "echo"
+            ]
+        }
+    },
+    "agents": {
+        "meta": {
+            "enabled": true,
+            "max_retries": 2
+        },
+        "relationship_analyst": {
+            "enabled": false
+        },
+        "bug_detector": {
+            "enabled": true
+        },
+        "strategy": {
+            "enabled": false
+        },
+        "implementation": {
+            "enabled": false
+        },
+        "verification": {
+            "enabled": false
+        },
+        "priority_analyzer": {
+            "enabled": false
+        },
+        "orchestrator": {
+            "enabled": false
+        }
+    },
+    "startup": {
+        "parallel": false,
+        "retry_count": 1,
+        "timeout": 30,
+        "auto_recover": false,
+        "health_check_interval": 15
+    }
+}

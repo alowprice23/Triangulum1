@@ -79,7 +79,7 @@ class TriangulumEngine:
         # Needs to be initialized before agents that might use it.
         # Assuming OperationProgress is a class that can be instantiated.
         from triangulum_lx.core.monitor import OperationProgress # Import it
-        self.operation_monitor = OperationProgress() # Instantiate it
+        self.operation_monitor = OperationProgress(operation_id="engine_startup", operation_type="engine_startup") # Instantiate it
         logger.info("OperationProgress monitor initialized in Engine.")
 
         # Define component dependencies

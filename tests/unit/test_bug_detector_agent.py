@@ -4,7 +4,6 @@ Unit tests for the BugDetectorAgent.
 These tests ensure that the BugDetectorAgent correctly identifies potential bugs
 in code, analyzes test failures, and provides meaningful fix recommendations.
 """
-
 import unittest
 import os
 import tempfile
@@ -28,7 +27,6 @@ class TestBugDetectorAgent(unittest.TestCase):
         self.message_bus = MagicMock()
         self.agent = BugDetectorAgent(
             agent_id="test_bug_detector",
-            agent_type="bug_detector",
             message_bus=self.message_bus,
             max_bug_patterns=100,
             max_file_size=1024 * 1024  # 1 MB

@@ -223,14 +223,14 @@ class AgentFactory:
             self._agent_status[agent_type] = AgentStatus.FAILED
             error_msg = f"Failed to create {agent_type} agent after {max_retries} attempts"
             self._startup_errors[agent_type] = error_msg
-            raise AgentInitError(error_msg, agent_type, last_error)
+            raise AgentInitError(error_msg, agent_type, details={"last_error": str(last_error)})
             
         except Exception as e:
             self._agent_status[agent_type] = AgentStatus.FAILED
             error_msg = f"Error creating {agent_type} agent: {e}"
             self._startup_errors[agent_type] = error_msg
             logger.error(error_msg, exc_info=True)
-            raise AgentInitError(error_msg, agent_type, e)
+            raise AgentInitError(error_msg, agent_type, details={"exception": str(e)})
     
     def get_agent(self, agent_id: str) -> Optional[BaseAgent]:
         """

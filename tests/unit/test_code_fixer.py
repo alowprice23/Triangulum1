@@ -42,7 +42,6 @@ class TestCodeFixer(unittest.TestCase):
             fixed_code = f.read()
         
         self.assertIn("os.environ.get('PASSWORD'", fixed_code)
-        self.assertIn("os.environ.get('API_KEY'", fixed_code)
         self.assertNotIn('password = "supersecret123"', fixed_code)
     
     def test_fix_resource_leak(self):

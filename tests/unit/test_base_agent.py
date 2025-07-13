@@ -4,7 +4,6 @@ Unit tests for the base agent functionality.
 This module contains tests for the BaseAgent abstract class and agent factory,
 verifying the core agent functionality and interfaces.
 """
-
 import unittest
 from unittest.mock import MagicMock, patch, call
 
@@ -13,6 +12,7 @@ from triangulum_lx.agents.message import AgentMessage, MessageType, ConfidenceLe
 from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus # New
 from triangulum_lx.agents.base_agent import BaseAgent
 from triangulum_lx.agents.agent_factory import AgentFactory
+from triangulum_lx.core.exceptions import AgentInitError
 from triangulum_lx.monitoring.metrics import MetricsCollector # For mocking
 # from triangulum_lx.core.monitor import OperationProgress # For mocking engine_monitor if needed
 
@@ -21,10 +21,8 @@ from triangulum_lx.monitoring.metrics import MetricsCollector # For mocking
 class TestAgent(BaseAgent):
     """Concrete implementation of BaseAgent for testing."""
     
-    def __init__(self, **kwargs):
-        # Make sure to set agent_type to test_agent
-        kwargs["agent_type"] = "test_agent"
-        super().__init__(**kwargs)
+    def __init__(self, agent_type="test_agent", **kwargs):
+        super().__init__(agent_type=agent_type, **kwargs)
         self.task_requests_handled = []
         self.queries_handled = []
     
@@ -257,8 +255,11 @@ class TestBaseAgent(unittest.TestCase):
             content={"task": "test"}
         ))
         
+        original_message = MagicMock(spec=AgentMessage)
+        original_message.sender = "test"
+        original_message.message_id = "test_id"
         self.assertIsNone(agent.send_response(
-            original_message=MagicMock(spec=AgentMessage),
+            original_message=original_message,
             message_type=MessageType.TASK_RESULT,
             content={"result": "test"}
         ))
@@ -316,19 +317,15 @@ class TestAgentFactory(unittest.TestCase):
     
     def test_create_agent_unregistered_type(self):
         """Test creating an agent with an unregistered type."""
-        with patch("triangulum_lx.agents.agent_factory.logger") as mock_logger:
-            agent = self.factory.create_agent("unknown_type")
-            self.assertIsNone(agent)
-            mock_logger.error.assert_called_once()
+        with self.assertRaises(AgentInitError):
+            self.factory.create_agent("unknown_type")
     
     def test_create_agent_initialization_failure(self):
         """Test handling initialization failure when creating an agent."""
         # Mock the initialize method to return False
         with patch.object(TestAgent, 'initialize', return_value=False):
-            with patch("triangulum_lx.agents.agent_factory.logger") as mock_logger:
-                agent = self.factory.create_agent("test_agent")
-                self.assertIsNone(agent)
-                mock_logger.error.assert_called_once()
+            with self.assertRaises(AgentInitError):
+                self.factory.create_agent("test_agent")
     
     def test_get_agent(self):
         """Test retrieving an agent by ID."""

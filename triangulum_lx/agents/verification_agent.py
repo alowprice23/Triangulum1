@@ -275,6 +275,7 @@ class VerificationAgent(BaseAgent):
         self.test_generator = TestGenerator(config=self.config.get("test_generator", {}))
         self.code_fixer = CodeFixer(config=self.config.get("code_fixer", {}))
         self.global_metrics = GlobalVerificationMetrics(
+            namespace=self.agent_id,
             metrics_path=self.config.get("metrics_path", os.path.join(self.verification_data_dir, "metrics"))
         )
         

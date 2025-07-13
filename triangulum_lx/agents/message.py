@@ -144,6 +144,8 @@ class AgentMessage:
         Returns:
             bool: True if the message is valid, raises ValueError otherwise
         """
+        if not isinstance(self.message_type, MessageType):
+            raise ValueError(f"message_type must be a MessageType enum, got {type(self.message_type)}")
         try:
             # Import here to avoid circular imports
             from triangulum_lx.agents.message_schema import validate_message
@@ -162,8 +164,6 @@ class AgentMessage:
         except ImportError:
             # Fall back to basic validation if schema module is not available
             # Check required fields
-            if not isinstance(self.message_type, MessageType):
-                raise ValueError(f"message_type must be a MessageType enum, got {type(self.message_type)}")
             
             if not isinstance(self.content, dict):
                 raise ValueError(f"content must be a dictionary, got {type(self.content)}")
@@ -309,9 +309,9 @@ class AgentMessage:
             conversation_id=self.conversation_id,
             confidence=confidence,
             metadata=metadata or {},
-            problem_context=problem_context or {},
-            analysis_results=analysis_results or {},
-            suggested_actions=suggested_actions or [],
+            problem_context=problem_context or self.problem_context,
+            analysis_results=analysis_results or self.analysis_results,
+            suggested_actions=suggested_actions or self.suggested_actions,
             is_chunked=is_chunked,
             chunk_id=chunk_id,
             total_chunks=total_chunks,

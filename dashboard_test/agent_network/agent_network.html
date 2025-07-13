@@ -2,251 +2,359 @@
 <html>
 <head>
     <title>Triangulum Agent Network Visualization</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .dashboard {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .visualization-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .visualization-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-        .visualization-refresh {
-            font-size: 14px;
-            color: #888;
         }
         .network-container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
+            width: 100%;
             height: 600px;
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
         }
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+        .message-list {
             margin-top: 20px;
-        }
-        .stat-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            flex: 1;
-            min-width: 200px;
-        }
-        .stat-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1890ff;
-        }
-        .messages-container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
         }
         .message {
+            margin-bottom: 10px;
             padding: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            border-left: 4px solid #999;
         }
-        .message:last-child {
-            border-bottom: none;
+        .message-request {
+            border-left-color: #1890ff;
+            background-color: #e6f7ff;
         }
-        .message-timestamp {
+        .message-response {
+            border-left-color: #52c41a;
+            background-color: #f6ffed;
+        }
+        .message-notification {
+            border-left-color: #faad14;
+            background-color: #fff7e6;
+        }
+        .message-command {
+            border-left-color: #722ed1;
+            background-color: #f9f0ff;
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
             font-size: 12px;
-            color: #888;
+            color: #666;
         }
         .message-content {
-            margin-top: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
         }
-        .agent-node {
+        .message-route {
+            font-weight: bold;
+        }
+        .controls {
+            margin-bottom: 10px;
+        }
+        .filter-control {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            background-color: white;
             cursor: pointer;
         }
-        .link-label {
-            font-size: 10px;
+        .filter-control.active {
+            background-color: #1890ff;
+            color: white;
+            border-color: #1890ff;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+        .tooltip {
+            position: absolute;
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
             pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
-    <div class="visualization-header">
-        <div class="visualization-title">Triangulum Agent Network Visualization</div>
-        <div class="visualization-refresh">Last updated: 2025-07-08 01:23:59</div>
+    <h1>Agent Communication Network</h1>
+
+    <div class="controls">
+        <button class="filter-control active" data-filter="all">All Messages</button>
+        <button class="filter-control" data-filter="command">Commands</button>
+        <button class="filter-control" data-filter="request">Requests</button>
+        <button class="filter-control" data-filter="response">Responses</button>
+        <button class="filter-control" data-filter="notification">Notifications</button>
     </div>
-    
-    <div class="dashboard">
-        <div class="network-container" id="network-visualization"></div>
-        
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-title">Total Agents</div>
-                <div class="stat-value">2</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Total Messages</div>
-                <div class="stat-value">1</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Active Agents (Last 5m)</div>
-                <div class="stat-value">2</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Avg. Response Time</div>
-                <div class="stat-value">0ms</div>
-            </div>
-        </div>
-        
-        <div class="messages-container">
-            <div class="stat-title">Recent Messages</div>
-            
-            <div class="message">
-                <div class="message-timestamp">01:23:49</div>
-                <div class="message-content">
-                    <strong>orchestrator</strong> → <strong>bug_detector</strong> (command)
-                    : Test message for dashboard
-                </div>
-            </div>
-            
-        </div>
+
+    <div class="network-container">
+        <svg id="network-svg" width="100%" height="100%"></svg>
     </div>
-    
+
+    <h2>Recent Messages</h2>
+
+    <div class="message-list" id="message-list">
+        <div class="no-data">No messages recorded yet.</div>
+    </div>
+
     <script>
-        // Network visualization using D3.js
-        const width = document.getElementById('network-visualization').clientWidth;
-        const height = document.getElementById('network-visualization').clientHeight;
-        
-        const svg = d3.select('#network-visualization')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height);
-        
-        // Create the graph data
-        const graphData = {"nodes": [{"id": "bug_detector", "color": "#fa8c16"}, {"id": "orchestrator", "color": "#1890ff"}], "links": [{"source": "orchestrator", "target": "bug_detector", "value": 1}]};
-        
-        // Create a force simulation
-        const simulation = d3.forceSimulation(graphData.nodes)
-            .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(100))
-            .force('charge', d3.forceManyBody().strength(-300))
-            .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('collision', d3.forceCollide().radius(50));
-        
-        // Add links
-        const link = svg.append('g')
-            .selectAll('line')
-            .data(graphData.links)
-            .enter()
-            .append('line')
-            .attr('stroke-width', d => Math.max(1, Math.sqrt(d.value)))
-            .attr('stroke', '#999')
-            .attr('stroke-opacity', 0.6);
-        
-        // Add link labels
-        const linkLabel = svg.append('g')
-            .selectAll('text')
-            .data(graphData.links)
-            .enter()
-            .append('text')
-            .attr('class', 'link-label')
-            .text(d => d.value)
-            .attr('fill', '#666')
-            .attr('text-anchor', 'middle');
-        
-        // Add nodes
-        const node = svg.append('g')
-            .selectAll('circle')
-            .data(graphData.nodes)
-            .enter()
-            .append('circle')
-            .attr('r', 20)
-            .attr('fill', d => d.color || '#1890ff')
-            .attr('class', 'agent-node')
-            .call(d3.drag()
-                .on('start', dragstarted)
-                .on('drag', dragged)
-                .on('end', dragended));
-        
-        // Add node labels
-        const nodeLabel = svg.append('g')
-            .selectAll('text')
-            .data(graphData.nodes)
-            .enter()
-            .append('text')
-            .text(d => d.id)
-            .attr('text-anchor', 'middle')
-            .attr('dy', 5)
-            .attr('fill', 'white')
-            .attr('pointer-events', 'none');
-        
-        // Update positions on simulation tick
-        simulation.on('tick', () => {
-            link
-                .attr('x1', d => d.source.x)
-                .attr('y1', d => d.source.y)
-                .attr('x2', d => d.target.x)
-                .attr('y2', d => d.target.y);
-            
-            linkLabel
-                .attr('x', d => (d.source.x + d.target.x) / 2)
-                .attr('y', d => (d.source.y + d.target.y) / 2);
-            
-            node
-                .attr('cx', d => d.x = Math.max(20, Math.min(width - 20, d.x)))
-                .attr('cy', d => d.y = Math.max(20, Math.min(height - 20, d.y)));
-                
-            nodeLabel
-                .attr('x', d => d.x)
-                .attr('y', d => d.y);
+        // This will be populated with actual data when rendered
+        let messagesData = [];
+        let agentsData = [];
+
+        // D3 Network visualization
+        function renderNetwork(messages, agents) {
+            // Clear previous visualization
+            d3.select("#network-svg").html("");
+
+            if (messages.length === 0) {
+                d3.select("#network-svg")
+                    .append("text")
+                    .attr("x", "50%")
+                    .attr("y", "50%")
+                    .attr("text-anchor", "middle")
+                    .text("No agent communication recorded yet.");
+                return;
+            }
+
+            // Extract unique agents
+            const uniqueAgents = new Set();
+            messages.forEach(msg => {
+                uniqueAgents.add(msg.source_agent);
+                uniqueAgents.add(msg.target_agent);
+            });
+
+            // Create nodes data
+            const nodes = Array.from(uniqueAgents).map(agent => ({
+                id: agent,
+                name: agent
+            }));
+
+            // Create links data from messages
+            const links = messages.map(msg => ({
+                source: msg.source_agent,
+                target: msg.target_agent,
+                type: msg.message_type,
+                timestamp: msg.timestamp,
+                content: msg.content
+            }));
+
+            // Set up SVG
+            const svg = d3.select("#network-svg");
+            const width = svg.node().getBoundingClientRect().width;
+            const height = svg.node().getBoundingClientRect().height;
+
+            // Create tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            // Create simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+                .force("charge", d3.forceManyBody().strength(-500))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            // Create links
+            const link = svg.append("g")
+                .selectAll("line")
+                .data(links)
+                .enter().append("line")
+                .attr("stroke-width", 2)
+                .attr("stroke", d => {
+                    switch (d.type) {
+                        case "command": return "#722ed1";
+                        case "request": return "#1890ff";
+                        case "response": return "#52c41a";
+                        case "notification": return "#faad14";
+                        default: return "#999";
+                    }
+                });
+
+            // Create nodes
+            const node = svg.append("g")
+                .selectAll("circle")
+                .data(nodes)
+                .enter().append("circle")
+                .attr("r", 20)
+                .attr("fill", "#fff")
+                .attr("stroke", "#1890ff")
+                .attr("stroke-width", 2)
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Agent: ${d.name}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                })
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            // Add labels to nodes
+            const labels = svg.append("g")
+                .selectAll("text")
+                .data(nodes)
+                .enter().append("text")
+                .text(d => d.name)
+                .attr("font-size", "10px")
+                .attr("dx", 0)
+                .attr("dy", 30)
+                .attr("text-anchor", "middle");
+
+            // Set up tick function
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x = Math.max(20, Math.min(width - 20, d.x)))
+                    .attr("cy", d => d.y = Math.max(20, Math.min(height - 20, d.y)));
+
+                labels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        // Render message list
+        function renderMessageList(messages, filter = 'all') {
+            const container = document.getElementById('message-list');
+
+            // Clear container
+            container.innerHTML = '';
+
+            // Filter messages if needed
+            const filteredMessages = filter === 'all'
+                ? messages
+                : messages.filter(msg => msg.message_type === filter);
+
+            // If no data, show message
+            if (filteredMessages.length === 0) {
+                container.innerHTML = '<div class="no-data">No messages recorded yet.</div>';
+                return;
+            }
+
+            // Sort messages by timestamp (newest first)
+            const sortedMessages = [...filteredMessages].sort((a, b) => {
+                return new Date(b.timestamp) - new Date(a.timestamp);
+            });
+
+            // Render each message
+            sortedMessages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.className = `message message-${message.message_type || 'default'}`;
+
+                const headerElement = document.createElement('div');
+                headerElement.className = 'message-header';
+
+                const routeElement = document.createElement('span');
+                routeElement.className = 'message-route';
+                routeElement.textContent = `${message.source_agent} → ${message.target_agent}`;
+
+                const timestampElement = document.createElement('span');
+                timestampElement.textContent = new Date(message.timestamp).toLocaleString();
+
+                headerElement.appendChild(routeElement);
+                headerElement.appendChild(timestampElement);
+
+                const contentElement = document.createElement('div');
+                contentElement.className = 'message-content';
+                contentElement.textContent = `[${message.message_type}] ${message.content || 'No content'}`;
+
+                messageElement.appendChild(headerElement);
+                messageElement.appendChild(contentElement);
+
+                container.appendChild(messageElement);
+            });
+        }
+
+        // Set up filter controls
+        document.querySelectorAll('.filter-control').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all filters
+                document.querySelectorAll('.filter-control').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Add active class to clicked filter
+                button.classList.add('active');
+
+                // Apply filter
+                const filter = button.getAttribute('data-filter');
+                renderMessageList(messagesData, filter);
+            });
         });
-        
-        // Drag functions
-        function dragstarted(event, d) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-        
-        function dragged(event, d) {
-            d.fx = event.x;
-            d.fy = event.y;
-        }
-        
-        function dragended(event, d) {
-            if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        }
-        
+
+        // Initial render
+        renderNetwork(messagesData, agentsData);
+        renderMessageList(messagesData);
+
         // Auto-refresh every 5 seconds
-        setTimeout(function() {
-            location.reload();
+        setInterval(() => {
+            fetch('messages.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Update data
+                    messagesData = data;
+
+                    // Re-render visualizations
+                    renderNetwork(messagesData, agentsData);
+
+                    // Get active filter
+                    const activeFilter = document.querySelector('.filter-control.active');
+                    const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+
+                    renderMessageList(messagesData, filter);
+                })
+                .catch(error => console.error('Error fetching messages data:', error));
         }, 5000);
     </script>
 </body>

@@ -1,0 +1,36 @@
+{
+  "agents": [
+    "bug_detector",
+    "orchestrator"
+  ],
+  "messages": [
+    {
+      "source_agent": "orchestrator",
+      "target_agent": "bug_detector",
+      "message_type": "command",
+      "content": "Test message for dashboard",
+      "timestamp": "2025-07-13T10:58:29.890366",
+      "metadata": {}
+    }
+  ],
+  "connections": {
+    "orchestrator": {
+      "bug_detector": 1
+    }
+  },
+  "agent_stats": {
+    "orchestrator": {
+      "messages_sent": 1,
+      "messages_received": 0,
+      "last_active": "2025-07-13T10:58:29.890366",
+      "response_times": []
+    },
+    "bug_detector": {
+      "messages_sent": 0,
+      "messages_received": 1,
+      "last_active": "2025-07-13T10:58:29.890366",
+      "response_times": []
+    }
+  },
+  "timestamp": "2025-07-13T10:58:40.091397"
+}

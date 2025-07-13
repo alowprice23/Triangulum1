@@ -5,7 +5,6 @@ This module contains tests for the AgentMessage class, MessageBus, and
 ConversationMemory, verifying that the agent communication protocol
 works as expected.
 """
-
 import unittest
 import json
 import threading
@@ -13,7 +12,7 @@ import time
 from unittest.mock import MagicMock
 
 from triangulum_lx.agents.message import AgentMessage, MessageType, ConversationMemory
-from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus, SubscriptionInfo
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus, EnhancedSubscriptionInfo as SubscriptionInfo
 
 
 class TestAgentMessage(unittest.TestCase):
@@ -422,7 +421,7 @@ class TestMessageBus(unittest.TestCase):
             message_type=MessageType.TASK_REQUEST,
             content={"task": "Analyze code"},
             sender="agent_a",
-            receiver="agent_b"
+            receiver="agent_b",
         )
         
         self.message_bus.publish(message)

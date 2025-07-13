@@ -1,13 +1,12 @@
 {
-  "chain_1": {
-    "agent_id": "orchestrator",
-    "thoughts": [
-      {
-        "timestamp": "2025-07-08T01:23:49.160382",
-        "agent_id": "orchestrator",
-        "content": "Starting orchestration process",
-        "thought_type": "analysis"
-      }
-    ]
-  }
+  "orchestrator": [
+    {
+      "agent_id": "orchestrator",
+      "chain_id": "test_chain_1",
+      "content": "Test thought for dashboard",
+      "thought_type": "analysis",
+      "timestamp": "2025-07-13T10:58:29.890276",
+      "metadata": {}
+    }
+  ]
 }

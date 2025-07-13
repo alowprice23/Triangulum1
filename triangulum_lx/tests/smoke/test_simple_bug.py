@@ -40,7 +40,7 @@ class TestSimpleBug(unittest.TestCase):
         self._create_test_project()
         
         # Initialize engine and monitor
-        self.engine = TriangulationEngine()
+        self.engine = TriangulumEngine()
         self.monitor = EngineMonitor(self.engine)
         self.engine.monitor = self.monitor
         

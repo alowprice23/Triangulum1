@@ -1,0 +1,8 @@
+[
+  {
+    "type": "message",
+    "timestamp": "2025-07-13T10:58:29.890366",
+    "agent_id": "orchestrator",
+    "content": "Message to bug_detector (command): Test message for dashboard"
+  }
+]

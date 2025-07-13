@@ -56,7 +56,7 @@ class RelationshipAnalystAgent(BaseAgent):
             agent_type=self.AGENT_TYPE,
             message_bus=message_bus,
             config=config,
-            subscribed_message_types=[MessageType.REQUEST, MessageType.QUERY, MessageType.TASK_REQUEST], # Define subscriptions
+            subscribed_message_types=[MessageType.TASK_REQUEST, MessageType.QUERY],
             **kwargs
         )
 
@@ -792,113 +792,6 @@ class RelationshipAnalystAgent(BaseAgent):
                 
         return None
     
-    def handle_message(self, message: AgentMessage) -> Optional[AgentMessage]:
-        """
-        Handle a message from another agent.
-        
-        Args:
-            message: Message to handle
-            
-        Returns:
-            Response message, if any
-        """
-        if message.message_type != MessageType.REQUEST:
-            return None
-            
-        content = message.content
-        if not isinstance(content, dict):
-            return None
-            
-        action = content.get("action", "")
-        
-        if action == "analyze_codebase":
-            root_dir = content.get("root_dir", ".")
-            include_patterns = content.get("include_patterns")
-            exclude_patterns = content.get("exclude_patterns")
-            incremental = content.get("incremental", True)
-            
-            try:
-                summary = self.analyze_codebase(
-                    root_dir=root_dir,
-                    include_patterns=include_patterns,
-                    exclude_patterns=exclude_patterns,
-                    incremental=incremental
-                )
-                
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "success",
-                        "summary": summary
-                    }
-                )
-            except Exception as e:
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "error",
-                        "error": str(e)
-                    }
-                )
-                
-        elif action == "get_central_files":
-            n = content.get("n", 10)
-            metric = content.get("metric", "pagerank")
-            
-            try:
-                central_files = self.get_most_central_files(n=n, metric=metric)
-                
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "success",
-                        "central_files": central_files
-                    }
-                )
-            except Exception as e:
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "error",
-                        "error": str(e)
-                    }
-                )
-                
-        elif action == "predict_impact":
-            modified_files = content.get("modified_files", [])
-            
-            try:
-                impacted = self.predict_impact(modified_files)
-                
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "success",
-                        "impacted_files": list(impacted)
-                    }
-                )
-            except Exception as e:
-                return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
-                    content={
-                        "status": "error",
-                        "error": str(e)
-                    }
-                )
-        
-        return None
     
     def process_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """

@@ -20,7 +20,7 @@ from triangulum_lx.core.exceptions import (
 from triangulum_lx.monitoring.startup_dashboard import StartupDashboard, StartupPhase
 from triangulum_lx.providers.factory import ProviderFactory
 from triangulum_lx.agents.agent_factory import AgentFactory
-from triangulum_lx.agents.message_bus import MessageBus
+from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus
 
 
 class TestSystemStartup(unittest.TestCase):
@@ -35,6 +35,14 @@ class TestSystemStartup(unittest.TestCase):
                 "local": {
                     "enabled": True,
                     "models": ["echo"]
+                }
+            },
+            "llm": {
+                "default_provider": "local",
+                "providers": {
+                    "local": {
+                        "model": "local-model"
+                    }
                 }
             },
             "agents": {

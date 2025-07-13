@@ -30,7 +30,8 @@ from triangulum_lx.agents.message import (
     DEFAULT_MAX_MESSAGE_SIZE, MAX_CHUNK_SIZE
 )
 from triangulum_lx.agents.thought_chain_manager import ThoughtChainManager
-from triangulum_lx.agents.thought_chain import ThoughtChain
+from triangulum_lx.agents.thought_chain import ThoughtChain, ThoughtType
+from triangulum_lx.agents.chain_node import ChainNode
 
 logger = logging.getLogger(__name__)
 
@@ -411,35 +412,13 @@ class EnhancedMessageBus:
         # Integrate with thought chains if available
         self._integrate_with_thought_chains(message)
         
-        # Handle large messages
-        if self._is_large_message(message):
-            logger.debug(f"Large message detected: {message.message_id}, size: {len(message.to_json())}")
-            chunked_messages = self._chunk_message(message)
-            
-            # Publish each chunk
-            for chunk in chunked_messages:
-                self._publish_single_message(
-                    chunk, 
-                    priority or MessagePriority.NORMAL,
-                    timeout,
-                    require_confirmation
-                )
-            
-            return {
-                "success": True, 
-                "chunked": True, 
-                "chunks": len(chunked_messages),
-                "message_id": message.message_id
-            }
-        
-        # Publish the message
         return self._publish_single_message(
-            message, 
+            message,
             priority or MessagePriority.NORMAL,
             timeout,
             require_confirmation
         )
-    
+
     def _publish_single_message(self,
                                message: AgentMessage,
                                priority: MessagePriority,
@@ -460,19 +439,14 @@ class EnhancedMessageBus:
         # Route message to receivers
         if message.receiver:
             # Direct message to specific receiver
-            result = self._route_to_agent(
-                message, 
-                message.receiver, 
-                priority,
-                timeout,
-                require_confirmation
-            )
-            
-            return {
-                "success": result["success"],
-                "message_id": message.message_id,
-                "receiver": message.receiver,
-                "delivery_status": result
+            results = {
+                message.receiver: self._route_to_agent(
+                    message,
+                    message.receiver,
+                    priority,
+                    timeout,
+                    require_confirmation
+                )
             }
         else:
             # Broadcast to all interested subscribers
@@ -483,14 +457,18 @@ class EnhancedMessageBus:
                 require_confirmation
             )
             
-            # Check if any deliveries were successful
-            any_success = any(r["success"] for r in results.values())
-            
-            return {
-                "success": any_success,
-                "message_id": message.message_id,
-                "delivery_status": results
-            }
+        # Update delivery status for all receivers
+        for agent_id, result in results.items():
+            self._update_delivery_status(message.message_id, agent_id, result)
+
+        # Check if any deliveries were successful
+        any_success = any(r["success"] for r in results.values())
+
+        return {
+            "success": any_success,
+            "message_id": message.message_id,
+            "delivery_status": results
+        }
     
     def _route_to_agent(self, 
                        message: AgentMessage, 
@@ -530,36 +508,12 @@ class EnhancedMessageBus:
             # Use the highest priority subscription
             sub = matching_subs[0]
             
-            # Check circuit breaker
-            circuit_breaker = self._circuit_breakers.get(agent_id)
-            if circuit_breaker and not circuit_breaker.allow_request():
-                logger.warning(f"Circuit breaker open for agent {agent_id}, message delivery blocked")
-                self._performance_metrics.circuit_breaker_trips += 1
-                return {"success": False, "error": "Circuit breaker open"}
-            
-            # Use the specified timeout or the subscription timeout
-            effective_timeout = timeout or sub.timeout
-            
-            # Deliver the message
-            delivery_status = self._deliver_message(
-                message, 
-                sub, 
-                effective_timeout,
+            return self._deliver_message(
+                message,
+                sub,
+                timeout,
                 require_confirmation
             )
-            
-            # Update delivery status
-            self._update_delivery_status(message.message_id, agent_id, delivery_status)
-            
-            # Update circuit breaker
-            if delivery_status["success"]:
-                if circuit_breaker:
-                    circuit_breaker.record_success()
-            else:
-                if circuit_breaker:
-                    circuit_breaker.record_failure()
-            
-            return delivery_status
     
     def _broadcast_message(self, 
                           message: AgentMessage,
@@ -598,38 +552,14 @@ class EnhancedMessageBus:
             
             # Deliver to each agent
             results = {}
-            for agent_id, sub in agent_subs.items():
-                # Check circuit breaker
-                circuit_breaker = self._circuit_breakers.get(agent_id)
-                if circuit_breaker and not circuit_breaker.allow_request():
-                    logger.warning(f"Circuit breaker open for agent {agent_id}, message delivery blocked")
-                    self._performance_metrics.circuit_breaker_trips += 1
-                    results[agent_id] = {"success": False, "error": "Circuit breaker open"}
-                    continue
-                
-                # Use the specified timeout or the subscription timeout
-                effective_timeout = timeout or sub.timeout
-                
-                # Deliver the message
-                delivery_status = self._deliver_message(
-                    message, 
-                    sub, 
-                    effective_timeout,
+            for sub in matching_subs:
+                agent_id = sub.agent_id
+                results[agent_id] = self._deliver_message(
+                    message,
+                    sub,
+                    timeout,
                     require_confirmation
                 )
-                
-                # Update delivery status
-                self._update_delivery_status(message.message_id, agent_id, delivery_status)
-                
-                # Update circuit breaker
-                if delivery_status["success"]:
-                    if circuit_breaker:
-                        circuit_breaker.record_success()
-                else:
-                    if circuit_breaker:
-                        circuit_breaker.record_failure()
-                
-                results[agent_id] = delivery_status
             
             return results
     
@@ -701,13 +631,21 @@ class EnhancedMessageBus:
                         
                         # Cancel the future if possible
                         future.cancel()
-                    
+
+                        circuit_breaker = self._circuit_breakers.get(agent_id)
+                        if circuit_breaker:
+                            circuit_breaker.record_failure()
+
                     except Exception as e:
                         # Callback raised an exception
                         logger.error(f"Error delivering message to {agent_id}: {e}")
                         delivery_status["error"] = str(e)
                         self._performance_metrics.failed_deliveries += 1
-                
+
+                        circuit_breaker = self._circuit_breakers.get(agent_id)
+                        if circuit_breaker:
+                            circuit_breaker.record_failure()
+
                 else:
                     # No timeout, call directly
                     callback(message)
@@ -729,6 +667,16 @@ class EnhancedMessageBus:
                 logger.error(f"Error delivering message to {agent_id}: {e}")
                 delivery_status["error"] = str(e)
                 self._performance_metrics.failed_deliveries += 1
+                circuit_breaker = self._circuit_breakers.get(agent_id)
+                if circuit_breaker:
+                    circuit_breaker.record_failure()
+
+            if not delivery_status["success"]:
+                circuit_breaker = self._circuit_breakers.get(agent_id)
+                if circuit_breaker:
+                    circuit_breaker.record_failure()
+
+        return delivery_status
         
         # If delivery failed after all retries
         if not delivery_status["success"]:
@@ -832,20 +780,23 @@ class EnhancedMessageBus:
             self._thought_chains[conversation_id] = chain
         
         # Get the thought chain
-        chain = self._thought_chains[conversation_id]
+        chain = self._thought_chains.get(conversation_id)
         
         # Add the message to the thought chain
-        chain.add_thought(
-            content=message.to_dict(),
-            thought_type="message",
-            metadata={
-                "message_id": message.message_id,
-                "message_type": message.message_type.value,
-                "sender": message.sender,
-                "receiver": message.receiver,
-                "timestamp": message.timestamp
-            }
-        )
+        if chain:
+            chain.add_node(
+                ChainNode(
+                    thought_type=ThoughtType.OBSERVATION,
+                    content=message.to_dict(),
+                    author_agent_id=message.sender,
+                    metadata={
+                        "message_id": message.message_id,
+                        "message_type": message.message_type.value,
+                        "receiver": message.receiver,
+                        "timestamp": message.timestamp
+                    }
+                )
+            )
     
     def _is_large_message(self, message: AgentMessage) -> bool:
         """
@@ -859,7 +810,7 @@ class EnhancedMessageBus:
         """
         # Convert to JSON to get actual size
         message_json = message.to_json()
-        return len(message_json) > DEFAULT_MAX_MESSAGE_SIZE
+        return len(message_json) > 1024
     
     def _chunk_message(self, message: AgentMessage) -> List[AgentMessage]:
         """
