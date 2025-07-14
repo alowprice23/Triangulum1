@@ -659,7 +659,7 @@ class EnhancedMessageBus:
 
                 else:
                     # No timeout, call directly
-                    callback(message)
+                    await callback(message)
                     delivery_time = time.time() - start_time
                     
                     # Update performance metrics

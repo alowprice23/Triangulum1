@@ -1,6 +1,7 @@
 import click
 import logging
 import sys
+import json
 from pathlib import Path
 
 # Add the parent directory to sys.path to enable imports
@@ -87,13 +88,13 @@ def analyze(path):
     
     target_path = Path(path)
     if target_path.is_file():
-        relationships = analyzer.analyze_file(target_path)
+        analyzer.analyze_file(target_path)
         click.echo(f"Analysis for file: {path}")
-        click.echo(relationships)
+        click.echo(json.dumps(analyzer.relationships, indent=2))
     elif target_path.is_dir():
-        relationships = analyzer.analyze_directory(target_path)
+        analyzer.analyze_directory(target_path)
         click.echo(f"Analysis for directory: {path}")
-        click.echo(relationships)
+        click.echo(json.dumps(analyzer.relationships, indent=2))
 
 @cli.command()
 def benchmark():

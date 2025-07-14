@@ -1,0 +1,2 @@
+2025-07-14 08:35:20,075 - triangulum_lx.tooling.code_relationship_analyzer - INFO - Using STUBBED CodeRelationshipAnalyzer. Functionality will be minimal.
+2025-07-14 08:35:20,076 - triangulum_lx.tooling.code_relationship_analyzer - WARNING - STUB: CodeRelationshipAnalyzer.analyze_directory('buggy_files') called. No actual analysis performed by stub.
