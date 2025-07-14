@@ -713,29 +713,31 @@ class PriorityAnalyzerAgent(BaseAgent):
                     dependency_map[source] = []
                 dependency_map[source].append(target)
         
-        def calculate_depth(file_path: str, current_depth: int = 0) -> int:
-            if file_path in visited:
-                return 0  # Avoid cycles
+        def calculate_depth(file_path: str, path: Set[str]) -> int:
+            if file_path in path:
+                return 0 # Cycle detected
             
-            visited.add(file_path)
+            path.add(file_path)
+
+            if file_path in depths:
+                path.remove(file_path)
+                return depths[file_path]
+
+            if file_path not in dependency_map or not dependency_map[file_path]:
+                depths[file_path] = 0
+                path.remove(file_path)
+                return 0
+
+            max_depth = 0
+            for dep in dependency_map[file_path]:
+                max_depth = max(max_depth, 1 + calculate_depth(dep, path))
             
-            if file_path not in dependency_map:
-                return current_depth
-            
-            dependencies = dependency_map[file_path]
-            if not dependencies:
-                return current_depth
-            
-            max_depth = current_depth
-            for dep in dependencies:
-                depth = calculate_depth(dep, current_depth + 1)
-                max_depth = max(max_depth, depth)
-            
-            visited.remove(file_path)
+            depths[file_path] = max_depth
+            path.remove(file_path)
             return max_depth
         
         for file_path in dependency_map:
-            depths[file_path] = calculate_depth(file_path)
+            depths[file_path] = calculate_depth(file_path, set())
         
         return depths
 

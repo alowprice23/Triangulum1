@@ -28,8 +28,10 @@ class TestBugDetectorAgent(unittest.TestCase):
         self.agent = BugDetectorAgent(
             agent_id="test_bug_detector",
             message_bus=self.message_bus,
-            max_bug_patterns=100,
-            max_file_size=1024 * 1024  # 1 MB
+            config={
+                "max_bug_patterns": 100,
+                "max_file_size": 1024 * 1024  # 1 MB
+            }
         )
     
     def tearDown(self):
@@ -287,7 +289,7 @@ ValueError: invalid data
         self.assertEqual(location["file"], "Main.java")
         self.assertEqual(location["line"], 25)
     
-    def test_handle_task_request_detect_bugs(self):
+    async def test_handle_task_request_detect_bugs(self):
         """Test handling a task request to detect bugs."""
         # Create a Python file with a bug
         file_content = """
@@ -308,7 +310,7 @@ def process_data(data):
         )
         
         # Handle the message
-        self.agent._handle_task_request(message)
+        await self.agent._handle_task_request(message)
         
         # Verify that send_response was called with the correct arguments
         self.agent.message_bus.publish.assert_called_once()
@@ -317,7 +319,7 @@ def process_data(data):
         self.assertEqual(response_msg.content["status"], "success")
         self.assertGreaterEqual(len(response_msg.content["bugs"]), 1)
     
-    def test_handle_query_get_bug_patterns(self):
+    async def test_handle_query_get_bug_patterns(self):
         """Test handling a query for bug patterns."""
         # Create a mock message
         message = AgentMessage(
@@ -330,7 +332,7 @@ def process_data(data):
         )
         
         # Handle the message
-        self.agent._handle_query(message)
+        await self.agent._handle_query(message)
         
         # Verify that send_response was called with the correct arguments
         self.agent.message_bus.publish.assert_called_once()
@@ -339,7 +341,7 @@ def process_data(data):
         self.assertEqual(response_msg.content["status"], "success")
         self.assertGreater(len(response_msg.content["patterns"]), 0)
     
-    def test_error_handling(self):
+    async def test_error_handling(self):
         """Test error handling in message processing."""
         # Create a mock message with an invalid query type
         message = AgentMessage(
@@ -351,7 +353,7 @@ def process_data(data):
         )
         
         # Handle the message
-        self.agent._handle_query(message)
+        await self.agent._handle_query(message)
         
         # Verify that send_response was called with an error message
         self.agent.message_bus.publish.assert_called_once()
@@ -536,7 +538,7 @@ def process_data(data):
             content = self.agent._read_file_with_encoding(utf8_file, 'utf-8')
             self.assertIsNotNone(content)
     
-    def test_error_response_in_message_handling(self):
+    async def test_error_response_in_message_handling(self):
         """Test that errors are properly reported in message responses."""
         # Create a task request message with missing file_path
         message = AgentMessage(
@@ -549,7 +551,7 @@ def process_data(data):
         )
         
         # Handle the message
-        self.agent._handle_task_request(message)
+        await self.agent._handle_task_request(message)
         
         # Verify the error response
         self.agent.message_bus.publish.assert_called_once()

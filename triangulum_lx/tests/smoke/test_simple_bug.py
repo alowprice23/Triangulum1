@@ -40,9 +40,10 @@ class TestSimpleBug(unittest.TestCase):
         self._create_test_project()
         
         # Initialize engine and monitor
-        self.engine = TriangulumEngine()
+        self.engine = TriangulumEngine(config={"llm": {"provider": "mock"}})
         self.monitor = EngineMonitor(self.engine)
         self.engine.monitor = self.monitor
+        self.engine.bugs = []
         
         # Initialize coordinator with mocks
         self.coordinator = self._setup_mock_coordinator()

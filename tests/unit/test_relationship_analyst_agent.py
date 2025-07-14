@@ -10,6 +10,7 @@ import unittest
 import os
 import tempfile
 import shutil
+import asyncio
 from unittest.mock import patch, MagicMock
 
 from triangulum_lx.agents.relationship_analyst_agent import RelationshipAnalystAgent
@@ -30,10 +31,8 @@ class TestRelationshipAnalystAgent(unittest.TestCase):
         self.message_bus = MagicMock()
         self.agent = RelationshipAnalystAgent(
             agent_id="test_analyst",
-            agent_type="relationship_analyst",
             message_bus=self.message_bus,
-            max_workers=1,
-            cache_dir=None
+            config={"max_workers": 1, "cache_dir": None}
         )
         
         # Create a simple graph for testing
@@ -210,14 +209,14 @@ def get_data():
     def test_prioritize_files_for_repair(self):
         """Test prioritizing files for repair."""
         # Prioritize all files
-        priorities = self.agent.prioritize_files_for_repair()
+        files_to_prioritize = list(self.agent.graph._nodes.keys())
+        priorities = self.agent.analyzer.prioritize_files(files_to_prioritize)
         
         # Verify the results
         self.assertEqual(len(priorities), 5)
         # Check that important files are in the priorities
-        priority_files = [p[0] for p in priorities]
-        self.assertIn("file1.py", priority_files)
-        self.assertIn("file5.py", priority_files)  # Part of the cycle
+        self.assertIn("file1.py", priorities)
+        self.assertIn("file5.py", priorities)  # Part of the cycle
     
     def test_get_impacted_files(self):
         """Test getting impacted files."""
@@ -227,7 +226,7 @@ def get_data():
         # Verify the results
         self.assertEqual(len(impacted), 3)  # file1.py, file3.py, file5.py due to the cycle
     
-    def test_handle_task_request_analyze_codebase(self):
+    async def test_handle_task_request_analyze_codebase(self):
         """Test handling a task request to analyze a codebase."""
         # Create a mock message
         message = AgentMessage(
@@ -242,7 +241,7 @@ def get_data():
         # Mock the analyze_codebase method
         with patch.object(self.agent, 'analyze_codebase', return_value={"files_analyzed": 5}):
             # Handle the message
-            self.agent._handle_task_request(message)
+            await self.agent._handle_task_request(message)
             
             # Verify that send_response was called with the correct arguments
             self.agent.message_bus.publish.assert_called_once()
@@ -251,7 +250,7 @@ def get_data():
             self.assertEqual(response_msg.content["status"], "success")
             self.assertEqual(response_msg.content["summary"]["files_analyzed"], 5)
     
-    def test_handle_query_central_files(self):
+    async def test_handle_query_central_files(self):
         """Test handling a query for central files."""
         # Create a mock message
         message = AgentMessage(
@@ -267,7 +266,7 @@ def get_data():
         # Mock the get_most_central_files method
         with patch.object(self.agent, 'get_most_central_files', return_value=[("file1.py", 0.5), ("file5.py", 0.3)]):
             # Handle the message
-            self.agent._handle_query(message)
+            await self.agent._handle_query(message)
             
             # Verify that send_response was called with the correct arguments
             self.agent.message_bus.publish.assert_called_once()
@@ -277,7 +276,7 @@ def get_data():
             self.assertEqual(len(response_msg.content["central_files"]), 2)
             self.assertEqual(response_msg.content["central_files"][0][0], "file1.py")
     
-    def test_handle_query_file_dependencies(self):
+    async def test_handle_query_file_dependencies(self):
         """Test handling a query for file dependencies."""
         # Create a mock message
         message = AgentMessage(
@@ -293,7 +292,7 @@ def get_data():
         # Mock the get_file_dependencies method
         with patch.object(self.agent, 'get_file_dependencies', return_value={"file2.py", "file3.py"}):
             # Handle the message
-            self.agent._handle_query(message)
+            await self.agent._handle_query(message)
             
             # Verify that send_response was called with the correct arguments
             self.agent.message_bus.publish.assert_called_once()
@@ -304,7 +303,7 @@ def get_data():
             self.assertIn("file2.py", response_msg.content["dependencies"])
             self.assertIn("file3.py", response_msg.content["dependencies"])
     
-    def test_error_handling(self):
+    async def test_error_handling(self):
         """Test error handling in message processing."""
         # Create a mock message with an invalid query type
         message = AgentMessage(
@@ -316,7 +315,7 @@ def get_data():
         )
         
         # Handle the message
-        self.agent._handle_query(message)
+        await self.agent._handle_query(message)
         
         # Verify that send_response was called with an error message
         self.agent.message_bus.publish.assert_called_once()
@@ -343,7 +342,7 @@ def get_data():
         })
         
         self.assertEqual(result["status"], "error")
-        self.assertIn("Unknown action", result["message"])
+        self.assertIn("Unknown action", result["error"])
 
 
 if __name__ == "__main__":

@@ -752,47 +752,41 @@ class BugDetectorAgent(BaseAgent):
             language = self._infer_language_from_path(file_path)
             logger.debug(f"Inferred language for {file_path}: {language}")
         
-            # Get relationship context if enabled and available
-            # This now needs to be re-thought as self.relationship_analyst is removed from direct init.
-            # It would typically involve sending a message to a relationship_analyst agent.
-            # For now, this demo will proceed without it if not passed in.
-            if self.enable_context_aware_detection and not relationship_context:
-                # TODO: Implement logic to request relationship_context if needed, possibly via message bus
-                # For this refactor, we'll assume relationship_context is passed in or not used if not available.
-                # relationship_context = self._get_relationship_context_via_messaging(file_path) # Placeholder
-                pass # relationship_context will remain None if not provided
+        # Get relationship context if enabled and available
+        if self.enable_context_aware_detection and not relationship_context:
+            relationship_context = self._get_relationship_context(file_path)
 
-            # Get applicable patterns
-            try:
-                patterns = self._get_applicable_patterns(language, selected_patterns)
-                if not patterns:
-                    logger.info(f"No applicable patterns for {language} in file: {file_path}")
-                    
-                    # This is not an error, just no applicable patterns
-                    if include_errors:
-                        return FileAnalysisResult(
-                            bugs=[], errors=[], success=True, 
-                            partial_success=False, file_path=file_path
-                        )
-                    return []
-            except Exception as e:
-                error = BugDetectorError(
-                    message=f"Error getting applicable patterns for {file_path}: {str(e)}",
-                    severity=ErrorSeverity.HIGH,
-                    error_type=type(e).__name__,
-                    file_path=file_path,
-                    recoverable=False,
-                    suggestion="Check the pattern definitions and language compatibility."
-                )
-                errors.append(error)
-                logger.error(f"{error.message}\n{traceback.format_exc()}")
+        # Get applicable patterns
+        try:
+            patterns = self._get_applicable_patterns(language, selected_patterns)
+            if not patterns:
+                logger.info(f"No applicable patterns for {language} in file: {file_path}")
                 
+                # This is not an error, just no applicable patterns
                 if include_errors:
                     return FileAnalysisResult(
-                        bugs=[], errors=errors, success=False, 
+                        bugs=[], errors=[], success=True,
                         partial_success=False, file_path=file_path
                     )
                 return []
+        except Exception as e:
+            error = BugDetectorError(
+                message=f"Error getting applicable patterns for {file_path}: {str(e)}",
+                severity=ErrorSeverity.HIGH,
+                error_type=type(e).__name__,
+                file_path=file_path,
+                recoverable=False,
+                suggestion="Check the pattern definitions and language compatibility."
+            )
+            errors.append(error)
+            logger.error(f"{error.message}\n{traceback.format_exc()}")
+
+            if include_errors:
+                return FileAnalysisResult(
+                    bugs=[], errors=errors, success=False,
+                    partial_success=False, file_path=file_path
+                )
+            return []
         
         # Read file content with proper encoding detection
         try:

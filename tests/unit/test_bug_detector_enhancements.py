@@ -38,10 +38,12 @@ class TestBugDetectorEnhancements(unittest.TestCase):
         # Create the bug detector with enhancements
         self.bug_detector = BugDetectorAgent(
             agent_id="test_bug_detector",
-            enable_context_aware_detection=True,
-            enable_multi_pass_verification=True,
-            false_positive_threshold=0.8,
-            use_ast_parsing=True
+            config={
+                "enable_context_aware_detection": True,
+                "enable_multi_pass_verification": True,
+                "false_positive_threshold": 0.8,
+                "use_ast_parsing": True
+            }
         )
         self.bug_detector.relationship_analyst = self.mock_relationship_analyst
         

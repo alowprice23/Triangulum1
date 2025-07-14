@@ -415,7 +415,7 @@ class TestMessageBus(unittest.TestCase):
             callback=self.agent_c_callback
         )
     
-    def test_direct_message_delivery(self):
+    async def test_direct_message_delivery(self):
         """Test delivering a message to a specific agent."""
         message = AgentMessage(
             message_type=MessageType.TASK_REQUEST,
@@ -424,7 +424,7 @@ class TestMessageBus(unittest.TestCase):
             receiver="agent_b",
         )
         
-        self.message_bus.publish(message)
+        await self.message_bus.publish(message)
         
         # agent_b should receive the message
         self.agent_b_callback.assert_called_once()
@@ -441,7 +441,7 @@ class TestMessageBus(unittest.TestCase):
         self.assertIsNotNone(conversation)
         self.assertEqual(len(conversation.messages), 1)
     
-    def test_broadcast_message(self):
+    async def test_broadcast_message(self):
         """Test broadcasting a message to all interested agents."""
         message = AgentMessage(
             message_type=MessageType.TASK_REQUEST,
@@ -449,7 +449,7 @@ class TestMessageBus(unittest.TestCase):
             sender="agent_c"
         )
         
-        self.message_bus.publish(message)
+        await self.message_bus.publish(message)
         
         # agent_a and agent_b should receive the message (they're subscribed to TASK_REQUEST)
         self.agent_a_callback.assert_called_once()
@@ -458,7 +458,7 @@ class TestMessageBus(unittest.TestCase):
         # agent_c should not receive its own broadcast
         self.agent_c_callback.assert_not_called()
     
-    def test_message_type_filtering(self):
+    async def test_message_type_filtering(self):
         """Test that messages are filtered by type."""
         # Send a message type that agent_a is not subscribed to
         message = AgentMessage(
@@ -468,7 +468,7 @@ class TestMessageBus(unittest.TestCase):
             receiver="agent_a"
         )
         
-        self.message_bus.publish(message)
+        await self.message_bus.publish(message)
         
         # agent_a should not receive the message (not subscribed to TASK_RESULT)
         self.agent_a_callback.assert_not_called()
@@ -478,7 +478,7 @@ class TestMessageBus(unittest.TestCase):
         self.assertIsNotNone(conversation)
         self.assertEqual(len(conversation.messages), 1)
     
-    def test_unsubscribe(self):
+    async def test_unsubscribe(self):
         """Test unsubscribing from the message bus."""
         # Unsubscribe agent_a from all message types
         self.message_bus.unsubscribe(agent_id="agent_a")
@@ -496,7 +496,7 @@ class TestMessageBus(unittest.TestCase):
             sender="agent_c"
         )
         
-        self.message_bus.publish(message1)
+        await self.message_bus.publish(message1)
         
         # agent_a should not receive it (unsubscribed from all)
         self.agent_a_callback.assert_not_called()
@@ -512,13 +512,13 @@ class TestMessageBus(unittest.TestCase):
             sender="agent_c"
         )
         
-        self.message_bus.publish(message2)
+        await self.message_bus.publish(message2)
         
         # Neither agent_a nor agent_b should receive it
         self.agent_a_callback.assert_not_called()
         self.agent_b_callback.assert_not_called()
     
-    def test_conversation_management(self):
+    async def test_conversation_management(self):
         """Test conversation management functionality."""
         # Create and publish messages in a conversation
         message1 = AgentMessage(
@@ -538,8 +538,8 @@ class TestMessageBus(unittest.TestCase):
             parent_id=message1.message_id
         )
         
-        self.message_bus.publish(message1)
-        self.message_bus.publish(message2)
+        await self.message_bus.publish(message1)
+        await self.message_bus.publish(message2)
         
         # Get the conversation
         conversation = self.message_bus.get_conversation("test_convo")
@@ -569,7 +569,7 @@ class TestMessageBus(unittest.TestCase):
             conversation_id="another_convo"
         )
         
-        self.message_bus.publish(message3)
+        await self.message_bus.publish(message3)
         self.assertIsNotNone(self.message_bus.get_conversation("another_convo"))
         
         self.message_bus.clear_conversations()

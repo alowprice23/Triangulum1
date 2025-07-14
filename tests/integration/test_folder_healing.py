@@ -11,6 +11,7 @@ import os
 import tempfile
 import shutil
 import time
+import asyncio
 from pathlib import Path
 
 from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus
@@ -189,7 +190,7 @@ if __name__ == "__main__":
             with open(os.path.join(dir_path, "__init__.py"), "w") as f:
                 f.write("# Initialize package\n")
     
-    def test_folder_healing_dry_run(self):
+    async def test_folder_healing_dry_run(self):
         """Test the entire folder-level healing workflow in dry run mode."""
         # Create a task request message
         message = AgentMessage(
@@ -204,11 +205,11 @@ if __name__ == "__main__":
                 }
             },
             sender="test_handler",
-            recipient="orchestrator"
+            receiver="orchestrator"
         )
         
         # Process the message
-        self.orchestrator.handle_message(message)
+        await self.orchestrator.handle_message(message)
         
         # Wait for the result (with timeout)
         start_time = time.time()
@@ -222,7 +223,7 @@ if __name__ == "__main__":
                     break
             
             # Sleep a bit to avoid busy waiting
-            time.sleep(0.1)
+            await asyncio.sleep(0.1)
         
         # Check that we got a result
         self.assertIn("orchestrator", self.results)
@@ -282,7 +283,7 @@ if __name__ == "__main__":
         self.assertIn("return self.config.connection_string", core_content)
         self.assertIn("# Missing file.close()", utils_content)
     
-    def test_orchestrator_real_healing_simulation(self):
+    async def test_orchestrator_real_healing_simulation(self):
         """
         Test that the orchestrator correctly simulates a real healing process.
         
@@ -304,31 +305,34 @@ if __name__ == "__main__":
                     "options": {"dry_run": False}
                 },
                 sender="test_handler",
-                recipient="orchestrator"
+                receiver="orchestrator"
             )
             
-            # Replace the orchestrator's _heal_single_file_in_folder method
-            # with a version that pretends to fix bugs
-            original_heal = self.orchestrator._heal_single_file_in_folder
-            
-            def mock_heal_file(*args, **kwargs):
-                # Pretend the file was healed successfully
-                return {"status": "success", "bugs_fixed": 1}
-            
-            self.orchestrator._heal_single_file_in_folder = mock_heal_file
-            
-            # Replace the _run_integration_tests method
-            original_tests = self.orchestrator._run_integration_tests
-            
-            def mock_run_tests(*args, **kwargs):
-                # Pretend the integration tests passed
-                return {"status": "success", "tests_passed": 1, "tests_failed": 0}
-            
-            self.orchestrator._run_integration_tests = mock_run_tests
-            
+            # Mock the verification agent's handle_message to simulate successful verification
+            original_handler = self.verification_agent.handle_message
+
+            async def mock_verification_handler(message):
+                if message.message_type == MessageType.TASK_REQUEST and message.content.get("action") == "verify_fix":
+                    response = AgentMessage(
+                        message_type=MessageType.TASK_RESULT,
+                        sender="verification_agent",
+                        receiver=message.sender,
+                        content={
+                            "status": "success",
+                            "verified": True,
+                            "tests_passed": 1,
+                            "tests_failed": 0,
+                        },
+                    )
+                    await self.message_bus.publish(response)
+                else:
+                    await original_handler(message)
+
+            self.verification_agent.handle_message = mock_verification_handler
+
             try:
                 # Process the message
-                self.orchestrator.handle_message(message)
+                await self.orchestrator.handle_message(message)
                 
                 # Wait for the result
                 start_time = time.time()
@@ -342,7 +346,7 @@ if __name__ == "__main__":
                             break
                     
                     # Sleep a bit
-                    time.sleep(0.1)
+                    await asyncio.sleep(0.1)
                 
                 # Check the result
                 self.assertIn("orchestrator", self.results)
@@ -357,8 +361,7 @@ if __name__ == "__main__":
                 
             finally:
                 # Restore original methods
-                self.orchestrator._heal_single_file_in_folder = original_heal
-                self.orchestrator._run_integration_tests = original_tests
+                self.verification_agent.handle_message = original_handler
         
         finally:
             # Clean up the simulation directory

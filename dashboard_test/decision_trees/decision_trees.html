@@ -172,7 +172,7 @@
 <body>
     <div class="visualization-header">
         <div class="visualization-title">Triangulum Decision Tree Visualization</div>
-        <div class="visualization-refresh">Last updated: 2025-07-13 10:58:40</div>
+        <div class="visualization-refresh">Last updated: 2025-07-14 05:49:53</div>
     </div>
 
     <div class="visualization-controls">
@@ -186,7 +186,7 @@
         <div class="control-group">
             <div class="control-label">Decision Tree:</div>
             <select id="tree-select" class="control-select">
-                <option value="dd6fc15d-4938-4358-9208-8a7e6810fd1c">Test Decision Tree</option>
+                <option value="30de8569-d6a8-4037-a39b-48e2c6688ef0">Test Decision Tree</option>
 
             </select>
         </div>
@@ -207,7 +207,7 @@
             <div class="tree-info-title">Tree Information</div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Tree ID:</div>
-                <div class="tree-info-value" id="tree-id">dd6fc15d-4938-4358-9208-8a7e6810fd1c</div>
+                <div class="tree-info-value" id="tree-id">30de8569-d6a8-4037-a39b-48e2c6688ef0</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Agent:</div>
@@ -215,11 +215,11 @@
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Created:</div>
-                <div class="tree-info-value" id="tree-created">2025-07-13 10:58:29</div>
+                <div class="tree-info-value" id="tree-created">2025-07-14 05:49:43</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Last Updated:</div>
-                <div class="tree-info-value" id="tree-updated">2025-07-13 10:58:29</div>
+                <div class="tree-info-value" id="tree-updated">2025-07-14 05:49:43</div>
             </div>
             <div class="tree-info-item">
                 <div class="tree-info-label">Nodes:</div>
@@ -248,8 +248,8 @@
 
     <script>
         // Decision tree data
-        const treeData = {"dd6fc15d-4938-4358-9208-8a7e6810fd1c": {"tree_id": "dd6fc15d-4938-4358-9208-8a7e6810fd1c", "agent_id": "orchestrator", "name": "Test Decision Tree", "description": "Tree for dashboard testing", "created_at": "2025-07-13T10:58:29.890484", "last_updated": "2025-07-13T10:58:29.890547", "status": "Active", "node_count": 2, "depth": 1, "root": {"name": "Root", "type": "root", "content": "Decision tree root", "children": [{"id": "7938811e-0f6e-453d-8abd-ab7f24d5bc40", "name": "Root Node", "type": "decision", "content": "Test decision node", "confidence": 90, "alternatives": [], "metadata": {}, "children": []}]}}};
-        const agentTrees = {"orchestrator": ["dd6fc15d-4938-4358-9208-8a7e6810fd1c"]};
+        const treeData = {"30de8569-d6a8-4037-a39b-48e2c6688ef0": {"tree_id": "30de8569-d6a8-4037-a39b-48e2c6688ef0", "agent_id": "orchestrator", "name": "Test Decision Tree", "description": "Tree for dashboard testing", "created_at": "2025-07-14T05:49:43.583436", "last_updated": "2025-07-14T05:49:43.583487", "status": "Active", "node_count": 2, "depth": 1, "root": {"name": "Root", "type": "root", "content": "Decision tree root", "children": [{"id": "1ce907df-c865-4d69-a80c-55e7ccd94c21", "name": "Root Node", "type": "decision", "content": "Test decision node", "confidence": 90, "alternatives": [], "metadata": {}, "children": []}]}}};
+        const agentTrees = {"orchestrator": ["30de8569-d6a8-4037-a39b-48e2c6688ef0"]};
 
         // Set up the tree visualization using D3.js
         const width = document.getElementById('tree-visualization').clientWidth;

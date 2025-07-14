@@ -6,6 +6,7 @@ for different types of bugs and evaluates strategies against constraints.
 """
 
 import unittest
+import asyncio
 from unittest.mock import patch, MagicMock
 import os
 import json
@@ -23,7 +24,6 @@ class TestStrategyAgent(unittest.TestCase):
         self.message_bus = MagicMock()
         self.agent = StrategyAgent(
             agent_id="test_strategy_agent",
-            agent_type="strategy_formulation",
             message_bus=self.message_bus
         )
     
@@ -156,7 +156,7 @@ class TestStrategyAgent(unittest.TestCase):
         self.assertIn("data", variables)
         self.assertIn("options", variables)
     
-    def test_handle_task_request_formulate_strategy(self):
+    async def test_handle_task_request_formulate_strategy(self):
         """Test handling a task request to formulate a strategy."""
         bug_report = {
             "pattern_id": "null_pointer",
@@ -183,7 +183,7 @@ class TestStrategyAgent(unittest.TestCase):
         )
         
         # Handle the message
-        self.agent._handle_task_request(message)
+        await self.agent._handle_task_request(message)
         
         # Verify that send_response was called with the correct arguments
         self.agent.message_bus.publish.assert_called_once()
@@ -192,7 +192,7 @@ class TestStrategyAgent(unittest.TestCase):
         self.assertEqual(response_msg.content["status"], "success")
         self.assertIn("strategy", response_msg.content)
     
-    def test_handle_query_get_strategy_templates(self):
+    async def test_handle_query_get_strategy_templates(self):
         """Test handling a query for strategy templates."""
         message = AgentMessage(
             message_type=MessageType.QUERY,
@@ -204,7 +204,7 @@ class TestStrategyAgent(unittest.TestCase):
         )
         
         # Handle the message
-        self.agent._handle_query(message)
+        await self.agent._handle_query(message)
         
         # Verify that send_response was called with the correct arguments
         self.agent.message_bus.publish.assert_called_once()
@@ -214,7 +214,7 @@ class TestStrategyAgent(unittest.TestCase):
         self.assertIn("templates", response_msg.content)
         self.assertEqual(response_msg.content["template_count"], 1)
     
-    def test_handle_error_messages(self):
+    async def test_handle_error_messages(self):
         """Test handling error cases."""
         # Test with invalid action
         message = AgentMessage(
@@ -226,7 +226,7 @@ class TestStrategyAgent(unittest.TestCase):
         )
         
         # Handle the message
-        self.agent._handle_task_request(message)
+        await self.agent._handle_task_request(message)
         
         # Verify that send_response was called with an error message
         self.agent.message_bus.publish.assert_called_once()

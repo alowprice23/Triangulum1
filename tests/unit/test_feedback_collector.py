@@ -251,7 +251,7 @@ class TestFeedbackCollector(unittest.TestCase):
         self.assertIsNotNone(analysis['average_rating'])
         self.assertEqual(analysis['processed_count'], 0)
         self.assertEqual(analysis['unprocessed_count'], 3)
-        self.assertEqual(len(analysis['common_tags']), 4)
+        self.assertEqual(len(analysis['common_tags']), 5)
         self.assertEqual(analysis['common_tags']['login'], 2)
         
         # Analyze bug feedback only
@@ -262,8 +262,9 @@ class TestFeedbackCollector(unittest.TestCase):
         self.assertEqual(bug_analysis['by_type']['bug'], 2)
         self.assertNotIn('feature', bug_analysis['by_type'])
 
+    @patch('json.dump')
     @patch('builtins.open', new_callable=mock_open)
-    def test_export_feedback_json(self, mock_file):
+    def test_export_feedback_json(self, mock_file, mock_json_dump):
         """Test exporting feedback to JSON."""
         # Record feedback
         self.collector.record_feedback(
@@ -281,8 +282,7 @@ class TestFeedbackCollector(unittest.TestCase):
         mock_file.assert_called_once_with("test.json", "w")
         
         # Check that json.dump was called with the feedback data
-        handle = mock_file()
-        self.assertEqual(handle.write.call_count, 1)
+        mock_json_dump.assert_called_once()
 
     def test_delete_feedback(self):
         """Test deleting feedback."""

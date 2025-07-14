@@ -376,11 +376,12 @@ class EnhancedMessageBus:
                             self._subscriptions.remove(sub)
                             logger.debug(f"Removed empty subscription for agent {agent_id}")
     
-    def publish(self, 
-                message: AgentMessage, 
+    async def publish(self,
+                message: AgentMessage,
                 priority: Optional[MessagePriority] = None,
                 timeout: Optional[float] = None,
-                require_confirmation: bool = False) -> Dict[str, Any]:
+                require_confirmation: bool = False,
+                callback: Optional[Callable[[AgentMessage], None]] = None) -> Dict[str, Any]:
         """
         Publish a message to all subscribed agents.
         
@@ -412,18 +413,19 @@ class EnhancedMessageBus:
         # Integrate with thought chains if available
         self._integrate_with_thought_chains(message)
         
-        return self._publish_single_message(
+        return await self._publish_single_message(
             message,
             priority or MessagePriority.NORMAL,
             timeout,
             require_confirmation
         )
 
-    def _publish_single_message(self,
+    async def _publish_single_message(self,
                                message: AgentMessage,
                                priority: MessagePriority,
                                timeout: Optional[float],
-                               require_confirmation: bool) -> Dict[str, Any]:
+                               require_confirmation: bool,
+                               callback: Optional[Callable[[AgentMessage], None]] = None) -> Dict[str, Any]:
         """
         Publish a single message to all subscribed agents.
         
@@ -440,21 +442,23 @@ class EnhancedMessageBus:
         if message.receiver:
             # Direct message to specific receiver
             results = {
-                message.receiver: self._route_to_agent(
+                message.receiver: await self._route_to_agent(
                     message,
                     message.receiver,
                     priority,
                     timeout,
-                    require_confirmation
+                    require_confirmation,
+                    callback
                 )
             }
         else:
             # Broadcast to all interested subscribers
-            results = self._broadcast_message(
+            results = await self._broadcast_message(
                 message, 
                 priority,
                 timeout,
-                require_confirmation
+                require_confirmation,
+                callback
             )
             
         # Update delivery status for all receivers
@@ -470,12 +474,13 @@ class EnhancedMessageBus:
             "delivery_status": results
         }
     
-    def _route_to_agent(self, 
-                       message: AgentMessage, 
+    async def _route_to_agent(self,
+                       message: AgentMessage,
                        agent_id: str,
                        priority: MessagePriority,
                        timeout: Optional[float],
-                       require_confirmation: bool) -> Dict[str, Any]:
+                       require_confirmation: bool,
+                       callback: Optional[Callable[[AgentMessage], None]] = None) -> Dict[str, Any]:
         """
         Route a message to a specific agent.
         
@@ -499,6 +504,9 @@ class EnhancedMessageBus:
                         matching_subs.append(sub)
             
             if not matching_subs:
+                if agent_id == "user":
+                    print(f"Message from {message.sender}: {message.content.get('message')}")
+                    return {"success": True}
                 logger.warning(f"No subscription found for agent {agent_id}, message type {message.message_type}")
                 return {"success": False, "error": "No matching subscription"}
             
@@ -508,18 +516,21 @@ class EnhancedMessageBus:
             # Use the highest priority subscription
             sub = matching_subs[0]
             
-            return self._deliver_message(
+            if callback:
+                sub.callback = callback
+            return await self._deliver_message(
                 message,
                 sub,
                 timeout,
                 require_confirmation
             )
     
-    def _broadcast_message(self, 
+    async def _broadcast_message(self,
                           message: AgentMessage,
                           priority: MessagePriority,
                           timeout: Optional[float],
-                          require_confirmation: bool) -> Dict[str, Dict[str, Any]]:
+                          require_confirmation: bool,
+                          callback: Optional[Callable[[AgentMessage], None]] = None) -> Dict[str, Dict[str, Any]]:
         """
         Broadcast a message to all interested subscribers.
         
@@ -563,7 +574,7 @@ class EnhancedMessageBus:
             
             return results
     
-    def _deliver_message(self, 
+    async def _deliver_message(self,
                         message: AgentMessage, 
                         subscription: EnhancedSubscriptionInfo,
                         timeout: Optional[float],

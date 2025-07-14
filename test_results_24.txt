@@ -1,0 +1,117 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 1 item
+
+tests/temp_test.py::TempTest::test_empty_folder FAILED                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ TempTest.test_empty_folder __________________________
+
+self = <temp_test.TempTest testMethod=test_empty_folder>
+
+    def test_empty_folder(self):
+        import asyncio
+        empty_dir = os.path.join(self.test_dir, "empty")
+        os.makedirs(empty_dir, exist_ok=True)
+>       result = asyncio.run(self._run_orchestrator(empty_dir))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/temp_test.py:101:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/temp_test.py:91: in _run_orchestrator
+    await self.orchestrator.handle_message(message)
+triangulum_lx/agents/base_agent.py:112: in handle_message
+    await self._handle_task_request(message)
+triangulum_lx/agents/orchestrator_agent.py:18: in _handle_task_request
+    await self._handle_folder_healing(message)
+triangulum_lx/agents/orchestrator_agent.py:33: in _handle_folder_healing
+    await workflow.start()
+triangulum_lx/agents/orchestrator_agent.py:52: in start
+    await self.agent.send_response(
+triangulum_lx/agents/base_agent.py:234: in send_response
+    return self.send_message(
+triangulum_lx/agents/base_agent.py:203: in send_message
+    self.message_bus.publish(message)
+triangulum_lx/agents/enhanced_message_bus.py:416: in publish
+    return self._publish_single_message(
+triangulum_lx/agents/enhanced_message_bus.py:444: in _publish_single_message
+    message.receiver: self._route_to_agent(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <triangulum_lx.agents.enhanced_message_bus.EnhancedMessageBus object at 0x7fe656c97260>
+message = AgentMessage(message_type=<MessageType.TASK_RESULT: 'task_result'>, content={'status': 'success'}, sender='orchestrato...chunk_sequence=None, response_id=None, compressed=False, problem_context={}, analysis_results={}, suggested_actions=[])
+agent_id = 'test_handler', priority = <MessagePriority.NORMAL: 1>
+timeout = None, require_confirmation = False
+
+    def _route_to_agent(self,
+                       message: AgentMessage,
+                       agent_id: str,
+                       priority: MessagePriority,
+                       timeout: Optional[float],
+                       require_confirmation: bool) -> Dict[str, Any]:
+        """
+        Route a message to a specific agent.
+
+        Args:
+            message: Message to route
+            agent_id: ID of the agent to route to
+            priority: Priority level for this message
+            timeout: Timeout in seconds for message delivery
+            require_confirmation: Whether to require delivery confirmation
+
+        Returns:
+            Dict[str, Any]: Delivery status information
+        """
+        with self._lock:
+            # Find matching subscription
+            matching_subs = []
+            for sub in self._subscriptions:
+                if sub.agent_id == agent_id and message.message_type in sub.message_types:
+                    # Check if message passes filters
+                    if self._passes_filters(message, sub.filters):
+                        matching_subs.append(sub)
+
+            if not matching_subs:
+                if agent_id == "user":
+                    print(f"Message from {message.sender}: {message.content.get('message')}")
+                    return {"success": True}
+                logger.warning(f"No subscription found for agent {agent_id}, message type {message.message_type}")
+                return {"success": False, "error": "No matching subscription"}
+
+            # Sort by priority (highest first)
+            matching_subs.sort(key=lambda s: s.priority.value, reverse=True)
+
+            # Use the highest priority subscription
+            sub = matching_subs[0]
+
+>           if callback:
+               ^^^^^^^^
+E           NameError: name 'callback' is not defined
+
+triangulum_lx/agents/enhanced_message_bus.py:515: NameError
+----------------------------- Captured stdout call -----------------------------
+Setting up test
+------------------------------ Captured log call -------------------------------
+WARNING  triangulum_lx.verification.metrics:metrics.py:52 Metrics path .triangulum/verification/metrics exists but is not a directory. Attempting to create.
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/temp_test.py::TempTest::test_empty_folder - NameError: name 'callback' is not defined
+========================= 1 failed, 1 warning in 5.18s =========================

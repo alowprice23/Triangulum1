@@ -401,11 +401,15 @@ class FeedbackCollector:
             
             # Tags
             if feedback['tags']:
-                tags = json.loads(feedback['tags']) if isinstance(feedback['tags'], str) else feedback['tags']
-                for tag in tags:
-                    if tag not in analysis['common_tags']:
-                        analysis['common_tags'][tag] = 0
-                    analysis['common_tags'][tag] += 1
+                try:
+                    tags = json.loads(feedback['tags']) if isinstance(feedback['tags'], str) else feedback['tags']
+                    if isinstance(tags, list):
+                        for tag in tags:
+                            if tag not in analysis['common_tags']:
+                                analysis['common_tags'][tag] = 0
+                            analysis['common_tags'][tag] += 1
+                except json.JSONDecodeError:
+                    pass # Ignore tags that are not valid JSON
         
         # Calculate average rating
         ratings = [f['rating'] for f in feedbacks if f['rating'] is not None]

@@ -91,7 +91,7 @@ class TestBaseAgent(unittest.TestCase):
         self.agent.shutdown()
         self.message_bus_mock.unsubscribe.assert_called_once_with(self.agent.agent_id)
     
-    def test_handle_message_task_request(self):
+    async def test_handle_message_task_request(self):
         """Test handling task request messages."""
         message = AgentMessage(
             message_type=MessageType.TASK_REQUEST,
@@ -99,7 +99,7 @@ class TestBaseAgent(unittest.TestCase):
             sender="sender_agent"
         )
         
-        self.agent.handle_message(message)
+        await self.agent.handle_message(message)
         
         self.assertEqual(len(self.agent.task_requests_handled), 1)
         self.assertEqual(self.agent.task_requests_handled[0], message)
@@ -112,7 +112,7 @@ class TestBaseAgent(unittest.TestCase):
         self.assertEqual(response.receiver, "sender_agent")
         self.assertEqual(response.content["result"], "Handled task: test task")
     
-    def test_handle_message_query(self):
+    async def test_handle_message_query(self):
         """Test handling query messages."""
         message = AgentMessage(
             message_type=MessageType.QUERY,
@@ -120,7 +120,7 @@ class TestBaseAgent(unittest.TestCase):
             sender="sender_agent"
         )
         
-        self.agent.handle_message(message)
+        await self.agent.handle_message(message)
         
         self.assertEqual(len(self.agent.queries_handled), 1)
         self.assertEqual(self.agent.queries_handled[0], message)
@@ -133,7 +133,7 @@ class TestBaseAgent(unittest.TestCase):
         self.assertEqual(response.receiver, "sender_agent")
         self.assertEqual(response.content["answer"], "Answered query: test query")
     
-    def test_handle_message_error(self):
+    async def test_handle_message_error(self):
         """Test handling error messages."""
         message = AgentMessage(
             message_type=MessageType.ERROR,
@@ -143,11 +143,11 @@ class TestBaseAgent(unittest.TestCase):
         
         # Need to mock the logger to verify it's called
         with patch("triangulum_lx.agents.base_agent.logger") as mock_logger:
-            self.agent.handle_message(message)
+            await self.agent.handle_message(message)
             mock_logger.warning.assert_called_once()
             self.assertIn("test error", mock_logger.warning.call_args[0][0])
     
-    def test_handle_message_status(self):
+    async def test_handle_message_status(self):
         """Test handling status messages."""
         message = AgentMessage(
             message_type=MessageType.STATUS,
@@ -157,7 +157,7 @@ class TestBaseAgent(unittest.TestCase):
         
         # Need to mock the logger to verify it's called
         with patch("triangulum_lx.agents.base_agent.logger") as mock_logger:
-            self.agent.handle_message(message)
+            await self.agent.handle_message(message)
             # Check that debug was called at least once with the status message
             self.assertTrue(mock_logger.debug.called)
             # Check that one of the calls contains the status message
@@ -168,9 +168,9 @@ class TestBaseAgent(unittest.TestCase):
                     break
             self.assertTrue(status_call_found, "Status message not found in debug calls")
     
-    def test_send_message(self):
+    async def test_send_message(self):
         """Test sending messages."""
-        message_id = self.agent.send_message(
+        message_id = await self.agent.send_message(
             message_type=MessageType.TASK_REQUEST,
             content={"task": "test task"},
             receiver="receiver_agent",
@@ -190,7 +190,7 @@ class TestBaseAgent(unittest.TestCase):
         self.assertEqual(message.confidence, 0.8)
         self.assertEqual(message.metadata["meta"], "data")
     
-    def test_send_response(self):
+    async def test_send_response(self):
         """Test sending response messages."""
         original_message = AgentMessage(
             message_type=MessageType.TASK_REQUEST,
@@ -200,7 +200,7 @@ class TestBaseAgent(unittest.TestCase):
             conversation_id="convo_id"
         )
         
-        message_id = self.agent.send_response(
+        message_id = await self.agent.send_response(
             original_message=original_message,
             message_type=MessageType.TASK_RESULT,
             content={"result": "test result"},
@@ -222,9 +222,9 @@ class TestBaseAgent(unittest.TestCase):
         self.assertEqual(response.confidence, 0.9)
         self.assertEqual(response.metadata["meta"], "data")
     
-    def test_broadcast_status(self):
+    async def test_broadcast_status(self):
         """Test broadcasting status messages."""
-        message_id = self.agent.broadcast_status(
+        message_id = await self.agent.broadcast_status(
             status="test status",
             metadata={"meta": "data"}
         )
@@ -241,7 +241,7 @@ class TestBaseAgent(unittest.TestCase):
         self.assertEqual(message.content["agent_type"], "test_agent")
         self.assertEqual(message.metadata["meta"], "data")
     
-    def test_no_message_bus(self):
+    async def test_no_message_bus(self):
         """Test agent behavior without a message bus."""
         agent = TestAgent(agent_id="no_bus_agent")
         
@@ -250,7 +250,7 @@ class TestBaseAgent(unittest.TestCase):
         agent.shutdown()
         
         # Sending messages should return None but not raise exceptions
-        self.assertIsNone(agent.send_message(
+        self.assertIsNone(await agent.send_message(
             message_type=MessageType.TASK_REQUEST,
             content={"task": "test"}
         ))
@@ -258,13 +258,13 @@ class TestBaseAgent(unittest.TestCase):
         original_message = MagicMock(spec=AgentMessage)
         original_message.sender = "test"
         original_message.message_id = "test_id"
-        self.assertIsNone(agent.send_response(
+        self.assertIsNone(await agent.send_response(
             original_message=original_message,
             message_type=MessageType.TASK_RESULT,
             content={"result": "test"}
         ))
         
-        self.assertIsNone(agent.broadcast_status("test status"))
+        self.assertIsNone(await agent.broadcast_status("test status"))
 
 
 class TestAgentFactory(unittest.TestCase):

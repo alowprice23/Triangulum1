@@ -8,6 +8,7 @@ including initialization, dashboard monitoring, and recovery mechanisms.
 import os
 import json
 import time
+import asyncio
 import unittest
 from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
@@ -27,6 +28,9 @@ class TestSystemStartupIntegration(unittest.TestCase):
         """Set up test fixtures."""
         # Create a minimal test configuration
         self.test_config = {
+            "llm": {
+                "provider": "mock"
+            },
             "providers": {
                 "default_provider": "local",
                 "local": {
@@ -75,7 +79,7 @@ class TestSystemStartupIntegration(unittest.TestCase):
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_agent_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_provider_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_message_bus')
-    def test_graceful_shutdown(self, mock_init_message_bus, mock_init_provider_factory,
+    async def test_graceful_shutdown(self, mock_init_message_bus, mock_init_provider_factory,
                              mock_init_agent_factory, mock_init_meta_agent, mock_init_bug_detector,
                              mock_shutdown_message_bus, mock_shutdown_provider_factory,
                              mock_shutdown_agent_factory):
@@ -91,14 +95,14 @@ class TestSystemStartupIntegration(unittest.TestCase):
         engine = TriangulumEngine(self.test_config)
         
         # Initialize engine
-        result = engine.initialize()
+        result = await engine.initialize()
         
         # Verify initialization was successful
         self.assertTrue(result)
         self.assertTrue(engine._initialized)
         
         # Shutdown engine
-        result = engine.shutdown()
+        result = await engine.shutdown()
         
         # Verify shutdown was successful
         self.assertTrue(result)
@@ -114,7 +118,7 @@ class TestSystemStartupIntegration(unittest.TestCase):
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_agent_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_provider_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_message_bus')
-    def test_system_health_monitoring(self, mock_init_message_bus, mock_init_provider_factory,
+    async def test_system_health_monitoring(self, mock_init_message_bus, mock_init_provider_factory,
                                    mock_init_agent_factory, mock_init_meta_agent, mock_init_bug_detector,
                                    mock_check_health):
         """Test system health monitoring."""
@@ -139,7 +143,7 @@ class TestSystemStartupIntegration(unittest.TestCase):
         engine = TriangulumEngine(self.test_config)
         
         # Initialize engine
-        result = engine.initialize()
+        result = await engine.initialize()
         
         # Verify initialization was successful
         self.assertTrue(result)
@@ -161,7 +165,7 @@ class TestSystemStartupIntegration(unittest.TestCase):
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_agent_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_provider_factory')
     @patch('triangulum_lx.core.engine.TriangulumEngine._init_message_bus')
-    def test_startup_dashboard_integration(self, mock_init_message_bus, mock_init_provider_factory,
+    async def test_startup_dashboard_integration(self, mock_init_message_bus, mock_init_provider_factory,
                                         mock_init_agent_factory, mock_init_meta_agent, mock_init_bug_detector):
         """Test integration between engine initialization and dashboard monitoring."""
         # Configure mocks to return component instances
@@ -181,14 +185,14 @@ class TestSystemStartupIntegration(unittest.TestCase):
         dashboard.start_monitoring(engine=engine, update_interval=0.1)
         
         # Initialize engine
-        result = engine.initialize(parallel=False)
+        result = await engine.initialize(parallel=False)
         
         # Verify initialization was successful
         self.assertTrue(result)
         self.assertTrue(engine._initialized)
         
         # Wait for dashboard to update
-        time.sleep(1.0)
+        await asyncio.sleep(1.0)
         
         # Force the dashboard to mark completion for testing purposes
         dashboard.startup_complete = True

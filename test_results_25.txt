@@ -1,0 +1,70 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 1 item
+
+tests/temp_test.py::TempTest::test_empty_folder FAILED                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ TempTest.test_empty_folder __________________________
+
+self = <temp_test.TempTest testMethod=test_empty_folder>
+
+    def test_empty_folder(self):
+        import asyncio
+        empty_dir = os.path.join(self.test_dir, "empty")
+        os.makedirs(empty_dir, exist_ok=True)
+>       result = asyncio.run(self._run_orchestrator(empty_dir))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/temp_test.py:101:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/temp_test.py:91: in _run_orchestrator
+    await self.orchestrator.handle_message(message)
+triangulum_lx/agents/base_agent.py:112: in handle_message
+    await self._handle_task_request(message)
+triangulum_lx/agents/orchestrator_agent.py:18: in _handle_task_request
+    await self._handle_folder_healing(message)
+triangulum_lx/agents/orchestrator_agent.py:33: in _handle_folder_healing
+    await workflow.start()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <triangulum_lx.agents.orchestrator_agent.Workflow object at 0x7fc6c54cffe0>
+
+    async def start(self):
+        # For now, just send a success message.
+        # In the future, this will be where the workflow logic goes.
+>       await self.agent.send_response(
+            self.original_message,
+            MessageType.TASK_RESULT,
+            {"status": "success"}
+        )
+E       TypeError: object str can't be used in 'await' expression
+
+triangulum_lx/agents/orchestrator_agent.py:52: TypeError
+----------------------------- Captured stdout call -----------------------------
+Setting up test
+Error from orchestrator: Unknown error
+------------------------------ Captured log call -------------------------------
+WARNING  triangulum_lx.verification.metrics:metrics.py:52 Metrics path .triangulum/verification/metrics exists but is not a directory. Attempting to create.
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/temp_test.py::TempTest::test_empty_folder - TypeError: object str can't be used in 'await' expression
+========================= 1 failed, 1 warning in 4.61s =========================

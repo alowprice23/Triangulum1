@@ -1,7 +1,7 @@
 {
   "agents": [
-    "bug_detector",
-    "orchestrator"
+    "orchestrator",
+    "bug_detector"
   ],
   "messages": [
     {
@@ -9,7 +9,7 @@
       "target_agent": "bug_detector",
       "message_type": "command",
       "content": "Test message for dashboard",
-      "timestamp": "2025-07-13T10:58:29.890366",
+      "timestamp": "2025-07-14T05:49:43.583346",
       "metadata": {}
     }
   ],
@@ -22,15 +22,15 @@
     "orchestrator": {
       "messages_sent": 1,
       "messages_received": 0,
-      "last_active": "2025-07-13T10:58:29.890366",
+      "last_active": "2025-07-14T05:49:43.583346",
       "response_times": []
     },
     "bug_detector": {
       "messages_sent": 0,
       "messages_received": 1,
-      "last_active": "2025-07-13T10:58:29.890366",
+      "last_active": "2025-07-14T05:49:43.583346",
       "response_times": []
     }
   },
-  "timestamp": "2025-07-13T10:58:40.091397"
+  "timestamp": "2025-07-14T05:49:53.765310"
 }

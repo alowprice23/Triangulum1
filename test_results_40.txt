@@ -1,0 +1,74 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 1 item
+
+tests/temp_test.py::TempTest::test_empty_folder FAILED                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ TempTest.test_empty_folder __________________________
+
+self = <temp_test.TempTest testMethod=test_empty_folder>
+
+    def test_empty_folder(self):
+        async def run_test():
+            message_bus = EnhancedMessageBus()
+            orchestrator = OrchestratorAgent(message_bus=message_bus)
+            message = AgentMessage(
+                message_type=MessageType.TASK_REQUEST,
+                content={"action": "orchestrate_folder_healing", "folder_path": self.test_dir},
+                sender="test"
+            )
+            response = await orchestrator.handle_message(message)
+            self.assertIsNotNone(response)
+            self.assertEqual(response["status"], "success")
+
+        self.test_dir = tempfile.mkdtemp()
+>       asyncio.run(run_test())
+
+tests/temp_test.py:25:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def run_test():
+        message_bus = EnhancedMessageBus()
+        orchestrator = OrchestratorAgent(message_bus=message_bus)
+        message = AgentMessage(
+            message_type=MessageType.TASK_REQUEST,
+            content={"action": "orchestrate_folder_healing", "folder_path": self.test_dir},
+            sender="test"
+        )
+        response = await orchestrator.handle_message(message)
+        self.assertIsNotNone(response)
+>       self.assertEqual(response["status"], "success")
+                         ^^^^^^^^^^^^^^^^^^
+E       TypeError: string indices must be integers, not 'str'
+
+tests/temp_test.py:22: TypeError
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+tests/temp_test.py::TempTest::test_empty_folder
+  /app/triangulum_lx/agents/base_agent.py:203: RuntimeWarning: coroutine 'EnhancedMessageBus._publish_single_message' was never awaited
+    await self.message_bus.publish(message)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/temp_test.py::TempTest::test_empty_folder - TypeError: string indices must be integers, not 'str'
+======================== 1 failed, 2 warnings in 2.09s =========================

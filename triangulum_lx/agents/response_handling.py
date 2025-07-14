@@ -105,46 +105,38 @@ class ResponseChunker:
         total_chunks = None  # Will be calculated later
         
         # Create chunks of manageable size
-        while remaining:
-            # Convert the remaining data to JSON and measure size
-            chunk_data = {}
-            keys_to_include = []
-            
-            # Estimate size of each key's data
-            for key, value in remaining.items():
-                value_json = json.dumps(value)
-                value_size = len(value_json.encode('utf-8'))
-                
-                # If a single value is too large, we need to split it
-                if value_size > self.max_chunk_size:
-                    # Special handling for large arrays
-                    if isinstance(value, list):
-                        # Split the list
-                        max_items = max(1, len(value) // (value_size // self.max_chunk_size + 1))
-                        chunk_value = value[:max_items]
-                        remaining[key] = value[max_items:]
-                        chunk_data[key] = chunk_value
-                    else:
-                        # For non-list large values, just include as is and will be compressed
-                        # or further processed by ResponseCompressor
-                        chunk_data[key] = value
-                        del remaining[key]
-                else:
-                    # This value fits in the chunk
-                    keys_to_include.append(key)
-            
-            # Add keys that fit in this chunk
-            for key in keys_to_include:
-                chunk_data[key] = remaining[key]
-                del remaining[key]
-            
+        chunk_data_list = []
+        if isinstance(message.content, dict) and 'data' in message.content and isinstance(message.content['data'], list):
+            data_list = message.content['data']
+            items_per_chunk = 1
+            while True:
+                chunk_size = len(json.dumps(data_list[:items_per_chunk]).encode('utf-8'))
+                if chunk_size > self.max_chunk_size and items_per_chunk > 1:
+                    items_per_chunk -=1
+                    break
+                if chunk_size > self.max_chunk_size:
+                    # A single item is too large, so we can't chunk it further.
+                    # It will be sent as a single chunk and hopefully compressed.
+                    break
+                if chunk_size <= self.max_chunk_size:
+                    items_per_chunk += 1
+                if items_per_chunk > len(data_list):
+                    items_per_chunk = len(data_list)
+                    break
+
+            for i in range(0, len(data_list), items_per_chunk):
+                chunk_data_list.append({'data': data_list[i:i + items_per_chunk]})
+        else:
+            chunk_data_list.append(message.content)
+
+        for i, chunk_data in enumerate(chunk_data_list):
             # Create the chunk message
             chunk_message = AgentMessage(
-                message_id=f"{message.message_id}_chunk_{chunk_number}",
+                message_id=f"{message.message_id}_chunk_{i}",
                 message_type=MessageType.CHUNKED_MESSAGE,
                 content={
                     "chunk_id": chunk_id,
-                    "chunk_number": chunk_number,
+                    "chunk_number": i,
                     "original_message_id": message.message_id,
                     "original_message_type": message.message_type.value,
                     "chunk_data": chunk_data
@@ -153,10 +145,7 @@ class ResponseChunker:
                 receiver=message.receiver,
                 timestamp=message.timestamp
             )
-            
-            # Add to chunks
             chunks.append(chunk_message)
-            chunk_number += 1
         
         # Update total_chunks in all chunks
         total_chunks = len(chunks)
@@ -216,8 +205,8 @@ class ResponseChunker:
                 if key in merged_content and isinstance(merged_content[key], list) and isinstance(value, list):
                     # Append lists
                     merged_content[key].extend(value)
-                else:
-                    # Replace or add other values
+                elif key not in merged_content:
+                    # Add new key
                     merged_content[key] = value
         
         # Create the reassembled message
@@ -674,19 +663,19 @@ class LargeResponseHandler:
             content_json = json.dumps(message.content)
             content_size = len(content_json.encode('utf-8'))
             
-            if content_size <= COMPRESSION_THRESHOLD:
+            if content_size <= self.chunker.max_chunk_size:
                 # Small enough to send directly
                 if self.message_bus:
                     self.message_bus.publish(message)
-                return message.message_id
-                
+                return [message.message_id]
+
+            # Compress if size is between chunk size and max message size
             elif content_size <= MAX_MESSAGE_SIZE:
-                # Compress and send directly
                 compressed_message = self.compressor.compress_message(message)
                 if self.message_bus:
                     self.message_bus.publish(compressed_message)
-                return compressed_message.message_id
-                
+                return [compressed_message.message_id]
+
             else:
                 # Too large, use chunking
                 return self._handle_chunked(message)
@@ -704,6 +693,12 @@ class LargeResponseHandler:
         # Split into chunks
         chunks = self.chunker.chunk_message(message)
         
+        # If only one chunk, and it's the original message, send it directly
+        if len(chunks) == 1 and chunks[0] is message:
+            if self.message_bus:
+                self.message_bus.publish(message)
+            return [message.message_id]
+
         # Compress each chunk if necessary
         compressed_chunks = [self.compressor.compress_message(chunk) for chunk in chunks]
         

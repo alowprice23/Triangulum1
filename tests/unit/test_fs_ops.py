@@ -8,6 +8,7 @@ import logging
 from pathlib import Path
 
 from triangulum_lx.tooling import fs_ops
+import os
 
 # Configure logging for tests
 logging.basicConfig(level=logging.DEBUG)
@@ -286,7 +287,7 @@ def test_fsync_mocked(mocker):
 
     # Reset mock for another call if testing O_TMPFILE path separately
     mock_os_fsync.reset_mock()
-    if fs_ops.os.name == 'posix' and hasattr(fs_ops.os, 'O_TMPFILE') and hasattr(fs_ops.os, 'linkat'):
+    if os.name == 'posix' and hasattr(os, 'O_TMPFILE') and hasattr(os, 'linkat'):
         # Only attempt if O_TMPFILE path is likely
         try:
             fs_ops.atomic_write(str(test_file), data, use_otmpfile_if_available=True)

@@ -106,18 +106,15 @@ class TestResponseHandling(unittest.TestCase):
         self.assertIsNone(error)
         
         # Invalid message (missing sender)
-        invalid_message = AgentMessage(
-            message_id="test_invalid",
-            message_type=MessageType.TASK_RESULT,
-            content={"result": "invalid"},
-            sender=None,
-            receiver="receiver",
-            timestamp=time.time()
-        )
-        
-        is_valid, error = self.validator.validate_response(invalid_message)
-        self.assertFalse(is_valid)
-        self.assertIsNotNone(error)
+        with self.assertRaises(ValueError):
+            AgentMessage(
+                message_id="test_invalid",
+                message_type=MessageType.TASK_RESULT,
+                content={"result": "invalid"},
+                sender=None,
+                receiver="receiver",
+                timestamp=time.time()
+            )
     
     def test_async_coordination(self):
         """Test async response coordination."""
@@ -150,7 +147,7 @@ class TestResponseHandling(unittest.TestCase):
     def test_large_response_handler(self):
         """Test the complete large response handler."""
         # Create a message with large content
-        large_content = {"data": ["item" * 100 for _ in range(100)]}
+        large_content = {"data": ["item" * 500 for _ in range(100)]}
         original_message = AgentMessage(
             message_id="test_large_handler",
             message_type=MessageType.TASK_RESULT,

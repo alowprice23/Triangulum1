@@ -1,0 +1,41 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 1 item
+
+tests/temp_test.py::TempTest::test_empty_folder FAILED                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ TempTest.test_empty_folder __________________________
+
+self = <temp_test.TempTest testMethod=test_empty_folder>
+
+    def test_empty_folder(self):
+        empty_dir = os.path.join(self.test_dir, "empty")
+        os.makedirs(empty_dir, exist_ok=True)
+        result = self._run_orchestrator(empty_dir)
+>       self.assertIn("status", result)
+E       AssertionError: 'status' not found in {}
+
+tests/temp_test.py:101: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Setting up test
+Error from orchestrator: Unknown error
+------------------------------ Captured log call -------------------------------
+WARNING  triangulum_lx.verification.metrics:metrics.py:52 Metrics path .triangulum/verification/metrics exists but is not a directory. Attempting to create.
+WARNING  triangulum_lx.agents.orchestrator_agent:orchestrator_agent.py:1670 Folder analysis step bug_detector timed out or failed
+WARNING  triangulum_lx.agents.orchestrator_agent:orchestrator_agent.py:1671 Step bug_detector failed for /tmp/tmpyzsk1l23/empty
+WARNING  triangulum_lx.agents.orchestrator_agent:orchestrator_agent.py:1413 Step bug_detector failed for /tmp/tmpyzsk1l23/empty
+ERROR    triangulum_lx.agents.orchestrator_agent:orchestrator_agent.py:1417 Critical step bug_detector failed, aborting workflow
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/temp_test.py::TempTest::test_empty_folder - AssertionError: 'status' not found in {}
+=================== 1 failed, 1 warning in 89.08s (0:01:29) ====================

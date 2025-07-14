@@ -421,6 +421,11 @@ class DependencyAnalyzer:
         if not self.nx_graph or not self.nx_graph.nodes(): return []
         return list(nx.strongly_connected_components(self.nx_graph))
 
+    def find_cycles(self) -> List[List[str]]:
+        self._ensure_networkx_graph()
+        if not self.nx_graph or not self.nx_graph.nodes(): return []
+        return list(nx.simple_cycles(self.nx_graph))
+
     def get_repair_batches(self) -> List[Set[str]]:
         self._ensure_networkx_graph()
         if not self.nx_graph or not self.nx_graph.nodes(): return []

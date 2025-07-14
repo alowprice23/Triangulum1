@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collecting ...

@@ -46,7 +46,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Create a mock callback
         self.mock_callback = MagicMock()
     
-    def test_subscribe_and_publish(self):
+    async def test_subscribe_and_publish(self):
         """Test basic subscription and publishing."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -56,7 +56,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish a message
-        result = self.message_bus.publish(self.test_message)
+        result = await self.message_bus.publish(self.test_message)
         
         # Check that the callback was called
         self.mock_callback.assert_called_once()
@@ -83,7 +83,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Check that the callback was not called
         self.mock_callback.assert_not_called()
     
-    def test_direct_message(self):
+    async def test_direct_message(self):
         """Test sending a direct message to a specific agent."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -101,13 +101,13 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish the message
-        result = self.message_bus.publish(direct_message)
+        result = await self.message_bus.publish(direct_message)
         
         # Check that the callback was called
         self.mock_callback.assert_called_once()
         self.assertTrue(result["success"])
     
-    def test_message_filtering_by_topic(self):
+    async def test_message_filtering_by_topic(self):
         """Test message filtering by topic."""
         # Subscribe to messages with topic filter
         self.message_bus.subscribe(
@@ -134,8 +134,8 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish both messages
-        self.message_bus.publish(message_with_topic)
-        self.message_bus.publish(message_with_other_topic)
+        await self.message_bus.publish(message_with_topic)
+        await self.message_bus.publish(message_with_other_topic)
         
         # Check that the callback was called only once (for the matching topic)
         self.assertEqual(self.mock_callback.call_count, 1)
@@ -144,7 +144,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         called_message = self.mock_callback.call_args[0][0]
         self.assertEqual(called_message.metadata["topic"], "test_topic")
     
-    def test_message_filtering_by_source(self):
+    async def test_message_filtering_by_source(self):
         """Test message filtering by source."""
         # Subscribe to messages with source filter
         self.message_bus.subscribe(
@@ -169,8 +169,8 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish both messages
-        self.message_bus.publish(message_from_specific)
-        self.message_bus.publish(message_from_other)
+        await self.message_bus.publish(message_from_specific)
+        await self.message_bus.publish(message_from_other)
         
         # Check that the callback was called only once (for the matching sender)
         self.assertEqual(self.mock_callback.call_count, 1)
@@ -179,7 +179,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         called_message = self.mock_callback.call_args[0][0]
         self.assertEqual(called_message.sender, "specific_sender")
     
-    def test_message_filtering_by_confidence(self):
+    async def test_message_filtering_by_confidence(self):
         """Test message filtering by confidence level."""
         # Subscribe to messages with confidence filter
         self.message_bus.subscribe(
@@ -206,8 +206,8 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish both messages
-        self.message_bus.publish(high_confidence_message)
-        self.message_bus.publish(low_confidence_message)
+        await self.message_bus.publish(high_confidence_message)
+        await self.message_bus.publish(low_confidence_message)
         
         # Check that the callback was called only once (for the high confidence message)
         self.assertEqual(self.mock_callback.call_count, 1)
@@ -216,7 +216,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         called_message = self.mock_callback.call_args[0][0]
         self.assertEqual(called_message.confidence, 0.8)
     
-    def test_priority_based_delivery(self):
+    async def test_priority_based_delivery(self):
         """Test priority-based message delivery."""
         # Create a list to track the order of message delivery
         delivery_order = []
@@ -256,17 +256,17 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish messages with different priorities
-        self.message_bus.publish(
+        await self.message_bus.publish(
             low_priority_message,
             priority=MessagePriority.LOW
         )
         
-        self.message_bus.publish(
+        await self.message_bus.publish(
             high_priority_message,
             priority=MessagePriority.HIGH
         )
         
-        self.message_bus.publish(
+        await self.message_bus.publish(
             critical_priority_message,
             priority=MessagePriority.CRITICAL
         )
@@ -277,7 +277,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # priority-ordered in all cases.
         self.assertEqual(len(delivery_order), 3)
     
-    def test_circuit_breaker(self):
+    async def test_circuit_breaker(self):
         """Test the circuit breaker pattern for failure isolation."""
         # Create a callback that raises an exception
         def failing_callback(message):
@@ -305,7 +305,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
                 content={"status": "test"}
             )
             response.receiver = "failing_agent"
-            self.message_bus.publish(response)
+            await self.message_bus.publish(response)
         
         # Check that the circuit is now open
         self.assertEqual(circuit_breaker.state, CircuitState.OPEN)
@@ -316,7 +316,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Check that circuit breaker trips were recorded
         self.assertGreater(metrics.circuit_breaker_trips, 0)
     
-    def test_timeout_handling(self):
+    async def test_timeout_handling(self):
         """Test timeout handling for message delivery."""
         # Create a callback that sleeps longer than the timeout
         def slow_callback(message):
@@ -336,7 +336,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
             content={"status": "test"}
         )
         response.receiver = "slow_agent"
-        result = self.message_bus.publish(response)
+        result = await self.message_bus.publish(response)
         
         # Check that the delivery failed due to timeout
         self.assertFalse(result["delivery_status"]["slow_agent"]["success"])
@@ -348,7 +348,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Check that timeouts were recorded
         self.assertGreater(metrics.timeouts, 0)
     
-    def test_large_message_handling(self):
+    async def test_large_message_handling(self):
         """Test handling of large messages with chunking."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -368,7 +368,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         
         # Publish the large message
         with patch.object(self.message_bus, '_is_large_message', return_value=True):
-            result = self.message_bus.publish(large_message)
+            result = await self.message_bus.publish(large_message)
         
         # Check that the callback was called for each chunk
         self.assertGreater(self.mock_callback.call_count, 1)
@@ -384,7 +384,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         reassembled_message = self.message_bus.reassemble_chunked_message(chunks)
         self.assertEqual(reassembled_message.content, large_content)
     
-    def test_message_deduplication(self):
+    async def test_message_deduplication(self):
         """Test message deduplication to prevent processing duplicates."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -394,13 +394,13 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish the same message twice
-        self.message_bus.publish(self.test_message)
-        self.message_bus.publish(self.test_message)  # Duplicate
+        await self.message_bus.publish(self.test_message)
+        await self.message_bus.publish(self.test_message)  # Duplicate
         
         # Check that the callback was called only once
         self.assertEqual(self.mock_callback.call_count, 1)
     
-    def test_conversation_memory(self):
+    async def test_conversation_memory(self):
         """Test conversation memory for storing message history."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -428,9 +428,9 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish all messages
-        self.message_bus.publish(query)
-        self.message_bus.publish(response)
-        self.message_bus.publish(follow_up)
+        await self.message_bus.publish(query)
+        await self.message_bus.publish(response)
+        await self.message_bus.publish(follow_up)
         
         # Get the conversation
         conversation = self.message_bus.get_conversation(query.conversation_id)
@@ -446,7 +446,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         message_chain = self.message_bus.get_message_chain(query.message_id)
         self.assertEqual(len(message_chain), 3)
     
-    def test_thought_chain_integration(self):
+    async def test_thought_chain_integration(self):
         """Test integration with thought chains."""
         # Create a thought chain manager
         thought_chain_manager = ThoughtChainManager()
@@ -462,7 +462,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish a message
-        message_bus_with_tc.publish(self.test_message)
+        await message_bus_with_tc.publish(self.test_message)
         
         # Check that a thought chain was created
         thought_chain = message_bus_with_tc.get_thought_chain(self.test_message.conversation_id)
@@ -471,7 +471,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Check that the message was added to the thought chain
         self.assertEqual(len(thought_chain._nodes), 1)
     
-    def test_performance_metrics(self):
+    async def test_performance_metrics(self):
         """Test performance metrics tracking."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -481,7 +481,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish a message
-        self.message_bus.publish(self.test_message)
+        await self.message_bus.publish(self.test_message)
         
         # Get performance metrics
         metrics = self.message_bus.get_performance_metrics()
@@ -497,7 +497,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         # Check agent message counts
         self.assertEqual(metrics.agent_message_counts.get("test_sender"), 1)
     
-    def test_delivery_status_tracking(self):
+    async def test_delivery_status_tracking(self):
         """Test delivery status tracking."""
         # Subscribe to messages
         self.message_bus.subscribe(
@@ -507,7 +507,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         )
         
         # Publish a message
-        self.message_bus.publish(self.test_message)
+        await self.message_bus.publish(self.test_message)
         
         # Get delivery status
         delivery_status = self.message_bus.get_delivery_status(self.test_message.message_id)
@@ -516,7 +516,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
         self.assertIn("test_agent", delivery_status)
         self.assertTrue(delivery_status["test_agent"].success)
     
-    def test_cleanup_old_conversations(self):
+    async def test_cleanup_old_conversations(self):
         """Test cleanup of old conversations."""
         # Create multiple conversations
         for i in range(5):
@@ -526,7 +526,7 @@ class TestEnhancedMessageBus(unittest.TestCase):
                 sender="test_sender",
                 conversation_id=f"conversation_{i}"
             )
-            self.message_bus.publish(message)
+            await self.message_bus.publish(message)
         
         # Check that all conversations were created
         self.assertEqual(len(self.message_bus._conversations), 5)

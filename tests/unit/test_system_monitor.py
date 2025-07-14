@@ -31,10 +31,11 @@ class TestSystemMonitor(unittest.TestCase):
         self.assertFalse(self.monitor.is_monitoring)
         self.assertIsNone(self.monitor.last_check_time)
 
+    @patch('psutil.cpu_times')
     @patch('psutil.cpu_percent')
     @patch('psutil.virtual_memory')
     @patch('psutil.disk_usage')
-    def test_check_health(self, mock_disk, mock_memory, mock_cpu):
+    def test_check_health(self, mock_disk, mock_memory, mock_cpu, mock_cpu_times):
         """Test checking system health."""
         # Mock the psutil functions
         mock_cpu.return_value = 50.0
@@ -192,10 +193,19 @@ class TestSystemMonitor(unittest.TestCase):
         self.assertIn('recommendations', report)
         self.assertIn('engine', report['components'])
 
-    @patch('builtins.open')
+    @patch('triangulum_lx.monitoring.system_monitor.atomic_write')
+    @patch('psutil.disk_usage')
+    @patch('psutil.virtual_memory')
+    @patch('psutil.cpu_percent')
+    @patch('psutil.cpu_times')
     @patch('json.dumps')
-    def test_export_metrics(self, mock_json_dumps, mock_open):
+    def test_export_metrics(self, mock_json_dumps, mock_cpu_times, mock_cpu_percent, mock_virtual_memory, mock_disk_usage, mock_atomic_write):
         """Test exporting metrics."""
+        # Configure mocks
+        mock_cpu_percent.return_value = 50.0
+        mock_virtual_memory.return_value = MagicMock(percent=60.0)
+        mock_disk_usage.return_value = MagicMock(percent=70.0)
+
         # Set up test metrics
         self.monitor.metrics = {
             'timestamp': time.time(),
@@ -218,8 +228,7 @@ class TestSystemMonitor(unittest.TestCase):
         self.monitor.export_metrics(output_format='json', file_path='test.json')
         
         # Verify file export
-        mock_open.assert_called_once_with('test.json', 'w')
-        mock_open.return_value.__enter__.return_value.write.assert_called_once_with('{"metrics": "test"}')
+        mock_atomic_write.assert_called_once_with('test.json', '{"metrics": "test"}'.encode('utf-8'))
 
 if __name__ == "__main__":
     unittest.main()

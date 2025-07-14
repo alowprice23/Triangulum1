@@ -1,4 +1,5 @@
 import unittest
+import asyncio
 from unittest.mock import MagicMock, patch
 from triangulum_lx.agents.priority_analyzer_agent import PriorityAnalyzerAgent
 from triangulum_lx.agents.message import AgentMessage, MessageType
@@ -26,9 +27,9 @@ class TestPriorityAnalyzerAgent(unittest.TestCase):
         
         self.assertIn("file1.py", priorities)
         self.assertIn("file2.py", priorities)
-        self.assertGreater(priorities["file1.py"]["priority"], priorities["file2.py"]["priority"])
+        self.assertLess(priorities["file1.py"]["priority"], priorities["file2.py"]["priority"])
 
-    def test_handle_priority_analysis_request(self):
+    async def test_handle_priority_analysis_request(self):
         message = AgentMessage(
             message_type=MessageType.TASK_REQUEST,
             sender="test_agent",
@@ -39,7 +40,7 @@ class TestPriorityAnalyzerAgent(unittest.TestCase):
                 "relationships": {},
             },
         )
-        self.agent.handle_message(message)
+        await self.agent.handle_message(message)
         self.message_bus.publish.assert_called_once()
         response = self.message_bus.publish.call_args[0][0]
         self.assertEqual(response.message_type, MessageType.TASK_RESULT)

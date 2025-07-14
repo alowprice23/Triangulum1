@@ -55,6 +55,15 @@ class LanguageType(Enum):
         }
         return ext_map.get(extension.lower(), cls.UNKNOWN)
 
+    @classmethod
+    def from_str(cls, s: str) -> 'LanguageType':
+        """Determine language type from a string."""
+        s_upper = s.upper()
+        for member in cls:
+            if member.name == s_upper:
+                return member
+        return cls.UNKNOWN
+
 
 @dataclass
 class DependencyMetadata:

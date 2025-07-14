@@ -11,15 +11,16 @@ import time
 import logging
 import json
 from typing import Dict, List, Set, Any, Optional, Tuple
-from collections import defaultdict
+from collections import defaultdict, deque
 from datetime import datetime
+import networkx as nx
 
 from .base_agent import BaseAgent
 from .message import AgentMessage, MessageType
 # from .message_bus import MessageBus # Old
 from .enhanced_message_bus import EnhancedMessageBus # New
 # Updated import to point to the consolidated dependency_graph
-from ..tooling.dependency_graph import DependencyGraphBuilder, DependencyAnalyzer, DependencyGraph, FileNode, DependencyType, DependencyMetadata
+from ..tooling.dependency_graph import DependencyGraphBuilder, DependencyAnalyzer, DependencyGraph, FileNode, DependencyType, DependencyMetadata, LanguageType
 # CodeRelationshipAnalyzer is removed as its functionality is being simplified/merged or deferred.
 
 logger = logging.getLogger(__name__)
@@ -417,42 +418,13 @@ class RelationshipAnalystAgent(BaseAgent):
             # If FileNode language info is needed, it should be on node attributes in nx_graph
             # Or, iterate self.graph_model._nodes if that's preferred
             node_data = self.analyzer.nx_graph.nodes[node_path_str]
-            lang_val = node_data.get('language', LanguageType.UNKNOWN.value) # Get from node attribute
+            lang_val = node_data.get('language', 'UNKNOWN') # Get from node attribute
 
             # lang_type_enum = LanguageType(lang_val) if isinstance(lang_val, str) else LanguageType.UNKNOWN
             # The current stub for FileNode stores language as LanguageType enum, to_dict converts to value.
             # So lang_val should be like "python".
-
-            if lang_val == LanguageType.PYTHON.value: languages['PYTHON'] += 1
-            elif lang_val == LanguageType.JAVASCRIPT.value: languages['JAVASCRIPT'] += 1
-            elif lang_val == LanguageType.TYPESCRIPT.value: languages['TYPESCRIPT'] += 1 # Added for TS
-            elif lang_val == LanguageType.JAVA.value: languages['JAVA'] += 1
-            elif lang_val == LanguageType.GO.value: languages['GO'] += 1
-            # Add other LanguageType enum values as needed
-            else: languages['OTHER'] += 1
-            
-            if ext == '.py':
-                languages['PYTHON'] += 1
-            elif ext in ('.js', '.jsx', '.ts', '.tsx'):
-                languages['JAVASCRIPT'] += 1
-            elif ext in ('.java', '.kt'):
-                languages['JAVA'] += 1
-            elif ext in ('.c', '.cpp', '.cc', '.h', '.hpp'):
-                languages['C/C++'] += 1
-            elif ext in ('.go'):
-                languages['GO'] += 1
-            elif ext in ('.rb'):
-                languages['RUBY'] += 1
-            elif ext in ('.php'):
-                languages['PHP'] += 1
-            elif ext in ('.rs'):
-                languages['RUST'] += 1
-            elif ext in ('.swift'):
-                languages['SWIFT'] += 1
-            elif ext in ('.scala'):
-                languages['SCALA'] += 1
-            else:
-                languages['OTHER'] += 1
+            language = LanguageType.from_str(lang_val)
+            languages[language.name] += 1
                 
         return dict(languages)
     
@@ -589,9 +561,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 central_files = self.get_most_central_files(n=n, metric=metric)
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "success",
                         "central_files": central_files
@@ -599,9 +571,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -613,9 +585,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 cycles = self.find_cycles()
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "success",
                         "cycles": cycles
@@ -623,9 +595,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -640,9 +612,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 dependents = self.get_file_dependents(file_path, transitive=transitive)
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "success",
                         "dependents": list(dependents)
@@ -650,9 +622,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -667,9 +639,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 dependencies = self.get_file_dependencies(file_path, transitive=transitive)
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "success",
                         "dependencies": list(dependencies)
@@ -677,9 +649,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -693,9 +665,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 impacted = self.predict_impact(modified_files)
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "success",
                         "impacted_files": list(impacted)
@@ -703,9 +675,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.QUERY_RESPONSE,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -745,9 +717,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.TASK_RESULT,
                     content={
                         "status": "success",
                         "summary": summary
@@ -755,9 +727,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.TASK_RESULT,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -771,9 +743,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 self.add_execution_trace(trace)
                 
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.TASK_RESULT,
                     content={
                         "status": "success",
                         "message": "Execution trace added"
@@ -781,9 +753,9 @@ class RelationshipAnalystAgent(BaseAgent):
                 )
             except Exception as e:
                 return AgentMessage(
-                    sender_id=self.agent_id,
-                    recipient_id=message.sender_id,
-                    message_type=MessageType.RESPONSE,
+                    sender=self.agent_id,
+                    receiver=message.sender,
+                    message_type=MessageType.TASK_RESULT,
                     content={
                         "status": "error",
                         "error": str(e)
@@ -833,3 +805,10 @@ class RelationshipAnalystAgent(BaseAgent):
         except Exception as e:
             logger.error(f"Error processing message: {e}", exc_info=True)
             return {"status": "error", "error": str(e)}
+
+    def get_impacted_files(self, files: List[str]) -> Set[str]:
+        """
+        Get the set of files impacted by changes to the given files.
+        This is a convenience wrapper around predict_impact.
+        """
+        return self.predict_impact(files)

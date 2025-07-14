@@ -1,0 +1,78 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collected 418 items / 3 errors
+
+==================================== ERRORS ====================================
+_____ ERROR collecting tests/edge_cases/test_folder_healing_edge_cases.py ______
+ImportError while importing test module '/app/tests/edge_cases/test_folder_healing_edge_cases.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/edge_cases/test_folder_healing_edge_cases.py:6: in <module>
+    from triangulum_lx.agents.orchestrator_agent import OrchestratorAgent
+E   ModuleNotFoundError: No module named 'triangulum_lx'
+________ ERROR collecting tests/integration/test_dependency_analysis.py ________
+ImportError while importing test module '/app/tests/integration/test_dependency_analysis.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/integration/test_dependency_analysis.py:10: in <module>
+    from triangulum_lx.tooling.graph_models import (
+E   ModuleNotFoundError: No module named 'triangulum_lx'
+__________ ERROR collecting tests/integration/test_folder_healing.py ___________
+ImportError while importing test module '/app/tests/integration/test_folder_healing.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/jules/.pyenv/versions/3.12.11/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/integration/test_folder_healing.py:16: in <module>
+    from triangulum_lx.agents.enhanced_message_bus import EnhancedMessageBus as MessageBus
+E   ModuleNotFoundError: No module named 'triangulum_lx'
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+triangulum_lx/agents/test_message_bus.py:19
+  /app/triangulum_lx/agents/test_message_bus.py:19: PytestCollectionWarning: cannot collect test class 'TestEnhancedMessageBus' because it has a __init__ constructor (from: tests/test_agentic_system.py)
+    class TestEnhancedMessageBus(EnhancedMessageBus):
+
+triangulum_lx/tooling/test_runner.py:18
+  /app/triangulum_lx/tooling/test_runner.py:18: PytestCollectionWarning: cannot collect test class 'TestResult' because it has a __init__ constructor (from: tests/test_repair_workflow.py)
+    class TestResult:
+
+tests/unit/test_base_agent.py:21
+  /app/tests/unit/test_base_agent.py:21: PytestCollectionWarning: cannot collect test class 'TestAgent' because it has a __init__ constructor (from: tests/unit/test_base_agent.py)
+    class TestAgent(BaseAgent):
+
+triangulum_lx/tooling/test_runner.py:18
+  /app/triangulum_lx/tooling/test_runner.py:18: PytestCollectionWarning: cannot collect test class 'TestResult' because it has a __init__ constructor (from: tests/unit/test_patcher_agent.py)
+    class TestResult:
+
+triangulum_lx/agents/test_message_bus.py:19
+  /app/triangulum_lx/agents/test_message_bus.py:19: PytestCollectionWarning: cannot collect test class 'TestEnhancedMessageBus' because it has a __init__ constructor (from: triangulum_lx/agents/test_message_bus.py)
+    class TestEnhancedMessageBus(EnhancedMessageBus):
+
+triangulum_lx/tooling/test_runner.py:18
+  /app/triangulum_lx/tooling/test_runner.py:18: PytestCollectionWarning: cannot collect test class 'TestResult' because it has a __init__ constructor (from: triangulum_lx/tooling/test_runner.py)
+    class TestResult:
+
+triangulum_lx/tooling/test_runner.py:26
+  /app/triangulum_lx/tooling/test_runner.py:26: PytestCollectionWarning: cannot collect test class 'TestRunner' because it has a __init__ constructor (from: triangulum_lx/tooling/test_runner.py)
+    class TestRunner:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/edge_cases/test_folder_healing_edge_cases.py
+ERROR tests/integration/test_dependency_analysis.py
+ERROR tests/integration/test_folder_healing.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!
+======================== 8 warnings, 3 errors in 6.61s =========================

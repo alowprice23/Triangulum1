@@ -1,0 +1,8 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0
+collected 443 items
+
+tests/edge_cases/test_folder_healing_edge_cases.py FFFFFF

@@ -89,7 +89,7 @@ class BaseAgent(abc.ABC):
         )
         logger.debug(f"Agent {self.agent_id} registered with message bus")
         
-    def handle_message(self, message: AgentMessage) -> None:
+    async def handle_message(self, message: AgentMessage) -> Optional[Dict[str, Any]]:
         """
         Handle an incoming message.
 
@@ -102,24 +102,24 @@ class BaseAgent(abc.ABC):
         
         # Handle chunked messages specially
         if message.message_type == MessageType.CHUNKED_MESSAGE:
-            self._handle_chunked_message(message)
+            return await self._handle_chunked_message(message)
         elif message.message_type == MessageType.STREAM_START:
-            self._handle_stream_start(message)
+            return await self._handle_stream_start(message)
         elif message.message_type == MessageType.STREAM_END:
-            self._handle_stream_end(message)
+            return await self._handle_stream_end(message)
         # Dispatch to specific handler based on message type
         elif message.message_type == MessageType.TASK_REQUEST:
-            self._handle_task_request(message)
+            return await self._handle_task_request(message)
         elif message.message_type == MessageType.QUERY:
-            self._handle_query(message)
+            return await self._handle_query(message)
         elif message.message_type == MessageType.ERROR:
-            self._handle_error(message)
+            return await self._handle_error(message)
         elif message.message_type == MessageType.STATUS:
-            self._handle_status(message)
+            return await self._handle_status(message)
         else:
-            self._handle_other_message(message)
+            return await self._handle_other_message(message)
     
-    def send_message(
+    async def send_message(
         self,
         message_type: MessageType,
         content: Dict[str, Any],
@@ -129,7 +129,7 @@ class BaseAgent(abc.ABC):
         conversation_id: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
         large_content_handling: str = "auto"  # "auto", "direct", "chunked", "stream"
-    ) -> Optional[Union[str, List[str]]]:
+    ) -> Optional[Dict[str, Any]]:
         """
         Send a message via the message bus.
 
@@ -148,8 +148,7 @@ class BaseAgent(abc.ABC):
                 "stream": Stream the content as chunks
 
         Returns:
-            The message ID if sent successfully, list of message IDs for chunked messages,
-            or None if the message could not be sent
+            The response content if the message was sent successfully, otherwise None.
         """
         if not self.message_bus:
             logger.warning(f"Agent {self.agent_id}: No message bus available, message not sent")
@@ -167,7 +166,7 @@ class BaseAgent(abc.ABC):
             
             if large_content_handling == "chunked":
                 # Prepare chunked response
-                return self._send_chunked_message(
+                return await self._send_chunked_message(
                     message_type=message_type,
                     content=content,
                     receiver=receiver,
@@ -178,7 +177,7 @@ class BaseAgent(abc.ABC):
                 )
             elif large_content_handling == "stream":
                 # Stream the response
-                return self._send_streamed_message(
+                return await self._send_streamed_message(
                     message_type=message_type,
                     content=content,
                     receiver=receiver,
@@ -200,10 +199,10 @@ class BaseAgent(abc.ABC):
             metadata=metadata or {}
         )
         
-        self.message_bus.publish(message)
-        return message.message_id
+        response = await self.message_bus.publish(message)
+        return response
     
-    def send_response(
+    async def send_response(
         self,
         original_message: AgentMessage,
         message_type: MessageType,
@@ -211,7 +210,7 @@ class BaseAgent(abc.ABC):
         confidence: Optional[float] = None,
         metadata: Optional[Dict[str, Any]] = None,
         large_content_handling: str = "auto"  # "auto", "direct", "chunked", "stream"
-    ) -> Optional[Union[str, List[str]]]:
+    ) -> Optional[Dict[str, Any]]:
         """
         Send a response to a specific message.
 
@@ -228,10 +227,9 @@ class BaseAgent(abc.ABC):
                 "stream": Stream the content as chunks
 
         Returns:
-            The message ID if sent successfully, list of message IDs for chunked messages,
-            or None if the message could not be sent
+            The response content if the message was sent successfully, otherwise None.
         """
-        return self.send_message(
+        return await self.send_message(
             message_type=message_type,
             content=content,
             receiver=original_message.sender,
@@ -550,7 +548,7 @@ class BaseAgent(abc.ABC):
         return message_ids
         
     @abc.abstractmethod
-    def _handle_task_request(self, message: AgentMessage) -> None:
+    async def _handle_task_request(self, message: AgentMessage) -> None:
         """
         Handle a task request message.
 
@@ -560,7 +558,7 @@ class BaseAgent(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def _handle_query(self, message: AgentMessage) -> None:
+    async def _handle_query(self, message: AgentMessage) -> None:
         """
         Handle a query message.
 
@@ -569,7 +567,7 @@ class BaseAgent(abc.ABC):
         """
         pass
     
-    def _handle_error(self, message: AgentMessage) -> None:
+    async def _handle_error(self, message: AgentMessage) -> None:
         """
         Handle an error message.
 
@@ -579,7 +577,7 @@ class BaseAgent(abc.ABC):
         error_text = message.content.get("error", "Unknown error")
         logger.warning(f"Agent {self.agent_id} received error: {error_text}")
     
-    def _handle_status(self, message: AgentMessage) -> None:
+    async def _handle_status(self, message: AgentMessage) -> None:
         """
         Handle a status message.
 
@@ -592,7 +590,7 @@ class BaseAgent(abc.ABC):
         sender_type = message.content.get("agent_type", "unknown")
         logger.debug(f"Agent {self.agent_id} received status from {sender_type} agent: {status}")
     
-    def _handle_other_message(self, message: AgentMessage) -> None:
+    async def _handle_other_message(self, message: AgentMessage) -> None:
         """
         Handle any other type of message.
 
@@ -600,6 +598,22 @@ class BaseAgent(abc.ABC):
             message: The message to handle
         """
         logger.debug(f"Agent {self.agent_id} received unhandled message type: {message.message_type}")
+
+    def send_message_to_user(self, message: str):
+        """
+        Send a message to the user.
+
+        Args:
+            message: The message to send to the user.
+        """
+        if self.message_bus:
+            user_message = AgentMessage(
+                message_type=MessageType.LOG,
+                content={"message": message},
+                sender=self.agent_id,
+                receiver="user"
+            )
+            self.message_bus.publish(user_message)
         
     # Operation tracking methods
     

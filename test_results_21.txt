@@ -1,0 +1,63 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 1 item
+
+tests/temp_test.py::TempTest::test_empty_folder FAILED                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ TempTest.test_empty_folder __________________________
+
+self = <temp_test.TempTest testMethod=test_empty_folder>
+
+    def setUp(self):
+        print("Setting up test")
+        self.message_bus = MessageBus()
+        self.bug_detector = BugDetectorAgent(
+            agent_id="bug_detector",
+            message_bus=self.message_bus
+        )
+        self.relationship_analyst = RelationshipAnalystAgent(
+            agent_id="relationship_analyst",
+            message_bus=self.message_bus
+        )
+        self.priority_analyzer = PriorityAnalyzerAgent(
+            agent_id="priority_analyzer",
+            message_bus=self.message_bus
+        )
+        self.strategy_agent = StrategyAgent(
+            agent_id="strategy_agent",
+            message_bus=self.message_bus
+        )
+        self.implementation_agent = ImplementationAgent(
+            agent_id="implementation_agent",
+            message_bus=self.message_bus
+        )
+        self.verification_agent = VerificationAgent(
+            agent_id="verification_agent",
+            message_bus=self.message_bus
+        )
+>       self.orchestrator = OrchestratorAgent(
+            agent_id="orchestrator",
+            message_bus=self.message_bus,
+            config={"timeout": 5}
+        )
+E       TypeError: Can't instantiate abstract class OrchestratorAgent without an implementation for abstract method '_handle_query'
+
+tests/temp_test.py:44: TypeError
+----------------------------- Captured stdout call -----------------------------
+Setting up test
+------------------------------ Captured log call -------------------------------
+WARNING  triangulum_lx.verification.metrics:metrics.py:52 Metrics path .triangulum/verification/metrics exists but is not a directory. Attempting to create.
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/temp_test.py::TempTest::test_empty_folder - TypeError: Can't instantiate abstract class OrchestratorAgent without an implementation for abstract method '_handle_query'
+========================= 1 failed, 1 warning in 7.42s =========================

@@ -1,0 +1,1017 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /home/jules/.pyenv/versions/3.12.11/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pytest.ini
+testpaths: tests
+plugins: mock-3.14.1, anyio-4.9.0, timeout-2.4.0
+collecting ... collected 416 items
+
+tests/edge_cases/test_folder_healing_edge_cases.py::TestFolderHealingEdgeCases::test_empty_folder PASSED [  0%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_all_pass PASSED [  0%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_present_is_absent PASSED [  0%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_absent_is_present PASSED [  0%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_dir_is_file PASSED [  1%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_file_is_dir PASSED [  1%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_present_file_is_absent PASSED [  1%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_expect_present_dir_is_absent PASSED [  1%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_multiple_failures PASSED [  2%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_unknown_state PASSED [  2%]
+tests/fs/test_consistency.py::test_assert_fs_consistency_no_base_dir_absolute_paths PASSED [  2%]
+tests/integration/test_dependency_analysis.py::TestIntegratedDependencyAnalysis::test_cached_graph_loading PASSED [  2%]
+tests/integration/test_dependency_analysis.py::TestIntegratedDependencyAnalysis::test_full_project_analysis PASSED [  3%]
+tests/integration/test_dependency_analysis.py::TestIntegratedDependencyAnalysis::test_impact_analysis PASSED [  3%]
+tests/integration/test_dependency_analysis.py::TestIntegratedDependencyAnalysis::test_incremental_analysis PASSED [  3%]
+tests/integration/test_dependency_analysis.py::TestIntegratedDependencyAnalysis::test_prioritization PASSED [  3%]
+tests/integration/test_folder_healing.py::TestFolderHealing::test_folder_healing_dry_run PASSED [  4%]
+tests/integration/test_folder_healing.py::TestFolderHealing::test_orchestrator_real_healing_simulation PASSED [  4%]
+tests/integration/test_learning_integration.py::TestEngineLearningIntegration::test_get_integration_state PASSED [  4%]
+tests/integration/test_learning_integration.py::TestEngineLearningIntegration::test_integrate_learning_with_engine PASSED [  4%]
+tests/integration/test_learning_integration.py::TestLearningEnabledEngine::test_initialization PASSED [  5%]
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_graceful_shutdown PASSED [  5%]
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_startup_dashboard_integration PASSED [  5%]
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_system_health_monitoring PASSED [  5%]
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_system_manager_startup_recovery SKIPPED [  6%]
+tests/temp_test.py::TempTest::test_empty_folder PASSED                   [  6%]
+tests/test_agentic_dashboard.py::test_dashboard_update PASSED            [  6%]
+tests/test_openai.py::TestOpenAI::test_openai_api PASSED                 [  6%]
+tests/test_startup_sequence.py::test_successful_startup PASSED           [  6%]
+tests/test_startup_sequence.py::test_error_recovery PASSED               [  7%]
+tests/test_startup_sequence.py::test_parallel_vs_sequential PASSED       [  7%]
+tests/test_startup_sequence.py::test_component_dependencies PASSED       [  7%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_backward_compatibility PASSED [  7%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_create_message PASSED [  8%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_create_message_with_enhanced_fields PASSED [  8%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_create_response PASSED [  8%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_message_validation PASSED [  8%]
+tests/unit/test_agent_message.py::TestAgentMessage::test_serialization PASSED [  9%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_add_message PASSED [  9%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_get_message_by_id PASSED [  9%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_get_message_chain PASSED [  9%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_get_messages_by_sender PASSED [ 10%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_get_messages_by_type PASSED [ 10%]
+tests/unit/test_agent_message.py::TestConversationMemory::test_serialization PASSED [ 10%]
+tests/unit/test_agent_message.py::TestMessageBus::test_broadcast_message PASSED [ 10%]
+tests/unit/test_agent_message.py::TestMessageBus::test_conversation_management PASSED [ 11%]
+tests/unit/test_agent_message.py::TestMessageBus::test_direct_message_delivery PASSED [ 11%]
+tests/unit/test_agent_message.py::TestMessageBus::test_message_type_filtering PASSED [ 11%]
+tests/unit/test_agent_message.py::TestMessageBus::test_unsubscribe PASSED [ 11%]
+tests/unit/test_auto_verification.py::TestAutoVerifier::test_init_creates_verification_dir PASSED [ 12%]
+tests/unit/test_auto_verification.py::TestAutoVerifier::test_create_baseline_atomic_write PASSED [ 12%]
+tests/unit/test_auto_verification.py::TestAutoVerifier::test_verify_fix_atomic_write PASSED [ 12%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_broadcast_status PASSED [ 12%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_error PASSED [ 12%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_query PASSED [ 13%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_status PASSED [ 13%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_task_request PASSED [ 13%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_initialization PASSED [ 13%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_initialize PASSED     [ 14%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_no_message_bus PASSED [ 14%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_register_with_message_bus PASSED [ 14%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_message PASSED   [ 14%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_response PASSED  [ 15%]
+tests/unit/test_base_agent.py::TestBaseAgent::test_shutdown PASSED       [ 15%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_create_agent PASSED [ 15%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_create_agent_initialization_failure PASSED [ 15%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_create_agent_unregistered_type PASSED [ 16%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_get_agent PASSED   [ 16%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_get_agents_by_type PASSED [ 16%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_register_agent_type PASSED [ 16%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_shutdown_agent PASSED [ 17%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_shutdown_agent_exception PASSED [ 17%]
+tests/unit/test_base_agent.py::TestAgentFactory::test_shutdown_all_agents PASSED [ 17%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_analyze_test_failure PASSED [ 17%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_binary_file_detection PASSED [ 18%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_bug_pattern_management PASSED [ 18%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_detect_exception_swallowing_bug PASSED [ 18%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_detect_hardcoded_credentials_bug PASSED [ 18%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_detect_null_reference_bug PASSED [ 18%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_detect_resource_leak_bug PASSED [ 19%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_detect_sql_injection_bug PASSED [ 19%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_encoding_detection_and_handling PASSED [ 19%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_handling PASSED [ 19%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_response_in_message_handling PASSED [ 20%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_extract_error_location PASSED [ 20%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_extract_error_type PASSED [ 20%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_file_not_found_error_handling PASSED [ 20%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_file_size_limit PASSED [ 21%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_folder_analysis_error_handling PASSED [ 21%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_query_get_bug_patterns PASSED [ 21%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_task_request_detect_bugs PASSED [ 21%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_infer_language_from_path PASSED [ 22%]
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_regex_error_handling PASSED [ 22%]
+tests/unit/test_bug_detector_enhancements.py::TestBugDetectorEnhancements::test_bug_classification PASSED [ 22%]
+tests/unit/test_bug_detector_enhancements.py::TestBugDetectorEnhancements::test_context_aware_detection SKIPPED [ 22%]
+tests/unit/test_bug_detector_enhancements.py::TestBugDetectorEnhancements::test_false_positive_reduction PASSED [ 23%]
+tests/unit/test_bug_detector_enhancements.py::TestBugDetectorEnhancements::test_folder_analysis_performance PASSED [ 23%]
+tests/unit/test_bug_detector_enhancements.py::TestBugDetectorEnhancements::test_relationship_integration PASSED [ 23%]
+tests/unit/test_chain_node.py::TestThoughtType::test_thought_types PASSED [ 23%]
+tests/unit/test_chain_node.py::TestRelationshipType::test_relationship_types PASSED [ 24%]
+tests/unit/test_chain_node.py::TestChainNode::test_add_child PASSED      [ 24%]
+tests/unit/test_chain_node.py::TestChainNode::test_add_parent PASSED     [ 24%]
+tests/unit/test_chain_node.py::TestChainNode::test_from_dict PASSED      [ 24%]
+tests/unit/test_chain_node.py::TestChainNode::test_get_relationship_to PASSED [ 25%]
+tests/unit/test_chain_node.py::TestChainNode::test_initialization PASSED [ 25%]
+tests/unit/test_chain_node.py::TestChainNode::test_is_child_of PASSED    [ 25%]
+tests/unit/test_chain_node.py::TestChainNode::test_is_parent_of PASSED   [ 25%]
+tests/unit/test_chain_node.py::TestChainNode::test_relationship_validation PASSED [ 25%]
+tests/unit/test_chain_node.py::TestChainNode::test_remove_child PASSED   [ 26%]
+tests/unit/test_chain_node.py::TestChainNode::test_remove_parent PASSED  [ 26%]
+tests/unit/test_chain_node.py::TestChainNode::test_serialization_roundtrip PASSED [ 26%]
+tests/unit/test_chain_node.py::TestChainNode::test_to_dict PASSED        [ 26%]
+tests/unit/test_chain_node.py::TestChainNode::test_update_confidence PASSED [ 27%]
+tests/unit/test_chain_node.py::TestChainNode::test_update_content PASSED [ 27%]
+tests/unit/test_chain_node.py::TestChainNode::test_validation PASSED     [ 27%]
+tests/unit/test_code_fixer.py::TestCodeFixer::test_fix_exception_swallowing PASSED [ 27%]
+tests/unit/test_code_fixer.py::TestCodeFixer::test_fix_hardcoded_credentials PASSED [ 28%]
+tests/unit/test_code_fixer.py::TestCodeFixer::test_fix_null_pointer PASSED [ 28%]
+tests/unit/test_code_fixer.py::TestCodeFixer::test_fix_resource_leak PASSED [ 28%]
+tests/unit/test_code_fixer.py::TestCodeFixer::test_fix_sql_injection PASSED [ 28%]
+tests/unit/test_engine.py::TestTriangulumEngine::test_engine_initialization PASSED [ 29%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_circuit_breaker PASSED [ 29%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_cleanup_old_conversations PASSED [ 29%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_conversation_memory PASSED [ 29%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_delivery_status_tracking PASSED [ 30%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_direct_message PASSED [ 30%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_large_message_handling PASSED [ 30%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_deduplication PASSED [ 30%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_confidence PASSED [ 31%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_source PASSED [ 31%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_topic PASSED [ 31%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_performance_metrics PASSED [ 31%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_priority_based_delivery PASSED [ 31%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_shutdown PASSED [ 32%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_subscribe_and_publish PASSED [ 32%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_thought_chain_integration PASSED [ 32%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_timeout_handling PASSED [ 32%]
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_unsubscribe PASSED [ 33%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_failure_in_half_open PASSED [ 33%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_half_open_state PASSED [ 33%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_initial_state PASSED [ 33%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_record_failure PASSED [ 34%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_record_success PASSED [ 34%]
+tests/unit/test_enhanced_message_bus.py::TestCircuitBreaker::test_reset_timeout PASSED [ 34%]
+tests/unit/test_enhanced_message_bus.py::TestMessageDeduplicator::test_cache_size_limit PASSED [ 34%]
+tests/unit/test_enhanced_message_bus.py::TestMessageDeduplicator::test_expiration PASSED [ 35%]
+tests/unit/test_enhanced_message_bus.py::TestMessageDeduplicator::test_is_duplicate PASSED [ 35%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_analyze_feedback PASSED [ 35%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_delete_feedback PASSED [ 35%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_export_feedback_json PASSED [ 36%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_get_all_feedback PASSED [ 36%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_get_feedback PASSED [ 36%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_initialization PASSED [ 36%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_mark_as_processed PASSED [ 37%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_record_action PASSED [ 37%]
+tests/unit/test_feedback_collector.py::TestFeedbackCollector::test_record_feedback PASSED [ 37%]
+tests/unit/test_fix_impact_tracker.py::TestFixImpactTracker::test_init_creates_database_parent_dir PASSED [ 37%]
+tests/unit/test_fix_impact_tracker.py::TestFixImpactTracker::test_save_database_atomic_write PASSED [ 37%]
+tests/unit/test_fix_impact_tracker.py::TestFixImpactTracker::test_load_database_uses_cache_and_handles_missing_file PASSED [ 38%]
+tests/unit/test_fs_ops.py::test_atomic_write_creates_file_with_content_fallback PASSED [ 38%]
+tests/unit/test_fs_ops.py::test_atomic_write_creates_file_with_content_otmpfile_if_supported PASSED [ 38%]
+tests/unit/test_fs_ops.py::test_atomic_write_subdirectory_creation PASSED [ 38%]
+tests/unit/test_fs_ops.py::test_atomic_write_overwrite_existing_file PASSED [ 39%]
+tests/unit/test_fs_ops.py::test_atomic_rename_file PASSED                [ 39%]
+tests/unit/test_fs_ops.py::test_atomic_rename_overwrite_existing_file PASSED [ 39%]
+tests/unit/test_fs_ops.py::test_atomic_rename_to_subdirectory PASSED     [ 39%]
+tests/unit/test_fs_ops.py::test_atomic_delete_file PASSED                [ 40%]
+tests/unit/test_fs_ops.py::test_atomic_delete_non_existent_file PASSED   [ 40%]
+tests/unit/test_fs_ops.py::test_atomic_delete_is_a_directory_error PASSED [ 40%]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[True] PASSED [ 40%]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[False] PASSED [ 41%]
+tests/unit/test_fs_ops.py::test_fsync_mocked PASSED                      [ 41%]
+tests/unit/test_fs_state.py::test_cache_exists_miss_and_hit PASSED       [ 41%]
+tests/unit/test_fs_state.py::test_cache_is_dir_miss_and_hit PASSED       [ 41%]
+tests/unit/test_fs_state.py::test_cache_is_file_miss_and_hit PASSED      [ 42%]
+tests/unit/test_fs_state.py::test_cache_get_mtime_miss_and_hit PASSED    [ 42%]
+tests/unit/test_fs_state.py::test_cache_listdir_miss_and_hit PASSED      [ 42%]
+tests/unit/test_fs_state.py::test_cache_invalidation_simple PASSED       [ 42%]
+tests/unit/test_fs_state.py::test_cache_invalidation_affects_parent_listdir PASSED [ 43%]
+tests/unit/test_fs_state.py::test_cache_ttl_expiry PASSED                [ 43%]
+tests/unit/test_fs_state.py::test_clear_cache PASSED                     [ 43%]
+tests/unit/test_fs_state.py::test_mismatch_detection PASSED              [ 43%]
+tests/unit/test_fs_state.py::test_stress_operations_mismatch_counter PASSED [ 43%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation PASSED [ 44%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_null_pointer_strategy PASSED [ 44%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy PASSED [ 44%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_message_handling PASSED [ 44%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_metrics_collection PASSED [ 45%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_rollback_implementation PASSED [ 45%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_runtime_environment_detection PASSED [ 45%]
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_validation_failure_handling PASSED [ 45%]
+tests/unit/test_incremental_analyzer.py::TestIncrementalAnalyzer::test_analyze_changes_modified_file PASSED [ 46%]
+tests/unit/test_incremental_analyzer.py::TestIncrementalAnalyzer::test_analyze_changes_new_file PASSED [ 46%]
+tests/unit/test_learning_components.py::TestReplayBuffer::test_add_episode PASSED [ 46%]
+tests/unit/test_learning_components.py::TestReplayBuffer::test_sample PASSED [ 46%]
+tests/unit/test_learning_components.py::TestReplayBuffer::test_stats PASSED [ 47%]
+tests/unit/test_learning_components.py::TestContinuousImprovement::test_get_parameter PASSED [ 47%]
+tests/unit/test_memory_manager.py::TestTokenCounter::test_count_message_tokens PASSED [ 47%]
+tests/unit/test_memory_manager.py::TestTokenCounter::test_count_tokens PASSED [ 47%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_fallback_to_recency PASSED [ 48%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_filter_types PASSED [ 48%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_message_limit PASSED [ 48%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_recency PASSED [ 48%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_relevance PASSED [ 49%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_round_robin PASSED [ 49%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_thread PASSED [ 49%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_token_limit PASSED [ 49%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_context_type_priority PASSED [ 50%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_get_token_count PASSED [ 50%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_hybrid_strategy PASSED [ 50%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_initialization PASSED [ 50%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_prune_conversation PASSED [ 50%]
+tests/unit/test_memory_manager.py::TestMemoryManager::test_summarize_conversation PASSED [ 51%]
+tests/unit/test_message_schema.py::TestSchemaField::test_array_validation PASSED [ 51%]
+tests/unit/test_message_schema.py::TestSchemaField::test_boolean_validation PASSED [ 51%]
+tests/unit/test_message_schema.py::TestSchemaField::test_custom_validator PASSED [ 51%]
+tests/unit/test_message_schema.py::TestSchemaField::test_enum_validation PASSED [ 52%]
+tests/unit/test_message_schema.py::TestSchemaField::test_float_validation PASSED [ 52%]
+tests/unit/test_message_schema.py::TestSchemaField::test_integer_validation PASSED [ 52%]
+tests/unit/test_message_schema.py::TestSchemaField::test_object_validation PASSED [ 52%]
+tests/unit/test_message_schema.py::TestSchemaField::test_string_validation PASSED [ 53%]
+tests/unit/test_message_schema.py::TestMessageSchema::test_validate_invalid_field PASSED [ 53%]
+tests/unit/test_message_schema.py::TestMessageSchema::test_validate_missing_required_field PASSED [ 53%]
+tests/unit/test_message_schema.py::TestMessageSchema::test_validate_multiple_errors PASSED [ 53%]
+tests/unit/test_message_schema.py::TestMessageSchema::test_validate_unknown_field PASSED [ 54%]
+tests/unit/test_message_schema.py::TestMessageSchema::test_validate_valid_message PASSED [ 54%]
+tests/unit/test_message_schema.py::TestMessageSchemaValidation::test_convert_field_type PASSED [ 54%]
+tests/unit/test_message_schema.py::TestMessageSchemaValidation::test_get_default_values PASSED [ 54%]
+tests/unit/test_message_schema.py::TestMessageSchemaValidation::test_validate_message PASSED [ 55%]
+tests/unit/test_message_schema.py::TestSchemaExportImport::test_export_import_schema PASSED [ 55%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_create_invalid_message PASSED [ 55%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_create_response PASSED [ 55%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_create_valid_message PASSED [ 56%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_from_dict_valid PASSED [ 56%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_from_dict_with_defaults PASSED [ 56%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_from_dict_with_type_conversion PASSED [ 56%]
+tests/unit/test_message_schema.py::TestAgentMessageWithSchema::test_to_dict_and_json PASSED [ 56%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_custom_schema_path PASSED [ 57%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_fallback_schema_on_load_failure PASSED [ 57%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_generate_message_template PASSED [ 57%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_get_required_fields PASSED [ 57%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_get_schema_version PASSED [ 58%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_load_schema PASSED [ 58%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_performance_monitoring PASSED [ 58%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_schema_error_handling PASSED [ 58%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_invalid_message_type PASSED [ 59%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_message_content_detailed PASSED [ 59%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_message_detailed PASSED [ 59%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_message_with_enhanced_fields PASSED [ 59%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_missing_required_content PASSED [ 60%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_nested_properties PASSED [ 60%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_required_fields PASSED [ 60%]
+tests/unit/test_message_schema_validator.py::TestMessageSchemaValidator::test_validate_valid_message PASSED [ 60%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_context_storage PASSED [ 61%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_generate PASSED     [ 61%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_generate_with_tools_enhanced PASSED [ 61%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_get_model_config PASSED [ 61%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_get_statistics PASSED [ 62%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_initialization PASSED [ 62%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_is_available PASSED [ 62%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_model_configs PASSED [ 62%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_optimize_messages PASSED [ 62%]
+tests/unit/test_o3_provider.py::TestO3Provider::test_prepare_system_prompt PASSED [ 63%]
+tests/unit/test_orchestrator_agent_new.py::TestOrchestratorAgentNew::test_handle_message PASSED [ 63%]
+tests/unit/test_patch_bundle.py::TestPatchBundle::test_create_bundle_atomic_operations PASSED [ 63%]
+tests/unit/test_patch_bundle.py::TestPatchBundle::test_apply_invalidates_cache PASSED [ 63%]
+tests/unit/test_patch_bundle.py::TestPatchBundle::test_revert_invalidates_cache PASSED [ 64%]
+tests/unit/test_patch_bundle.py::TestPatchBundle::test_invalidate_cache_for_patch_files_method PASSED [ 64%]
+tests/unit/test_patch_bundle.py::test_create_bundle_calls_patch_bundle_create PASSED [ 64%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_analyze PASSED  [ 64%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_apply PASSED    [ 65%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_execute_repair_failure PASSED [ 65%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_execute_repair_success PASSED [ 65%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_generate_patch PASSED [ 65%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_integration PASSED [ 66%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_rollback PASSED [ 66%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_verify_failure PASSED [ 66%]
+tests/unit/test_patcher_agent.py::TestPatcherAgent::test_verify_success PASSED [ 66%]
+tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_analyze_priorities FAILED [ 67%]
+tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_handle_priority_analysis_request PASSED [ 67%]
+tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_initialization PASSED [ 67%]
+tests/unit/test_quantum_entanglement.py::TestEntangledState::test_add_component PASSED [ 67%]
+tests/unit/test_quantum_entanglement.py::TestEntangledState::test_get_entanglement_map PASSED [ 68%]
+tests/unit/test_quantum_entanglement.py::TestEntangledState::test_hadamard_and_measure PASSED [ 68%]
+tests/unit/test_quantum_entanglement.py::TestEntangledState::test_initialization PASSED [ 68%]
+tests/unit/test_quantum_entanglement.py::TestEntangledState::test_set_entanglement PASSED [ 68%]
+tests/unit/test_quantum_entanglement.py::TestQuantumBugSimulator::test_calculate_bug_probabilities PASSED [ 68%]
+tests/unit/test_quantum_entanglement.py::TestQuantumBugSimulator::test_get_optimal_repair_strategy PASSED [ 69%]
+tests/unit/test_quantum_entanglement.py::TestQuantumBugSimulator::test_initialization_from_graph PASSED [ 69%]
+tests/unit/test_quantum_entanglement.py::TestQuantumBugSimulator::test_simulate_repairs PASSED [ 69%]
+tests/unit/test_quantum_parallelization.py::TestQuantumParallelization::test_initialization PASSED [ 69%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_analyze_codebase PASSED [ 70%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_error_handling PASSED [ 70%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_find_cycles PASSED [ 70%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_get_file_dependencies PASSED [ 70%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_get_file_dependents PASSED [ 71%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_get_impacted_files PASSED [ 71%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_get_most_central_files PASSED [ 71%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_central_files PASSED [ 71%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_file_dependencies PASSED [ 72%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_task_request_analyze_codebase PASSED [ 72%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_prioritize_files_for_repair PASSED [ 72%]
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_process_message PASSED [ 72%]
+tests/unit/test_relationship_context_provider.py::TestRelationshipContextProvider::test_get_related_files PASSED [ 73%]
+tests/unit/test_relationship_context_provider.py::TestRelationshipContextProvider::test_get_relationship_context PASSED [ 73%]
+tests/unit/test_relationship_context_provider.py::TestRelationshipContextProvider::test_load_relationships PASSED [ 73%]
+tests/unit/test_relationship_context_provider.py::TestRelationshipContextProvider::test_provider_initialization PASSED [ 73%]
+tests/unit/test_response_handling.py::TestResponseHandling::test_async_coordination PASSED [ 74%]
+tests/unit/test_response_handling.py::TestResponseHandling::test_chunking_and_reassembly PASSED [ 74%]
+tests/unit/test_response_handling.py::TestResponseHandling::test_compression_and_decompression PASSED [ 74%]
+tests/unit/test_response_handling.py::TestResponseHandling::test_large_response_handler FAILED [ 74%]
+tests/unit/test_response_handling.py::TestResponseHandling::test_validation PASSED [ 75%]
+tests/unit/test_rollback_manager.py::TestTransactionManager::test_init_creates_dirs_if_not_exist PASSED [ 75%]
+tests/unit/test_rollback_manager.py::TestTransactionManager::test_save_transaction_atomic_writes PASSED [ 75%]
+tests/unit/test_rollback_manager.py::TestTransactionManager::test_load_transaction_uses_cache PASSED [ 75%]
+tests/unit/test_rollback_manager.py::TestTransactionManager::test_rollback_transaction_invalidates_cache PASSED [ 75%]
+tests/unit/test_router.py::TestRouter::test_route_bug_fixing_task PASSED [ 76%]
+tests/unit/test_router.py::TestRouter::test_route_code_analysis_task PASSED [ 76%]
+tests/unit/test_router.py::TestRouter::test_route_refactoring_task PASSED [ 76%]
+tests/unit/test_router.py::TestRouter::test_route_unknown_task PASSED    [ 76%]
+tests/unit/test_router.py::TestRouter::test_router_initialization PASSED [ 77%]
+tests/unit/test_state.py::TestState::test_bug_state_creation PASSED      [ 77%]
+tests/unit/test_state.py::TestState::test_bug_state_equality PASSED      [ 77%]
+tests/unit/test_state.py::TestState::test_bug_state_immutability PASSED  [ 77%]
+tests/unit/test_state.py::TestState::test_phase_enum PASSED              [ 78%]
+tests/unit/test_state.py::test_basic_functionality PASSED                [ 78%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_determine_bug_type PASSED [ 78%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_evaluate_strategy_acceptable PASSED [ 78%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_evaluate_strategy_unacceptable PASSED [ 79%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_extract_variables PASSED [ 79%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_formulate_strategy_null_pointer PASSED [ 79%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_formulate_strategy_resource_leak PASSED [ 79%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_error_messages PASSED [ 80%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_other_message PASSED [ 80%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_query_get_strategy_templates PASSED [ 80%]
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_task_request_formulate_strategy PASSED [ 80%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_check_component_health PASSED [ 81%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_check_health PASSED [ 81%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_diagnose_issue PASSED [ 81%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_export_metrics PASSED [ 81%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_generate_health_report PASSED [ 81%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_get_health_status PASSED [ 82%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_initialization PASSED [ 82%]
+tests/unit/test_system_monitor.py::TestSystemMonitor::test_start_stop_monitoring PASSED [ 82%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_circular_dependency_detection PASSED [ 82%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_component_status_tracking PASSED [ 83%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_config_validation PASSED [ 83%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_dashboard_phase_tracking PASSED [ 83%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_dependency_order PASSED [ 83%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_error_handling_during_initialization PASSED [ 84%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_graceful_shutdown PASSED [ 84%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_health_check_after_startup PASSED [ 84%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_parallel_initialization PASSED [ 84%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_retry_on_failure PASSED [ 85%]
+tests/unit/test_system_startup.py::TestSystemStartup::test_sequential_initialization PASSED [ 85%]
+tests/unit/test_system_startup.py::TestStartupRecovery::test_recovery_after_initialization_failure SKIPPED [ 85%]
+tests/unit/test_system_startup.py::TestStartupRecovery::test_recovery_by_disabling_failed_components SKIPPED [ 85%]
+tests/unit/test_system_startup.py::TestStartupRecovery::test_recovery_with_minimal_configuration SKIPPED [ 86%]
+tests/unit/test_system_startup.py::TestStartupRecovery::test_recovery_with_sequential_initialization SKIPPED [ 86%]
+tests/unit/test_thought_chain.py::TestTraversalOrder::test_traversal_orders PASSED [ 86%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_add_node PASSED [ 86%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_add_relationship PASSED [ 87%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_find_nodes PASSED [ 87%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_find_paths PASSED [ 87%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_get_node PASSED [ 87%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_initialization PASSED [ 87%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_remove_node PASSED [ 88%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_remove_relationship PASSED [ 88%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_to_from_dict PASSED [ 88%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_to_from_json PASSED [ 88%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_traverse_breadth_first PASSED [ 89%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_traverse_by_confidence PASSED [ 89%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_traverse_chronological PASSED [ 89%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_traverse_depth_first PASSED [ 89%]
+tests/unit/test_thought_chain.py::TestThoughtChain::test_validate PASSED [ 90%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_backup_versioning PASSED [ 90%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_compression PASSED [ 90%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_error_handling PASSED [ 90%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_list_available_chains PASSED [ 91%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_save_and_load_file PASSED [ 91%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_save_with_auto_filepath PASSED [ 91%]
+tests/unit/test_thought_chain.py::TestThoughtChainPersistence::test_thread_safety PASSED [ 91%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_add_thought PASSED [ 92%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_create_chain PASSED [ 92%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_delete_chain PASSED [ 92%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_find_related_thoughts PASSED [ 92%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_get_agent_chains PASSED [ 93%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_get_chain PASSED [ 93%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_get_chain_by_name PASSED [ 93%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_get_thought PASSED [ 93%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_list_chains PASSED [ 93%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_merge_chains PASSED [ 94%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_persistence PASSED [ 94%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_search_thoughts PASSED [ 94%]
+tests/unit/test_thought_chain_manager.py::TestThoughtChainManager::test_validate_all_chains PASSED [ 94%]
+tests/unit/test_timeout_handling.py::TestOperationProgress::test_operation_cancellation PASSED [ 95%]
+tests/unit/test_timeout_handling.py::TestOperationProgress::test_operation_timeout PASSED [ 95%]
+tests/unit/test_timeout_handling.py::TestOperationProgress::test_progress_lifecycle PASSED [ 95%]
+tests/unit/test_timeout_handling.py::TestOperationTracker::test_create_and_track_operation PASSED [ 95%]
+tests/unit/test_timeout_handling.py::TestOperationTracker::test_event_subscription PASSED [ 96%]
+tests/unit/test_timeout_handling.py::TestOperationTracker::test_operation_timeout_detection PASSED [ 96%]
+tests/unit/test_timeout_handling.py::TestEngineMonitorOperations::test_engine_monitor_operations PASSED [ 96%]
+tests/unit/test_timeout_handling.py::TestEngineMonitorOperations::test_metrics_include_operations PASSED [ 96%]
+tests/unit/test_timeout_handling.py::TestBaseAgentTimeoutHandling::test_agent_operation_tracking PASSED [ 97%]
+tests/unit/test_timeout_handling.py::TestBaseAgentTimeoutHandling::test_timeout_checking PASSED [ 97%]
+tests/unit/test_timeout_handling.py::TestOrchestratorTimeoutHandling::test_orchestrator_timeout_handling PASSED [ 97%]
+tests/unit/test_transition.py::test_module_imports PASSED                [ 97%]
+tests/unit/test_transition.py::test_basic_functionality PASSED           [ 98%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_calculate_confidence PASSED [ 98%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_determine_language PASSED [ 98%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_handle_query PASSED [ 98%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_handle_task_request PASSED [ 99%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_sandbox_creation_and_patching PASSED [ 99%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_verify_standards PASSED [ 99%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_verify_syntax PASSED [ 99%]
+tests/unit/test_verification_agent.py::TestVerificationAgent::test_verify_tests PASSED [100%]
+
+=================================== FAILURES ===================================
+______________ TestPriorityAnalyzerAgent.test_analyze_priorities _______________
+tests/unit/test_priority_analyzer_agent.py:30: in test_analyze_priorities
+    self.assertGreater(priorities["file1.py"]["priority"], priorities["file2.py"]["priority"])
+E   AssertionError: 0.6494303829603245 not greater than 0.6605
+_______________ TestResponseHandling.test_large_response_handler _______________
+tests/unit/test_response_handling.py:167: in test_large_response_handler
+    self.assertGreater(len(message_ids), 1)
+E   AssertionError: 1 not greater than 1
+=============================== warnings summary ===============================
+triangulum_lx/tooling/test_runner.py:15
+  /app/triangulum_lx/tooling/test_runner.py:15: DeprecationWarning: The 'triangulum_lx.tooling.fs_ops' module is deprecated and will be removed. Please import from 'triangulum_lx.utils.file_ops' instead.
+    from triangulum_lx.tooling.fs_ops import atomic_write, atomic_delete
+
+triangulum_lx/agents/test_message_bus.py:19
+  /app/triangulum_lx/agents/test_message_bus.py:19: PytestCollectionWarning: cannot collect test class 'TestEnhancedMessageBus' because it has a __init__ constructor (from: tests/test_agentic_system.py)
+    class TestEnhancedMessageBus(EnhancedMessageBus):
+
+triangulum_lx/tooling/test_runner.py:18
+  /app/triangulum_lx/tooling/test_runner.py:18: PytestCollectionWarning: cannot collect test class 'TestResult' because it has a __init__ constructor (from: tests/test_repair_workflow.py)
+    class TestResult:
+
+tests/unit/test_base_agent.py:21
+  /app/tests/unit/test_base_agent.py:21: PytestCollectionWarning: cannot collect test class 'TestAgent' because it has a __init__ constructor (from: tests/unit/test_base_agent.py)
+    class TestAgent(BaseAgent):
+
+triangulum_lx/tooling/test_runner.py:18
+  /app/triangulum_lx/tooling/test_runner.py:18: PytestCollectionWarning: cannot collect test class 'TestResult' because it has a __init__ constructor (from: tests/unit/test_patcher_agent.py)
+    class TestResult:
+
+tests/integration/test_folder_healing.py::TestFolderHealing::test_folder_healing_dry_run
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestFolderHealing.test_folder_healing_dry_run' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/integration/test_folder_healing.py::TestFolderHealing::test_folder_healing_dry_run
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestFolderHealing.test_folder_healing_dry_run of <integration.test_folder_healing.TestFolderHealing testMethod=test_folder_healing_dry_run>>)
+    return self.run(*args, **kwds)
+
+tests/integration/test_folder_healing.py::TestFolderHealing::test_orchestrator_real_healing_simulation
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestFolderHealing.test_orchestrator_real_healing_simulation' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/integration/test_folder_healing.py::TestFolderHealing::test_orchestrator_real_healing_simulation
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestFolderHealing.test_orchestrator_real_healing_simulation of <integration.test_folder_healing.TestFolderHealing testMethod=test_orchestrator_real_healing_simulation>>)
+    return self.run(*args, **kwds)
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_graceful_shutdown
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestSystemStartupIntegration.test_graceful_shutdown' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_graceful_shutdown
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestSystemStartupIntegration.test_graceful_shutdown of <integration.test_system_startup_integration.TestSystemStartupIntegration testMethod=test_graceful_shutdown>>)
+    return self.run(*args, **kwds)
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_startup_dashboard_integration
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestSystemStartupIntegration.test_startup_dashboard_integration' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_startup_dashboard_integration
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestSystemStartupIntegration.test_startup_dashboard_integration of <integration.test_system_startup_integration.TestSystemStartupIntegration testMethod=test_startup_dashboard_integration>>)
+    return self.run(*args, **kwds)
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_system_health_monitoring
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestSystemStartupIntegration.test_system_health_monitoring' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/integration/test_system_startup_integration.py::TestSystemStartupIntegration::test_system_health_monitoring
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestSystemStartupIntegration.test_system_health_monitoring of <integration.test_system_startup_integration.TestSystemStartupIntegration testMethod=test_system_health_monitoring>>)
+    return self.run(*args, **kwds)
+
+tests/test_startup_sequence.py::test_successful_startup
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages/_pytest/python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_startup_sequence.py::test_successful_startup returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_startup_sequence.py::test_error_recovery
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages/_pytest/python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_startup_sequence.py::test_error_recovery returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_startup_sequence.py::test_parallel_vs_sequential
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages/_pytest/python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_startup_sequence.py::test_parallel_vs_sequential returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_startup_sequence.py::test_component_dependencies
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages/_pytest/python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_startup_sequence.py::test_component_dependencies returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/unit/test_agent_message.py::TestMessageBus::test_broadcast_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestMessageBus.test_broadcast_message' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_agent_message.py::TestMessageBus::test_broadcast_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestMessageBus.test_broadcast_message of <unit.test_agent_message.TestMessageBus testMethod=test_broadcast_message>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_agent_message.py::TestMessageBus::test_conversation_management
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestMessageBus.test_conversation_management' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_agent_message.py::TestMessageBus::test_conversation_management
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestMessageBus.test_conversation_management of <unit.test_agent_message.TestMessageBus testMethod=test_conversation_management>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_agent_message.py::TestMessageBus::test_direct_message_delivery
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestMessageBus.test_direct_message_delivery' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_agent_message.py::TestMessageBus::test_direct_message_delivery
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestMessageBus.test_direct_message_delivery of <unit.test_agent_message.TestMessageBus testMethod=test_direct_message_delivery>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_agent_message.py::TestMessageBus::test_message_type_filtering
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestMessageBus.test_message_type_filtering' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_agent_message.py::TestMessageBus::test_message_type_filtering
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestMessageBus.test_message_type_filtering of <unit.test_agent_message.TestMessageBus testMethod=test_message_type_filtering>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_agent_message.py::TestMessageBus::test_unsubscribe
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestMessageBus.test_unsubscribe' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_agent_message.py::TestMessageBus::test_unsubscribe
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestMessageBus.test_unsubscribe of <unit.test_agent_message.TestMessageBus testMethod=test_unsubscribe>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_broadcast_status
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_broadcast_status' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_broadcast_status
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_broadcast_status of <unit.test_base_agent.TestBaseAgent testMethod=test_broadcast_status>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_error
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_handle_message_error' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_error
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_handle_message_error of <unit.test_base_agent.TestBaseAgent testMethod=test_handle_message_error>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_query
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_handle_message_query' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_query
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_handle_message_query of <unit.test_base_agent.TestBaseAgent testMethod=test_handle_message_query>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_status
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_handle_message_status' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_status
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_handle_message_status of <unit.test_base_agent.TestBaseAgent testMethod=test_handle_message_status>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_task_request
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_handle_message_task_request' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_handle_message_task_request
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_handle_message_task_request of <unit.test_base_agent.TestBaseAgent testMethod=test_handle_message_task_request>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_no_message_bus
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_no_message_bus' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_no_message_bus
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_no_message_bus of <unit.test_base_agent.TestBaseAgent testMethod=test_no_message_bus>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_send_message' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_send_message of <unit.test_base_agent.TestBaseAgent testMethod=test_send_message>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_response
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBaseAgent.test_send_response' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_base_agent.py::TestBaseAgent::test_send_response
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBaseAgent.test_send_response of <unit.test_base_agent.TestBaseAgent testMethod=test_send_response>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBugDetectorAgent.test_error_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBugDetectorAgent.test_error_handling of <unit.test_bug_detector_agent.TestBugDetectorAgent testMethod=test_error_handling>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_response_in_message_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBugDetectorAgent.test_error_response_in_message_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_error_response_in_message_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBugDetectorAgent.test_error_response_in_message_handling of <unit.test_bug_detector_agent.TestBugDetectorAgent testMethod=test_error_response_in_message_handling>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_query_get_bug_patterns
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBugDetectorAgent.test_handle_query_get_bug_patterns' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_query_get_bug_patterns
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBugDetectorAgent.test_handle_query_get_bug_patterns of <unit.test_bug_detector_agent.TestBugDetectorAgent testMethod=test_handle_query_get_bug_patterns>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_task_request_detect_bugs
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestBugDetectorAgent.test_handle_task_request_detect_bugs' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_bug_detector_agent.py::TestBugDetectorAgent::test_handle_task_request_detect_bugs
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestBugDetectorAgent.test_handle_task_request_detect_bugs of <unit.test_bug_detector_agent.TestBugDetectorAgent testMethod=test_handle_task_request_detect_bugs>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_circuit_breaker
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_circuit_breaker' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_circuit_breaker
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_circuit_breaker of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_circuit_breaker>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_cleanup_old_conversations
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_cleanup_old_conversations' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_cleanup_old_conversations
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_cleanup_old_conversations of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_cleanup_old_conversations>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_conversation_memory
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_conversation_memory' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_conversation_memory
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_conversation_memory of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_conversation_memory>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_delivery_status_tracking
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_delivery_status_tracking' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_delivery_status_tracking
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_delivery_status_tracking of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_delivery_status_tracking>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_direct_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_direct_message' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_direct_message
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_direct_message of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_direct_message>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_large_message_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_large_message_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_large_message_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_large_message_handling of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_large_message_handling>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_deduplication
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_message_deduplication' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_deduplication
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_message_deduplication of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_message_deduplication>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_confidence
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_message_filtering_by_confidence' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_confidence
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_message_filtering_by_confidence of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_message_filtering_by_confidence>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_source
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_message_filtering_by_source' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_source
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_message_filtering_by_source of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_message_filtering_by_source>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_topic
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_message_filtering_by_topic' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_message_filtering_by_topic
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_message_filtering_by_topic of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_message_filtering_by_topic>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_performance_metrics
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_performance_metrics' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_performance_metrics
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_performance_metrics of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_performance_metrics>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_priority_based_delivery
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_priority_based_delivery' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_priority_based_delivery
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_priority_based_delivery of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_priority_based_delivery>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_subscribe_and_publish
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_subscribe_and_publish' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_subscribe_and_publish
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_subscribe_and_publish of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_subscribe_and_publish>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_thought_chain_integration
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_thought_chain_integration' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_thought_chain_integration
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_thought_chain_integration of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_thought_chain_integration>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_timeout_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestEnhancedMessageBus.test_timeout_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_timeout_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestEnhancedMessageBus.test_timeout_handling of <unit.test_enhanced_message_bus.TestEnhancedMessageBus testMethod=test_timeout_handling>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_enhanced_message_bus.py::TestEnhancedMessageBus::test_unsubscribe
+  /app/tests/unit/test_enhanced_message_bus.py:81: RuntimeWarning: coroutine 'EnhancedMessageBus.publish' was never awaited
+    self.message_bus.publish(self.test_message)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[True]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[True]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[True]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[True]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[False]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[False]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[False]
+tests/unit/test_fs_ops.py::test_parallel_atomic_writes_no_stale_reads[False]
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=88172) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_null_pointer_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_rollback_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_validation_failure_handling
+  /app/triangulum_lx/agents/implementation_agent.py:778: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if isinstance(value_node, ast.Num):
+
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_null_pointer_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_rollback_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_validation_failure_handling
+  /app/triangulum_lx/agents/implementation_agent.py:780: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    elif isinstance(value_node, ast.Str):
+
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_null_pointer_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_rollback_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_validation_failure_handling
+  /app/triangulum_lx/agents/implementation_agent.py:790: DeprecationWarning: ast.NameConstant is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    elif isinstance(value_node, ast.NameConstant) and value_node.value is None:
+
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_apply_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_null_pointer_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_implement_resource_leak_strategy
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_rollback_implementation
+tests/unit/test_implementation_agent.py::TestImplementationAgent::test_validation_failure_handling
+  /app/triangulum_lx/agents/implementation_agent.py:792: DeprecationWarning: ast.NameConstant is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    elif isinstance(value_node, ast.NameConstant):
+
+tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_handle_priority_analysis_request
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestPriorityAnalyzerAgent.test_handle_priority_analysis_request' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_handle_priority_analysis_request
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestPriorityAnalyzerAgent.test_handle_priority_analysis_request of <unit.test_priority_analyzer_agent.TestPriorityAnalyzerAgent testMethod=test_handle_priority_analysis_request>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_error_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestRelationshipAnalystAgent.test_error_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_error_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestRelationshipAnalystAgent.test_error_handling of <unit.test_relationship_analyst_agent.TestRelationshipAnalystAgent testMethod=test_error_handling>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_central_files
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestRelationshipAnalystAgent.test_handle_query_central_files' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_central_files
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestRelationshipAnalystAgent.test_handle_query_central_files of <unit.test_relationship_analyst_agent.TestRelationshipAnalystAgent testMethod=test_handle_query_central_files>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_file_dependencies
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestRelationshipAnalystAgent.test_handle_query_file_dependencies' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_query_file_dependencies
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestRelationshipAnalystAgent.test_handle_query_file_dependencies of <unit.test_relationship_analyst_agent.TestRelationshipAnalystAgent testMethod=test_handle_query_file_dependencies>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_task_request_analyze_codebase
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestRelationshipAnalystAgent.test_handle_task_request_analyze_codebase' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_relationship_analyst_agent.py::TestRelationshipAnalystAgent::test_handle_task_request_analyze_codebase
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestRelationshipAnalystAgent.test_handle_task_request_analyze_codebase of <unit.test_relationship_analyst_agent.TestRelationshipAnalystAgent testMethod=test_handle_task_request_analyze_codebase>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_error_messages
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestStrategyAgent.test_handle_error_messages' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_error_messages
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestStrategyAgent.test_handle_error_messages of <unit.test_strategy_agent.TestStrategyAgent testMethod=test_handle_error_messages>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_other_message
+  /app/triangulum_lx/agents/strategy_agent.py:1158: RuntimeWarning: coroutine 'BaseAgent._handle_other_message' was never awaited
+    super()._handle_other_message(message)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_query_get_strategy_templates
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestStrategyAgent.test_handle_query_get_strategy_templates' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_query_get_strategy_templates
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestStrategyAgent.test_handle_query_get_strategy_templates of <unit.test_strategy_agent.TestStrategyAgent testMethod=test_handle_query_get_strategy_templates>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_task_request_formulate_strategy
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestStrategyAgent.test_handle_task_request_formulate_strategy' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_strategy_agent.py::TestStrategyAgent::test_handle_task_request_formulate_strategy
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestStrategyAgent.test_handle_task_request_formulate_strategy of <unit.test_strategy_agent.TestStrategyAgent testMethod=test_handle_task_request_formulate_strategy>>)
+    return self.run(*args, **kwds)
+
+tests/unit/test_timeout_handling.py::TestBaseAgentTimeoutHandling::test_timeout_checking
+  /app/triangulum_lx/agents/base_agent.py:876: RuntimeWarning: coroutine 'BaseAgent.send_message' was never awaited
+    self.broadcast_status(
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_timeout_handling.py::TestOrchestratorTimeoutHandling::test_orchestrator_timeout_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:589: RuntimeWarning: coroutine 'TestOrchestratorTimeoutHandling.test_orchestrator_timeout_handling' was never awaited
+    if method() is not None:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/unit/test_timeout_handling.py::TestOrchestratorTimeoutHandling::test_orchestrator_timeout_handling
+  /home/jules/.pyenv/versions/3.12.11/lib/python3.12/unittest/case.py:690: DeprecationWarning: It is deprecated to return a value that is not None from a test case (<bound method TestOrchestratorTimeoutHandling.test_orchestrator_timeout_handling of <unit.test_timeout_handling.TestOrchestratorTimeoutHandling testMethod=test_orchestrator_timeout_handling>>)
+    return self.run(*args, **kwds)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/unit/test_priority_analyzer_agent.py::TestPriorityAnalyzerAgent::test_analyze_priorities
+FAILED tests/unit/test_response_handling.py::TestResponseHandling::test_large_response_handler
+====== 2 failed, 408 passed, 6 skipped, 143 warnings in 69.18s (0:01:09) =======
