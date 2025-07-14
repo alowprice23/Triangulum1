@@ -1,0 +1,9 @@
+{
+  "TSH_HOME": "~/triangulum",
+  "TSH_DB": "$TSH_HOME/triangulum_data",
+  "TSH_DOCKER_PROJECT": "triangulum_stack",
+  "TSH_CPU_FACTOR": "$(nproc)",
+  "TSH_PARALLEL_JOBS": "$((TSH_CPU_FACTOR*4))",
+  "TSH_TIMEOUT": "600",
+  "TSH_RETRY": "43"
+}
