@@ -17,22 +17,22 @@ def get_shell_commands():
     for filename in os.listdir(domains_path):
         if filename.endswith('.py') and not filename.startswith('__'):
             command_name = filename[:-3]
-            module = importlib.import_module(f'tsh.domains.{command_name}')
+            module = importlib.import_module(f'triangulum.domains.{command_name}')
             if hasattr(module, 'cli'):
                 cli = module.cli
                 commands[command_name] = {
                     'description': cli.help,
                     'params': [],
-                    'usage': f'tsh {command_name} [OPTIONS]'
+                    'usage': f'triangulum {command_name} [OPTIONS]'
                 }
                 if isinstance(cli, click.Group):
-                    commands[command_name]['usage'] = f'tsh {command_name} [COMMAND] [OPTIONS]'
+                    commands[command_name]['usage'] = f'triangulum {command_name} [COMMAND] [OPTIONS]'
                     commands[command_name]['subcommands'] = {}
                     for subcommand_name, subcommand in cli.commands.items():
                         commands[command_name]['subcommands'][subcommand_name] = {
                             'description': subcommand.help,
                             'params': [],
-                            'usage': f'tsh {command_name} {subcommand_name} [OPTIONS]'
+                            'usage': f'triangulum {command_name} {subcommand_name} [OPTIONS]'
                         }
                         for param in subcommand.params:
                             help_record = param.get_help_record(None)

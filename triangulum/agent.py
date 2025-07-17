@@ -8,10 +8,10 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from tsh.shell_commands import get_shell_commands
-from tsh.shell_scripts import get_shell_scripts
+from triangulum.shell_commands import get_shell_commands
+from triangulum.shell_scripts import get_shell_scripts
 
-class TSHAgent:
+class TriangulumAgent:
     def __init__(self, openai_api_key):
         self.openai_api_key = openai_api_key
         openai.api_key = self.openai_api_key
@@ -94,14 +94,14 @@ If you are unsure or the request is ambiguous, respond with:
                 print(f"Subcommand '{subcommand_name}' for command '{command_name}' not found.")
                 return
             try:
-                process = subprocess.run(['python3', 'tsh/main.py', command_name, subcommand_name] + action.get('args', []), capture_output=True, text=True)
+                process = subprocess.run(['python3', 'triangulum/main.py', command_name, subcommand_name] + action.get('args', []), capture_output=True, text=True)
                 print(process.stdout)
                 print(process.stderr)
             except Exception as e:
                 print(f"Error executing command: {e}")
         else:
             try:
-                process = subprocess.run(['python3', 'tsh/main.py', command_name] + action.get('args', []), capture_output=True, text=True)
+                process = subprocess.run(['python3', 'triangulum/main.py', command_name] + action.get('args', []), capture_output=True, text=True)
                 print(process.stdout)
                 print(process.stderr)
             except Exception as e:
@@ -140,5 +140,5 @@ if __name__ == '__main__':
     if not api_key:
         print("Error: OPENAI_API_KEY environment variable not set.")
     else:
-        agent = TSHAgent(api_key)
+        agent = TriangulumAgent(api_key)
         agent.run()

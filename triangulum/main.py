@@ -20,26 +20,34 @@ class ComplexCLI(click.MultiCommand):
 
     def get_command(self, ctx, name):
         try:
-            module = importlib.import_module(f'tsh.domains.{name}')
+            module = importlib.import_module(f'triangulum.domains.{name}')
             return module.cli
         except ImportError:
             return
 
+from triangulum_core.core import start, stop, status, shell
+
 @click.group(cls=ComplexCLI)
-def tsh():
+def triangulum():
     """Triangulum Shell"""
     pass
 
-@tsh.command()
-def agent():
-    """Run the Triangulum Shell Agent"""
-    from tsh.agent import TSHAgent
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        print("Error: OPENAI_API_KEY environment variable not set.")
-        return
-    agent = TSHAgent(api_key)
-    agent.run()
+@triangulum.command()
+def start_command():
+    """Starts Triangulum"""
+    start()
 
-if __name__ == '__main__':
-    tsh()
+@triangulum.command()
+def stop_command():
+    """Stops Triangulum"""
+    stop()
+
+@triangulum.command()
+def status_command():
+    """Shows Triangulum status"""
+    status()
+
+@triangulum.command()
+def shell_command():
+    """Starts Triangulum shell"""
+    shell()

@@ -1,0 +1,11 @@
+name: Triangulum
+version: 0.1.0
+entry_point: triangulum_core.core:start
+features:
+  dashboard: triangulum_dashboard_final_consolidated
+  agents:
+    orchestrator: triangulum_lx.agents.orchestrator_agent:OrchestratorAgent
+    message_bus: triangulum_lx.agents.enhanced_message_bus:EnhancedMessageBus
+    bug_detector: triangulum_lx.agents.bug_detector_agent:BugDetectorAgent
+policies:
+  fs: config/fs_policy.json
