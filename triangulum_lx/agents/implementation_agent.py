@@ -3013,7 +3013,7 @@ class ImplementationAgent(BaseAgent):
         from datetime import datetime
         return datetime.now().isoformat()
     
-    def _handle_task_request(self, message: AgentMessage) -> None:
+    async def _handle_task_request(self, message: AgentMessage) -> None:
         """
         Handle a task request message.
         
@@ -3028,7 +3028,7 @@ class ImplementationAgent(BaseAgent):
             additional_context = content.get("additional_context")
             
             if not strategy:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -3044,7 +3044,7 @@ class ImplementationAgent(BaseAgent):
                     additional_context=additional_context
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -3053,7 +3053,7 @@ class ImplementationAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -3067,7 +3067,7 @@ class ImplementationAgent(BaseAgent):
             dry_run = content.get("dry_run", False)
             
             if not implementation:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -3083,7 +3083,7 @@ class ImplementationAgent(BaseAgent):
                     dry_run=dry_run
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -3092,7 +3092,7 @@ class ImplementationAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -3102,7 +3102,7 @@ class ImplementationAgent(BaseAgent):
                 )
         
         else:
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.ERROR,
                 content={
@@ -3111,7 +3111,7 @@ class ImplementationAgent(BaseAgent):
                 }
             )
     
-    def _handle_query(self, message: AgentMessage) -> None:
+    async def _handle_query(self, message: AgentMessage) -> None:
         """
         Handle a query message.
         
@@ -3125,7 +3125,7 @@ class ImplementationAgent(BaseAgent):
             implementation_id = content.get("implementation_id")
             
             if not implementation_id:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -3137,7 +3137,7 @@ class ImplementationAgent(BaseAgent):
             
             status = self.get_implementation_status(implementation_id)
             
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.QUERY_RESPONSE,
                 content={
@@ -3147,7 +3147,7 @@ class ImplementationAgent(BaseAgent):
             )
         
         else:
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.ERROR,
                 content={

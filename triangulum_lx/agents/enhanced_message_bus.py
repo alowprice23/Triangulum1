@@ -617,6 +617,7 @@ class EnhancedMessageBus:
                 if timeout:
                     # Use a future for timeout handling
                     future = self._executor.submit(callback, message)
+                    self._futures[message.message_id] = future
                     
                     try:
                         # Wait for the callback to complete with timeout
@@ -632,7 +633,7 @@ class EnhancedMessageBus:
                         delivery_status["delivery_time"] = delivery_time
                         
                         # Exit retry loop on success
-                        break
+
                     
                     except TimeoutError:
                         # Timeout occurred
@@ -646,7 +647,6 @@ class EnhancedMessageBus:
                         circuit_breaker = self._circuit_breakers.get(agent_id)
                         if circuit_breaker:
                             circuit_breaker.record_failure()
-
                     except Exception as e:
                         # Callback raised an exception
                         logger.error(f"Error delivering message to {agent_id}: {e}")
@@ -656,7 +656,12 @@ class EnhancedMessageBus:
                         circuit_breaker = self._circuit_breakers.get(agent_id)
                         if circuit_breaker:
                             circuit_breaker.record_failure()
-
+                    finally:
+                        with self._lock:
+                            if message.message_id in self._futures:
+                                del self._futures[message.message_id]
+                        if delivery_status["success"]:
+                            break
                 else:
                     # No timeout, call directly
                     await callback(message)
@@ -1164,3 +1169,13 @@ class EnhancedMessageBus:
             self._thought_chains.clear()
             
             logger.info("Message bus shutdown complete")
+
+    def wait_for_completion(self):
+        """
+        Waits for all messages in the bus to be processed.
+        """
+        while True:
+            with self._lock:
+                if not self._futures:
+                    break
+            time.sleep(0.1)

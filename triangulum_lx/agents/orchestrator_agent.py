@@ -22,13 +22,27 @@ class OrchestratorAgent(BaseAgent):
 
     async def _handle_task_request(self, message: AgentMessage) -> Optional[Dict[str, Any]]:
         action = message.content.get("action")
-        if action == "orchestrate_folder_healing":
+        if action == "start":
+            return await self._handle_start(message)
+        elif action == "orchestrate_folder_healing":
             return await self._handle_folder_healing(message)
         else:
             return await self.send_error_response(message, f"Unknown action: {action}")
 
     async def _handle_query(self, message: AgentMessage):
         await self.send_error_response(message, "Queries not yet implemented")
+
+    async def _handle_start(self, message: AgentMessage) -> Optional[Dict[str, Any]]:
+        """
+        Handles the start message and kicks off the analysis process.
+        """
+        return await self.send_message(
+            message_type=MessageType.TASK_REQUEST,
+            content={"task": "analyze"},
+            receiver="relationship_analyst",
+            parent_message_id=message.message_id,
+            conversation_id=message.conversation_id,
+        )
 
     async def _handle_folder_healing(self, message: AgentMessage) -> Optional[Dict[str, Any]]:
         folder_path = message.content.get("folder_path")

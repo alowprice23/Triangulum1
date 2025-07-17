@@ -45,13 +45,9 @@ class MetricsCollector:
         self.metrics_path = Path(_metrics_path_str) # Store as Path object
         
         # Create the metrics directory if it doesn't exist
-        if not self.fs_cache.exists(str(self.metrics_path)):
-            self.metrics_path.mkdir(parents=True, exist_ok=True)
-            self.fs_cache.invalidate(str(self.metrics_path))
-        elif not self.fs_cache.is_dir(str(self.metrics_path)):
-            logger.warning(f"Metrics path {self.metrics_path} exists but is not a directory. Attempting to create.")
-            self.metrics_path.mkdir(parents=True, exist_ok=True) # May fail
-            self.fs_cache.invalidate(str(self.metrics_path))
+        if not self.fs_cache.exists(str(self.metrics_path.parent)):
+            self.metrics_path.parent.mkdir(parents=True, exist_ok=True)
+            self.fs_cache.invalidate(str(self.metrics_path.parent))
         
         # Initialize metrics data structures
         self.total_verifications = 0

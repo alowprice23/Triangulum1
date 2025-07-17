@@ -1847,46 +1847,52 @@ class BugDetectorAgent(BaseAgent):
             }]
             files_with_errors += 1
         
-        # Analyze each file
-        for i, file_path in enumerate(files_to_analyze):
-            # Log progress every 10 files or at start/end
-            if i % 10 == 0 or i == len(files_to_analyze) - 1:
-                logger.info(f"Analyzing file {i+1}/{len(files_to_analyze)}: {file_path}")
-            
-            # Include errors flag for detecting problematic files
-            result = self.detect_bugs_in_file(
-                file_path=file_path,
-                language=language,
-                selected_patterns=selected_patterns,
-                include_errors=True
-            )
-            
-            # Handle result based on its type
-            if isinstance(result, FileAnalysisResult):
-                files_analyzed += 1
-                
-                # If file has bugs, add them to the results
-                if result.has_bugs:
-                    bugs_by_file[file_path] = result.bugs
-                    total_bugs += len(result.bugs)
-                    files_with_bugs += 1
-                
-                # If file has errors, add them to the error collection
-                if result.has_errors:
-                    errors_by_file[file_path] = [error.to_dict() for error in result.errors]
+        # Analyze each file in parallel
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.config.get("max_workers", 4)) as executor:
+            future_to_file = {executor.submit(self.detect_bugs_in_file, file_path, language, selected_patterns, True): file_path for file_path in files_to_analyze}
+            for future in concurrent.futures.as_completed(future_to_file):
+                file_path = future_to_file[future]
+                try:
+                    result = future.result()
+                    # Handle result based on its type
+                    if isinstance(result, FileAnalysisResult):
+                        files_analyzed += 1
+
+                        # If file has bugs, add them to the results
+                        if result.has_bugs:
+                            bugs_by_file[file_path] = result.bugs
+                            total_bugs += len(result.bugs)
+                            files_with_bugs += 1
+
+                        # If file has errors, add them to the error collection
+                        if result.has_errors:
+                            errors_by_file[file_path] = [error.to_dict() for error in result.errors]
+                            files_with_errors += 1
+
+                        # If analysis was neither successful nor partially successful
+                        if not result.success and not result.partial_success:
+                            skipped_files += 1
+                    else:
+                        # For backward compatibility with older implementations
+                        # that might return a list of bugs instead of FileAnalysisResult
+                        files_analyzed += 1
+                        if result:  # If the list has bugs
+                            bugs_by_file[file_path] = result
+                            total_bugs += len(result)
+                            files_with_bugs += 1
+                except Exception as exc:
+                    logger.error(f'{file_path} generated an exception: {exc}')
+                    errors_by_file[file_path] = [
+                        BugDetectorError(
+                            message=f"Error analyzing file: {exc}",
+                            severity=ErrorSeverity.CRITICAL,
+                            error_type=type(exc).__name__,
+                            file_path=file_path,
+                            recoverable=False,
+                        ).to_dict()
+                    ]
                     files_with_errors += 1
-                
-                # If analysis was neither successful nor partially successful
-                if not result.success and not result.partial_success:
                     skipped_files += 1
-            else:
-                # For backward compatibility with older implementations
-                # that might return a list of bugs instead of FileAnalysisResult
-                files_analyzed += 1
-                if result:  # If the list has bugs
-                    bugs_by_file[file_path] = result
-                    total_bugs += len(result)
-                    files_with_bugs += 1
         
         # Determine overall status
         status = "success"
@@ -2121,7 +2127,7 @@ class BugDetectorAgent(BaseAgent):
         # Clamp to [0, 1] range
         return max(0, min(1, base_priority))
     
-    def _handle_task_request(self, message: AgentMessage) -> None:
+    async def _handle_task_request(self, message: AgentMessage) -> None:
         """
         Handle a task request message.
         
@@ -2145,7 +2151,7 @@ class BugDetectorAgent(BaseAgent):
             selected_patterns = content.get("selected_patterns")
             
             if not file_path:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2185,7 +2191,7 @@ class BugDetectorAgent(BaseAgent):
                         selected_patterns=selected_patterns
                     )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -2195,7 +2201,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2215,7 +2221,7 @@ class BugDetectorAgent(BaseAgent):
             selected_patterns = content.get("selected_patterns")
             
             if not folder_path:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2233,7 +2239,7 @@ class BugDetectorAgent(BaseAgent):
                     selected_patterns=selected_patterns
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -2245,7 +2251,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2263,7 +2269,7 @@ class BugDetectorAgent(BaseAgent):
             source_files = content.get("source_files")
             
             if not test_name or not error_message or not stack_trace:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2281,7 +2287,7 @@ class BugDetectorAgent(BaseAgent):
                     source_files=source_files
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -2290,7 +2296,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2310,7 +2316,7 @@ class BugDetectorAgent(BaseAgent):
             remediation = content.get("remediation")
             
             if not all([pattern_id, pattern, languages, description, severity, remediation]):
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2331,7 +2337,7 @@ class BugDetectorAgent(BaseAgent):
                 )
                 
                 if success:
-                    self.send_response(
+                    await self.send_response(
                         original_message=message,
                         message_type=MessageType.TASK_RESULT,
                         content={
@@ -2340,7 +2346,7 @@ class BugDetectorAgent(BaseAgent):
                         }
                     )
                 else:
-                    self.send_response(
+                    await self.send_response(
                         original_message=message,
                         message_type=MessageType.ERROR,
                         content={
@@ -2349,7 +2355,7 @@ class BugDetectorAgent(BaseAgent):
                         }
                     )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2366,7 +2372,7 @@ class BugDetectorAgent(BaseAgent):
             # self.send_response is called below
 
         if response_content: # Ensure we always send a response
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=response_message_type,
                 content=response_content
@@ -2378,7 +2384,7 @@ class BugDetectorAgent(BaseAgent):
             self.metrics.record_metric("bug_detector_task_processed", 1, tags={"action": action, "status": status_tag})
             self.metrics.record_metric("bug_detector_task_duration_seconds", duration, tags={"action": action, "status": status_tag})
     
-    def _handle_query(self, message: AgentMessage) -> None:
+    async def _handle_query(self, message: AgentMessage) -> None:
         """
         Handle a query message.
         
@@ -2397,7 +2403,7 @@ class BugDetectorAgent(BaseAgent):
                 else:
                     patterns = {k: v for k, v in self.bug_patterns.items() if v.get("enabled", True)}
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.QUERY_RESPONSE,
                     content={
@@ -2407,7 +2413,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2425,7 +2431,7 @@ class BugDetectorAgent(BaseAgent):
                 else:
                     issues = self.known_issues
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.QUERY_RESPONSE,
                     content={
@@ -2435,7 +2441,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2449,7 +2455,7 @@ class BugDetectorAgent(BaseAgent):
             language = content.get("language")
             
             if not file_path:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2465,7 +2471,7 @@ class BugDetectorAgent(BaseAgent):
                     language=language
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.QUERY_RESPONSE,
                     content={
@@ -2476,7 +2482,7 @@ class BugDetectorAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -2486,7 +2492,7 @@ class BugDetectorAgent(BaseAgent):
                 )
         
         else:
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.ERROR,
                 content={

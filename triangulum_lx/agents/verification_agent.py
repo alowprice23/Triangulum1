@@ -274,9 +274,11 @@ class VerificationAgent(BaseAgent):
         self.verification_env = VerificationEnvironment(config=self.config.get("verification_env", {}))
         self.test_generator = TestGenerator(config=self.config.get("test_generator", {}))
         self.code_fixer = CodeFixer(config=self.config.get("code_fixer", {}))
+        metrics_path = os.path.join(self.verification_data_dir, "metrics")
+        os.makedirs(metrics_path, exist_ok=True)
         self.global_metrics = GlobalVerificationMetrics(
             namespace=self.agent_id,
-            metrics_path=self.config.get("metrics_path", os.path.join(self.verification_data_dir, "metrics"))
+            metrics_path=os.path.join(metrics_path, f"metrics_{self.agent_id}_{int(time.time())}.db")
         )
         
         # Start a metrics session
@@ -940,7 +942,7 @@ class VerificationAgent(BaseAgent):
             logger.error(f"Error attempting auto-fix: {e}")
             return {"success": False, "error": str(e)}
     
-    def _handle_task_request(self, message: AgentMessage) -> Optional[AgentMessage]:
+    async def _handle_task_request(self, message: AgentMessage) -> Optional[AgentMessage]:
         """Handle a task request message."""
         task_data = message.content.get("task", {})
         task_type = task_data.get("type")
@@ -952,9 +954,8 @@ class VerificationAgent(BaseAgent):
             
             result = self.verify_implementation(implementation, strategy, bug_report)
             
-            return AgentMessage(
-                sender=self.agent_id,
-                receiver=message.sender,
+            return await self.send_response(
+                original_message=message,
                 message_type=MessageType.TASK_RESULT,
                 content={
                     "task_id": message.content.get("task_id"),
@@ -980,9 +981,8 @@ class VerificationAgent(BaseAgent):
                     sandbox_path=sandbox_path
                 )
                 
-                return AgentMessage(
-                    sender=self.agent_id,
-                    receiver=message.sender,
+                return await self.send_response(
+                    original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
                         "task_id": message.content.get("task_id"),
@@ -994,7 +994,7 @@ class VerificationAgent(BaseAgent):
         
         return None
 
-    def _handle_query(self, message: AgentMessage) -> Optional[AgentMessage]:
+    async def _handle_query(self, message: AgentMessage) -> Optional[AgentMessage]:
         """Handle a query message."""
         query_data = message.content.get("query", {})
         query_type = query_data.get("type")
@@ -1002,9 +1002,8 @@ class VerificationAgent(BaseAgent):
         if query_type == "get_verification_result":
             implementation_id = query_data.get("implementation_id")
             result = self.verification_results.get(implementation_id)
-            return AgentMessage(
-                sender=self.agent_id,
-                receiver=message.sender,
+            return await self.send_response(
+                original_message=message,
                 message_type=MessageType.QUERY_RESPONSE,
                 content={"result": result}
             )

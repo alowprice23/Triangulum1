@@ -954,7 +954,7 @@ class StrategyAgent(BaseAgent):
         from datetime import datetime
         return datetime.now().isoformat()
     
-    def _handle_task_request(self, message: AgentMessage) -> None:
+    async def _handle_task_request(self, message: AgentMessage) -> None:
         """
         Handle a task request message.
         
@@ -970,7 +970,7 @@ class StrategyAgent(BaseAgent):
             relationship_context = content.get("relationship_context")
             
             if not bug_report or not code_context:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -987,7 +987,7 @@ class StrategyAgent(BaseAgent):
                     relationship_context=relationship_context
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -996,7 +996,7 @@ class StrategyAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -1010,7 +1010,7 @@ class StrategyAgent(BaseAgent):
             constraints = content.get("constraints")
             
             if not strategy:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -1026,7 +1026,7 @@ class StrategyAgent(BaseAgent):
                     constraints=constraints
                 )
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.TASK_RESULT,
                     content={
@@ -1035,7 +1035,7 @@ class StrategyAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -1045,7 +1045,7 @@ class StrategyAgent(BaseAgent):
                 )
         
         else:
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.ERROR,
                 content={
@@ -1054,7 +1054,7 @@ class StrategyAgent(BaseAgent):
                 }
             )
     
-    def _handle_query(self, message: AgentMessage) -> None:
+    async def _handle_query(self, message: AgentMessage) -> None:
         """
         Handle a query message.
         
@@ -1077,7 +1077,7 @@ class StrategyAgent(BaseAgent):
                 else:
                     templates = self.strategy_templates
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.QUERY_RESPONSE,
                     content={
@@ -1087,7 +1087,7 @@ class StrategyAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -1105,7 +1105,7 @@ class StrategyAgent(BaseAgent):
                 else:
                     strategies = self.successful_strategies
                 
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.QUERY_RESPONSE,
                     content={
@@ -1115,7 +1115,7 @@ class StrategyAgent(BaseAgent):
                     }
                 )
             except Exception as e:
-                self.send_response(
+                await self.send_response(
                     original_message=message,
                     message_type=MessageType.ERROR,
                     content={
@@ -1125,7 +1125,7 @@ class StrategyAgent(BaseAgent):
                 )
         
         else:
-            self.send_response(
+            await self.send_response(
                 original_message=message,
                 message_type=MessageType.ERROR,
                 content={
