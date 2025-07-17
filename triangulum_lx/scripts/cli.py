@@ -1,3 +1,10 @@
+# This file is part of the Triangulum project.
+#
+# To start the application, run the following command:
+#
+# tsh --help
+#
+
 import click
 import logging
 import sys

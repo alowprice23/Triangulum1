@@ -1,14 +1,23 @@
-# Agent Collaboration Protocol
-
-This document outlines the protocol for how agents in the Triangulum platform communicate and collaborate with each other.
+# Triangulum Agent Collaboration Protocol
+#
+# This document outlines the protocol for how agents in the Triangulum platform
+# communicate and collaborate with each other.
+#
+# To start the application, run the following command:
+#
+# tsh --help
+#
 
 ## 1. Message Bus
 
-All inter-agent communication happens through the `EnhancedMessageBus`. This is a publish-subscribe system that allows agents to send and receive messages without having direct knowledge of each other.
+All inter-agent communication happens through the `EnhancedMessageBus`. This is a
+publish-subscribe system that allows agents to send and receive messages without
+having direct knowledge of each other.
 
 ## 2. Message Format
 
-All messages on the bus are in JSON format. The basic message structure is as follows:
+All messages on the bus are in JSON format. The basic message structure is as
+follows:
 
 ```json
 {
@@ -39,7 +48,8 @@ All messages on the bus are in JSON format. The basic message structure is as fo
 
 ## 4. System Events
 
-The `EnhancedMessageBus` also broadcasts system events, which can be used for monitoring and automation.
+The `EnhancedMessageBus` also broadcasts system events, which can be used for
+monitoring and automation.
 
 ### 4.1. `AgentStarted`
 

@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # Command-Line Agent (CLA)
-
-# This script will be responsible for the autonomous oversight of the shell.
-# It will be able to:
-# 1. Inspect / spawn / restart any agent container.
-# 2. Execute all shell commands on a virtual TTY.
-# 3. Monitor progress vs. roadmap and enforce ≥10 % per commit rule.
-# 4. Invoke triage domain automatically when stuck or after 3 consecutive command failures.
+#
+# This script provides autonomous oversight of the Triangulum shell. It can
+# inspect, spawn, and restart agent containers, execute shell commands on a
+# virtual TTY, monitor progress against the roadmap, and invoke the triage
+# domain automatically when the system is stuck or after three consecutive
+# command failures.
+#
+# To start the application, run the following command:
+#
+# tsh --help
+#
 
 while true; do
   # Main loop for the CLA

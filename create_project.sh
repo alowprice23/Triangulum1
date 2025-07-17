@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Triangulum Project Generator
+#
+# This script creates the initial file and directory structure for the Triangulum
+# Shell (tsh) tool. It generates the necessary Python modules, configuration
+# files, and test files to get started with a new Triangulum project.
+#
+# To start the application, run the following command:
+#
+# tsh --help
+#
+
 set -e
 
 # Create directories

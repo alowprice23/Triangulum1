@@ -1,3 +1,14 @@
+# Triangulum Docker Compose Configuration
+#
+# This file defines the services, networks, and volumes for the Triangulum
+# application. It includes the main Triangulum engine, the human review hub,
+# Prometheus for metrics collection, and Grafana for metrics visualization.
+#
+# To start the application, run the following command:
+#
+# tsh --help
+#
+
 version: '3.8'
 
 services:
