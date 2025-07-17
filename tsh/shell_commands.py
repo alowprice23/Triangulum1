@@ -55,4 +55,8 @@ def get_shell_commands():
 
 if __name__ == '__main__':
     import json
-    print(json.dumps(get_shell_commands(), indent=2))
+    commands = get_shell_commands()
+    output_path = os.path.join(os.path.dirname(__file__), 'shell_commands.json')
+    with open(output_path, 'w') as f:
+        json.dump(commands, f, indent=2)
+    print(f"Successfully generated shell_commands.json at {output_path}")

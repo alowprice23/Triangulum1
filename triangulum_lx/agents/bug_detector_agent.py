@@ -38,6 +38,7 @@ from .message import AgentMessage, MessageType
 from .enhanced_message_bus import EnhancedMessageBus # New
 from .relationship_analyst_agent import RelationshipAnalystAgent
 from ..core.exceptions import TriangulumError
+from ..tooling.code_relationship_analyzer import CodeRelationshipAnalyzer
 
 logger = logging.getLogger(__name__)
 
@@ -1398,6 +1399,7 @@ class BugDetectorAgent(BaseAgent):
         # sending a message here and waiting for a response. That's too complex for this refactor.
         # For now, if self.relationship_analyst (which is no longer an init param) is not set,
         # this will effectively do nothing or rely on relationship_context passed to detect_bugs_in_file.
+        self.relationship_analyst = CodeRelationshipAnalyzer(root_path=self.config.get("root_path"))
 
         # Attempting to keep original logic if self.relationship_analyst was set by other means (e.g. a property)
         # This is a temporary measure for the diff. Ideally, this method is fully re-implemented.

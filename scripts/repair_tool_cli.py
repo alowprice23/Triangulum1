@@ -46,7 +46,7 @@ def plan_repairs(args):
     
     # Get bugs from the bug detector
     from triangulum_lx.agents.bug_detector_agent import BugDetectorAgent
-    bug_detector = BugDetectorAgent(agent_id="bug_detector_cli")
+    bug_detector = BugDetectorAgent(agent_id="bug_detector_cli", root_path=str(project_root))
     
     if target_path.is_file():
         # Scan a single file
@@ -423,78 +423,28 @@ def main():
         description="Plan and apply repairs to a codebase."
     )
     
-    subparsers = parser.add_subparsers(dest='command', help='Command to run')
-    
-    # Plan command
-    plan_parser = subparsers.add_parser('plan', help='Plan repairs for a codebase')
-    plan_parser.add_argument(
-        '--path',
-        required=True,
+    parser.add_argument(
+        'path',
         help='Path to the codebase to repair'
     )
-    plan_parser.add_argument(
-        '--output',
-        help='Path to save the repair plans as JSON'
-    )
-    
-    # Apply command
-    apply_parser = subparsers.add_parser('apply', help='Apply repairs to a codebase')
-    apply_parser.add_argument(
-        '--path',
-        required=True,
-        help='Path to the codebase to repair'
-    )
-    apply_parser.add_argument(
-        '--plans',
-        help='Path to a JSON file containing repair plans'
-    )
-    apply_parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Perform a dry run without actually applying repairs'
-    )
-    
-    # Verify command
-    verify_parser = subparsers.add_parser('verify', help='Verify repairs applied to a codebase')
-    verify_parser.add_argument(
-        '--path',
-        required=True,
-        help='Path to the codebase to verify'
-    )
-    verify_parser.add_argument(
-        '--run-tests',
-        action='store_true',
-        help='Run tests to verify repairs'
-    )
-    verify_parser.add_argument(
-        '--static-analysis',
-        action='store_true',
-        help='Run static analysis to verify repairs'
-    )
-    
-    # Common options
     parser.add_argument(
         '--verbose',
         action='store_true',
         help='Enable verbose logging'
     )
-    
     args = parser.parse_args()
-    
-    # Set logging level based on verbose flag
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-    
     try:
-        if args.command == 'plan':
-            return plan_repairs(args)
-        elif args.command == 'apply':
-            return apply_repairs(args)
-        elif args.command == 'verify':
-            return verify_repairs(args)
-        else:
-            parser.print_help()
-            return 1
+        args.output = None
+        args.plans = None
+        args.dry_run = False
+        args.run_tests = True
+        args.static_analysis = True
+        plan_repairs(args)
+        apply_repairs(args)
+        verify_repairs(args)
+        return 0
     except Exception as e:
         logger.error(f"Error: {e}")
         if args.verbose:

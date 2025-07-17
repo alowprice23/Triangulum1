@@ -15,6 +15,10 @@ from typing import List, Dict, Any
 from triangulum_lx.providers.factory import get_provider
 from triangulum_lx.agents.llm_config import LLM_CONFIG
 
+if LLM_CONFIG is None:
+    print("Warning: LLM config not found. Using default empty config.")
+    LLM_CONFIG = {}
+
 PROMPTS_PATH = Path(__file__).parent.parent / "tests/benchmarks/standard_prompts.yaml"
 RESULTS_PATH = Path(__file__).parent.parent / "benchmark_results.md"
 
