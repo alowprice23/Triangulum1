@@ -1,0 +1,10 @@
+--- tmp_case/helper.py.bak	2025-07-17 17:39:17.312768855 +0000
++++ tmp_case/helper.py	2025-07-17 17:39:17.312768855 +0000
+@@ -1,6 +1,6 @@
+ def helper():
+     # BUG: off-by-one in a loop
+     numbers = []
+-    for i in range(1, 5):
++    for i in range(1, 6):
+         numbers.append(i)
+     return numbers
