@@ -40,3 +40,22 @@ venv.bak/
 fixwurx_eval/fixwurx_repair/fixwurx_backup/oPEN AI API KEY.txt
 fixwurx_eval/fixwurx_snapshot/oPEN AI API KEY.txt
 *.api_key
+
+# Logs and temporary files
+*.log
+triangulum_logs/
+triangulum_demo_logs/
+.triangulum_health/
+integrated_debug.log
+
+# Generated files
+dependency_graph.png
+token_visualization_demo/
+quantum_analysis_output/
+metrics/
+
+# Debug and test output
+test_failures_phase1.log
+test_integration.log
+agentic_test.log
+dependency_analysis.log
