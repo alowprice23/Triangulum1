@@ -139,7 +139,13 @@ class SystemMonitor:
         for error in self.errors:
             logger.error(error)
         
-        return self.get_health_status()
+        health_status = self.get_health_status()
+
+        # Record health metrics
+        if self.engine and hasattr(self.engine, 'metrics_collector'):
+            self.engine.metrics_collector.record_health_metrics(health_status)
+
+        return health_status
 
     def get_health_status(self) -> Dict[str, Any]:
         """

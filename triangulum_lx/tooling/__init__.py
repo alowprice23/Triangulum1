@@ -1,5 +1,6 @@
 """Tooling utilities for Triangulum system."""
 
+from .code_relationship_analyzer import CodeRelationshipAnalyzer
 from .scope_filter import ScopeFilter
 from .compress import compress
 from .test_runner import TestRunner, TestResult
@@ -16,6 +17,7 @@ from .dependency_graph import (
 )
 
 __all__ = [
+    'CodeRelationshipAnalyzer',
     'ScopeFilter', 'compress',
     'TestRunner', 'TestResult', # 'DependencyAnalyzer', # Removed, functionality merged into GraphDependencyAnalyzer
     # Graph models
@@ -23,7 +25,7 @@ __all__ = [
     'DependencyType', 'LanguageType', 'DependencyEdge',
     # Dependency graph
     'BaseDependencyParser', 'PythonDependencyParser',
-    JavaScriptDependencyParser, TypeScriptDependencyParser,
+    'JavaScriptDependencyParser', 'TypeScriptDependencyParser',
     'ParserRegistry', 'DependencyGraphBuilder', 'GraphDependencyAnalyzer',
     # fs_ops
     'atomic_write', 'atomic_rename', 'atomic_delete'

@@ -1,69 +1,80 @@
 import os
 import json
+import sys
+from pathlib import Path
 from click.testing import CliRunner
-from triangulum.main import triangulum
 
-def test_triangulum_help():
+# Add the parent directory to sys.path to enable imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+
+from triangulum_lx.scripts.cli import cli as triangulum
+
+def test_cli_help():
     runner = CliRunner()
     result = runner.invoke(triangulum, ['--help'])
     assert result.exit_code == 0
-    assert 'Usage: triangulum [OPTIONS] COMMAND [ARGS]' in result.output
+    assert 'Usage: cli [OPTIONS] COMMAND [ARGS]' in result.output
 
-def test_triage_brainstorm():
-    runner = CliRunner()
-    result = runner.invoke(triangulum, ['triage', 'brainstorm', 'brainstorm-30'])
-    assert result.exit_code == 0
-    ideas = json.loads(result.output)
-    assert len(ideas) == 30
-
-    result = runner.invoke(triangulum, ['triage', 'brainstorm', 'triangulate-3'])
-    assert result.exit_code == 0
-    assert "Triangulating top 3 ideas" in result.output
-
-    result = runner.invoke(triangulum, ['triage', 'brainstorm', 'refine-2'])
-    assert result.exit_code == 0
-    assert "Refining 2 plans" in result.output
-
-    result = runner.invoke(triangulum, ['triage', 'brainstorm', 'backup-1'])
-    assert result.exit_code == 0
-    assert "Creating 1 backup plan" in result.output
-
-
-def test_util_grep():
+def test_analyze_command():
     runner = CliRunner()
     with runner.isolated_filesystem():
-        os.makedirs("subdir")
-        with open("subdir/test_grep_file.txt", "w") as f:
-            f.write("hello world\n")
-            f.write("another line\n")
-        result = runner.invoke(triangulum, ['util', 'grep', 'hello', 'subdir'])
+        os.makedirs('project/subdir', exist_ok=True)
+        with open("project/main.py", "w") as f:
+            f.write("import os\nfrom subdir.module import a_function\na_function()")
+        with open("project/subdir/module.py", "w") as f:
+            f.write("def a_function():\n    print('hello')")
+
+        result = runner.invoke(triangulum, ['analyze', 'project'])
         assert result.exit_code == 0
-        assert "subdir/test_grep_file.txt:1:hello world" in result.output
 
+        output = json.loads(result.output.split('Analysis for directory: project\n')[1])
+        assert len(output['nodes']) == 2
+        assert len(output['links']) > 0
 
-def test_graph_build():
+def test_benchmark_command(cli_runner_with_files):
+    result = cli_runner_with_files.invoke(triangulum, ['benchmark'])
+    assert result.exit_code == 0
+    assert 'Running benchmarks...' in result.output
+
+def test_run_command(cli_runner_with_files):
+    with open("goal.yaml", "w") as f:
+        f.write("name: test_goal")
+    result = cli_runner_with_files.invoke(triangulum, ['run', '--config', 'triangulum.yaml', '--goal', 'goal.yaml'])
+    assert result.exit_code == 0
+    assert 'Starting engine with goal file: goal.yaml' in result.output
+
+def test_start_stop_status_shell_commands():
     runner = CliRunner()
     with runner.isolated_filesystem():
-        result = runner.invoke(triangulum, ['graph', 'build'])
-        assert result.exit_code == 0
-        assert os.path.exists('.cache/dependency_graph.json')
-        with open('.cache/dependency_graph.json', 'r') as f:
-            data = json.load(f)
-            assert data == {"nodes": [], "edges": []}
+        with open("triangulum.yaml", "w") as f:
+            f.write("""
+llm:
+  default_provider: openai
+  providers:
+    openai:
+      default_model: o3
+      api_key: os.environ.get("OPENAI_API_KEY", "sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+agents:
+  meta_agent:
+    enabled: true
+""")
 
-def test_all_domains():
-    runner = CliRunner()
-    domains = {
-        'core': 'info',
-        'agent': 'list',
-        'bus': 'status',
-        'repair': 'auto',
-        'verify': 'all',
-        'perf': 'check',
-        'dash': 'show',
-        'config': 'get',
-        'fs': 'ls'
-    }
-    for domain, command in domains.items():
-        result = runner.invoke(triangulum, [domain, command])
+        result = runner.invoke(triangulum, ['start', '--config', 'triangulum.yaml'])
         assert result.exit_code == 0
+        assert 'Starting Triangulum...' in result.output
+
+        obj = runner.result.obj
+        assert 'engine' in obj
+
+        result = runner.invoke(triangulum, ['status'], obj=obj)
+        assert result.exit_code == 0
+        assert "'initialized': True" in result.output
+
+        result = runner.invoke(triangulum, ['stop'], obj=obj)
+        assert result.exit_code == 0
+        assert 'Stopping Triangulum...' in result.output
+
+        result = runner.invoke(triangulum, ['shell'], obj=obj)
+        assert result.exit_code == 0
+        assert 'Starting Triangulum shell...' in result.output

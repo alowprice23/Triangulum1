@@ -18,4 +18,5 @@ __all__ = [
     'ResponseCache',
     'get_response_cache',
     'Router',
+    'EnhancedMessageBus',
 ]

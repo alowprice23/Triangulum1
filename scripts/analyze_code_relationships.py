@@ -134,22 +134,5 @@ def main():
     
     return 0
 
-def print_graph_stats(analyzer):
-    """Print statistics about the graph."""
-    print("\nGraph Statistics:")
-    print(f"  Files analyzed: {len(analyzer.id_to_file)}")
-    print(f"  Total nodes: {len(analyzer.graph.nodes)}")
-    print(f"  Total edges: {len(analyzer.graph.edges)}")
-    
-    # Count edge types
-    edge_types = {}
-    for _, _, data in analyzer.graph.edges(data=True):
-        edge_type = data.get('type', 'unknown')
-        edge_types[edge_type] = edge_types.get(edge_type, 0) + 1
-    
-    print("\n  Edge Types:")
-    for edge_type, count in sorted(edge_types.items(), key=lambda x: x[1], reverse=True):
-        print(f"    - {edge_type}: {count}")
-
 if __name__ == "__main__":
     exit(main())

@@ -790,6 +790,66 @@ class AgenticDashboard:
                                 })
         except Exception as e:
             logger.error(f"Error processing thought chains: {e}")
+
+        try:
+            if hasattr(self.agent_network_visualizer, 'messages'):
+                if isinstance(self.agent_network_visualizer.messages, list):
+                    for message in self.agent_network_visualizer.messages:
+                        if isinstance(message, dict):
+                            all_events.append({
+                                "type": "message",
+                                "timestamp": message.get("timestamp", "Unknown"),
+                                "agent_id": message.get("source_agent", "Unknown"),
+                                "content": f"Message to {message.get('target_agent', 'Unknown')} ({message.get('message_type', 'Unknown')}): {message.get('content', '')}"
+                            })
+        except Exception as e:
+            logger.error(f"Error processing messages: {e}")
+
+        try:
+            # Sort events by timestamp - with type checking
+            all_events.sort(key=lambda x: x.get("timestamp", "") if isinstance(x, dict) else "")
+
+            # Create timeline HTML
+            for event in all_events:
+                if not isinstance(event, dict):
+                    continue
+
+                try:
+                    timestamp = datetime.datetime.fromisoformat(event.get("timestamp", "")).strftime("%H:%M:%S")
+                except (ValueError, TypeError, AttributeError):
+                    timestamp = "Unknown"
+
+                timeline_events += f"""
+                <div class="timeline-event">
+                    <div class="timeline-event-header">
+                        <div class="timeline-agent">{event.get('agent_id', 'Unknown')}</div>
+                        <div class="timeline-timestamp">{timestamp}</div>
+                    </div>
+                    <div class="timeline-content">{event.get('content', 'No content')}</div>
+                </div>
+                """
+        except Exception as e:
+            logger.error(f"Error sorting timeline events: {e}")
+
+        # Generate timeline events HTML
+        timeline_events = ""
+        all_events = []
+
+        # Collect all thoughts and messages
+        try:
+            if hasattr(self.thought_chain_visualizer, 'thought_chains'):
+                for chain_id, chain in self.thought_chain_visualizer.thought_chains.items():
+                    if isinstance(chain, dict) and "thoughts" in chain and isinstance(chain["thoughts"], list):
+                        for thought in chain["thoughts"]:
+                            if isinstance(thought, dict):
+                                all_events.append({
+                                    "type": "thought",
+                                    "timestamp": thought.get("timestamp", "Unknown"),
+                                    "agent_id": thought.get("agent_id", "Unknown"),
+                                    "content": f"Thought ({thought.get('thought_type', 'Unknown')}): {thought.get('content', 'No content')}"
+                                })
+        except Exception as e:
+            logger.error(f"Error processing thought chains: {e}")
         
         try:
             if hasattr(self.agent_network_visualizer, 'messages'):

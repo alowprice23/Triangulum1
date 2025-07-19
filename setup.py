@@ -13,7 +13,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'triangulum = triangulum_lx.cli:cli',
+            'triangulum = triangulum_lx.shell.main:cli',
         ],
     },
 )

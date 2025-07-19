@@ -20,6 +20,8 @@ RESULTS_PATH = Path(__file__).parent.parent / "benchmark_results.md"
 
 def load_prompts() -> List[Dict[str, Any]]:
     """Loads the standard prompts from the YAML file."""
+    if not PROMPTS_PATH.exists():
+        return []
     with open(PROMPTS_PATH, 'r') as f:
         return yaml.safe_load(f)
 
@@ -27,10 +29,19 @@ def run_benchmark() -> List[Dict[str, Any]]:
     """
     Runs the benchmark across all configured providers and models.
     """
+    from triangulum_lx.agents.llm_config import load_llm_config, get_llm_config
+
+    try:
+        get_llm_config()
+    except RuntimeError:
+        with open(Path(__file__).parent.parent / "triangulum.yaml", "r") as f:
+            config = yaml.safe_load(f)
+        load_llm_config(config.get("llm", {}))
+
     prompts = load_prompts()
     results = []
 
-    providers_config = LLM_CONFIG.get("providers", {})
+    providers_config = get_llm_config().get("providers", {})
 
     for provider_name, provider_info in providers_config.items():
         if not provider_info.get("api_key"):
@@ -94,9 +105,12 @@ def generate_report(results: List[Dict[str, Any]]):
     
     print(f"\nBenchmark complete. Report generated at: {RESULTS_PATH}")
 
-if __name__ == "__main__":
+def main():
     benchmark_results = run_benchmark()
     if benchmark_results:
         generate_report(benchmark_results)
     else:
         print("No benchmarks were run. Please check your configuration.")
+
+if __name__ == "__main__":
+    main()

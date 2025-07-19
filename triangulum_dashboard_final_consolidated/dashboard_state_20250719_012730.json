@@ -1,0 +1,13 @@
+{
+  "global_progress": {
+    "percent_complete": 0.0,
+    "status": "Initializing",
+    "start_time": "2025-07-19T01:27:30.223794",
+    "estimated_completion": null,
+    "steps_completed": 0,
+    "total_steps": 0
+  },
+  "agent_progress": {},
+  "agent_activity": {},
+  "timestamp": "2025-07-19T01:27:30.229598"
+}

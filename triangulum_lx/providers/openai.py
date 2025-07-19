@@ -17,12 +17,35 @@ class OpenAIProvider(LLMProvider):
     """
 
     def __init__(self, api_key: Optional[str] = None, model: str = "o3"):
-        super().__init__()  # Adjusted to not pass any arguments
+        super().__init__()
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.model = model
         if not self.api_key:
             raise ValueError("OpenAI API key not provided or found in environment variables.")
         self.client = OpenAI(api_key=self.api_key)
+
+    def is_available(self) -> bool:
+        return self.api_key is not None
+
+    def generate_response(self, prompt: str, **kwargs) -> LLMResponse:
+        start_time = time.time()
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}],
+            **kwargs,
+        )
+        latency = time.time() - start_time
+
+        content = response.choices[0].message.content or ""
+        tokens_used = response.usage.total_tokens if response.usage else None
+
+        return LLMResponse(
+            content=content,
+            model=response.model,
+            latency=latency,
+            tokens_used=tokens_used,
+            raw_response=response.model_dump()
+        )
 
     def _ensure_deterministic(self, temperature: float) -> None:
         """Ensure deterministic behavior for low temperatures."""

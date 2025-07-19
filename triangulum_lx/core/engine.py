@@ -629,6 +629,7 @@ class TriangulumEngine:
             raise RuntimeError("Cannot run: Engine not initialized")
             
         logger.info(f"Running engine with goal file: {goal_file}")
+        print(f"Starting engine with goal file: {goal_file}")
         self.running = True
         
         try:
@@ -1338,6 +1339,7 @@ class TriangulumEngine:
                 auto_open_browser=auto_open_browser
             )
             logger.info(f"AgenticDashboard initialized. Outputting to: {output_dir}")
+            self._components['dashboard'] = dashboard
             return dashboard
         except Exception as e:
             logger.error(f"Failed to initialize AgenticDashboard: {e}", exc_info=True)
@@ -1359,3 +1361,68 @@ class TriangulumEngine:
             logger.warning("Dashboard component found but has no 'stop' method.")
         else:
             logger.info("No active dashboard component to shut down.")
+
+    def run_self_healing_cycle(self):
+        """
+        Run a single cycle of the self-healing process.
+        """
+        if not self._initialized:
+            raise RuntimeError("Cannot run self-healing: Engine not initialized")
+
+        logger.info("Starting self-healing cycle")
+
+        # 1. Assess the system for bugs
+        bug_detector = self._components.get('bug_detector')
+        if not bug_detector:
+            logger.error("Bug detector not available, aborting self-healing cycle.")
+            return
+
+        bugs = bug_detector.detect_bugs()
+        if not bugs:
+            logger.info("No bugs detected, self-healing cycle complete.")
+            return
+
+        logger.info(f"Detected {len(bugs)} bugs.")
+
+        # 2. Plan the repair
+        for bug in bugs:
+            repair_plan = self.plan_repair(bug)
+
+            # 3. Act on the plan
+            if repair_plan:
+                self.execute_repair_plan(repair_plan)
+
+    def plan_repair(self, bug):
+        """
+        Plan the repair for a given bug.
+        """
+        logger.info(f"Planning repair for bug: {bug['description']}")
+        # This is a simplified planning process. A more advanced implementation
+        # would involve more sophisticated planning logic.
+        return {
+            "bug_id": bug["id"],
+            "file_path": bug["file_path"],
+            "description": f"Repair for {bug['description']}",
+            "changes": [
+                {
+                    "file_path": bug["file_path"],
+                    "start_line": bug["line_number"],
+                    "end_line": bug["line_number"],
+                    "new_content": "# TODO: Implement fix",
+                    "change_type": "replace"
+                }
+            ]
+        }
+
+    def execute_repair_plan(self, repair_plan):
+        """
+        Execute a repair plan.
+        """
+        logger.info(f"Executing repair plan for bug: {repair_plan['bug_id']}")
+        meta_agent = self._components.get('meta_agent')
+        if not meta_agent:
+            logger.error("Meta agent not available, cannot execute repair plan.")
+            return
+
+        result = meta_agent.run_repair(repair_plan)
+        logger.info(f"Repair result: {result}")

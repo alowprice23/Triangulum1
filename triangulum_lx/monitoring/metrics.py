@@ -325,6 +325,14 @@ class MetricsCollector:
         content_str = json.dumps(data, indent=2)
         atomic_write(str(file_path), content_str.encode('utf-8'))
         self.fs_cache.invalidate(str(file_path))
+
+    def record_health_metrics(self, health_status: Dict[str, Any]):
+        """Records the system health metrics."""
+        self.record_metric('cpu_percent', health_status['metrics'].get('cpu_percent', 0))
+        self.record_metric('memory_percent', health_status['metrics'].get('memory_percent', 0))
+        self.record_metric('disk_percent', health_status['metrics'].get('disk_percent', 0))
+        self.record_metric('warnings', len(health_status.get('warnings', [])))
+        self.record_metric('errors', len(health_status.get('errors', [])))
     
     def _save_agent_metrics(self) -> None:
         """Save agent metrics to disk."""
